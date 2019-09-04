@@ -1,0 +1,13 @@
+C:\mqtt-serialcomm\WindowsFormsApp2\bin\Debug\LGUMQTT.exe.config
+C:\mqtt-serialcomm\WindowsFormsApp2\bin\Debug\LGUMQTT.exe
+C:\mqtt-serialcomm\WindowsFormsApp2\bin\Debug\LGUMQTT.pdb
+C:\mqtt-serialcomm\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+C:\mqtt-serialcomm\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGMQTTAPP.csprojAssemblyReference.cache
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGUMQTT.Properties.Resources.resources
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGMQTTAPP.csproj.GenerateResource.cache
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGMQTTAPP.csproj.CoreCompileInputs.cache
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGMQTTAPP.csproj.CopyComplete
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGUMQTT.exe
+C:\mqtt-serialcomm\WindowsFormsApp2\obj\Debug\LGUMQTT.pdb

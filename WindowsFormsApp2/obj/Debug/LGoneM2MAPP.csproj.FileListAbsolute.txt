@@ -1,0 +1,13 @@
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUMQTT.exe.config
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUMQTT.exe
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUMQTT.pdb
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csprojAssemblyReference.cache
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUMQTT.Properties.Resources.resources
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.GenerateResource.cache
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CoreCompileInputs.cache
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CopyComplete
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUMQTT.exe
+C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUMQTT.pdb
