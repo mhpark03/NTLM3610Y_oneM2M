@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
-using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace WindowsFormsApp2
 {
@@ -17,6 +17,7 @@ namespace WindowsFormsApp2
     {
         private enum states
         {
+            booting,
             idle,
             getmodel,
             getmanufac,
@@ -30,6 +31,8 @@ namespace WindowsFormsApp2
             autogeticcid,
             bootstrap,
             setserverinfo,
+            setserverinfotpb23,
+            setncdp,
             setservertype,
             setepns,
             setmbsps,
@@ -38,44 +41,66 @@ namespace WindowsFormsApp2
             deregister,
             sendLWM2Mdata,
             receiveLWM2Mdata,
-            setFOTAinfo,
-            receiveFOTAdata,
             downloadMDLFOTA,
             updateMDLFOTA,
             lwm2mreset,
             sendmsgstr,
             sendmsghex,
+            sendmsgver,
+
             setcereg,
+            setceregtpb23,
             getcereg,
             reset,
-            mqttopen,
-            mqttconn,
-            mqttsub,
-            mqttunsub,
-            mqttdisconn,
-            automqttopen,
-            automqttconn,
-            automqttsub,
-            automqttunsub,
-            automqttdisconn,
-            mqttclose,
-            mqttpub,
-            mqttpubtext
+
+            getimeitpb23,
+            geticcidtpb23,
+            autogetimeitpb23,
+            autogeticcidtpb23,
+            resettpb23,
+            bootstrapmodetpb23,
+            setepnstpb23,
+            setmbspstpb23,
+            bootstraptpb23,
+            registertpb23,
+            deregistertpb23,
+            sendLWM2Mdatatpb23,
+            receiveLWM2Mdatatpb23,
+            downloadMDLFOTAtpb23,
+            updateMDLFOTAtpb23,
+            lwm2mresettpb23,
+            sendmsgstrtpb23,
+            sendmsghextpb23,
+            sendmsgvertpb23,
+
+            geticcidlg,
+            autogeticcidlg,
         }
 
         string sendWith;
         string dataIN;
         string RxDispOrder;
-        string serverip = "\"106.103.233.155\"";
+        string serverip = "106.103.233.155";
         string serverport = "5783";
         int network_chkcnt = 3;
-        string MQTT_Msg = "";
         string nextcommand = "";    //OK를 받은 후 전송할 명령어가 존재하는 경우
                                     //예를들어 +CEREG와 같이 OK를 포함한 응답 값을 받은 경우 OK처리 후에 명령어를 전송해야 한다
                                     // states 값을 바꾸고 명령어를 전송하면 명령의 응답을 받기전 이전에 받았던 OK에 동작할 수 있다.
 
+        string device_fota_state = "1";
+        string device_fota_reseult = "0";
+        int device_fota_index = 0;
+        int fotaCurrentIndex = -1;
+        int device_total_index = 0;
+        int fota_total_size = 0;
+        string device_fota_checksum = "";
+
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
+
+        FileStream fotafs = null;
+        StreamWriter fotasw;
+
 
         public Form1()
         {
@@ -134,18 +159,28 @@ namespace WindowsFormsApp2
             commands.Add("getimsi", "AT+CIMI");
             commands.Add("geticcid", "AT+ICCID");
             commands.Add("getimei", "AT+GSN");
+            commands.Add("geticcidtpb23", "AT+MUICCID");
+            commands.Add("geticcidlg", "AT+MUICCID=?");
+            commands.Add("getimeitpb23", "AT+CGSN=1");
             commands.Add("getmodel", "AT+CGMM");
             commands.Add("getmanufac", "AT+CGMI");
             commands.Add("setcereg", "AT+CEREG=1");
+            commands.Add("setceregtpb23", "AT+CEREG=3");
             commands.Add("getcereg", "AT+CEREG?");
             commands.Add("reset", "AT+CFUN=3,3");
+
+            commands.Add("resettpb23", "AT+NRB");
 
             commands.Add("autogetimsi", "AT+CIMI");
             commands.Add("autogeticcid", "AT+ICCID");
             commands.Add("autogetimei", "AT+GSN");
+            commands.Add("autogeticcidtpb23", "AT+MUICCID");
+            commands.Add("autogeticcidlg", "AT+MUICCID=?");
+            commands.Add("autogetimeitpb23", "AT+CGSN=1");
             commands.Add("autogetmodel", "AT+CGMM");
             commands.Add("autogetmanufac", "AT+CGMI");
 
+            commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",1");
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
             //commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
@@ -155,23 +190,22 @@ namespace WindowsFormsApp2
             commands.Add("register", "AT+QLWM2M=\"register\"");
             commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
             commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
-            commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",1");
             commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",10250,");
             commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
+            commands.Add("sendmsgver", "AT+QLWM2M=\"uldata\",26241,");
+            
 
-            commands.Add("mqttopen", "AT+QMTOPEN=0,\"");
-            commands.Add("mqttconn", "AT+QMTCONN=0,\"");
-            commands.Add("mqttsub", "AT+QMTSUB=0,1,\"");
-            commands.Add("mqttunsub", "AT+QMTUNS=0,1,\"");
-            commands.Add("mqttdisconn", "AT+QMTDISC=0");
-            commands.Add("automqttopen", "AT+QMTOPEN=0,\"");
-            commands.Add("automqttconn", "AT+QMTCONN=0,\"");
-            commands.Add("automqttsub", "AT+QMTSUB=0,1,\"");
-            commands.Add("automqttunsub", "AT+QMTUNS=0,1,\"");
-            commands.Add("automqttdisconn", "AT+QMTDISC=0");
-            commands.Add("mqttclose", "AT+QMTCLOSE=0");
-            commands.Add("mqttpub", "AT+QMTPUB=0,0,0,0,\"");
-            commands.Add("mqttpubtext", ">");
+            commands.Add("setserverinfotpb23", "AT+NCDP=");
+            commands.Add("setncdp", "AT+NCDP=");
+            commands.Add("bootstrapmodetpb23", "AT+MBOOTSTRAPMODE=1");
+            commands.Add("setepnstpb23", "AT+MLWEPNS=ASN_CSE-D-");
+            commands.Add("setmbspstpb23", "AT+MLWMBSPS=serviceCode=");
+            commands.Add("bootstraptpb23", "AT+MLWGOBOOTSTRAP=1");
+            commands.Add("registertpb23", "AT+MLWSREGIND=0");
+            commands.Add("deregistertpb23", "AT+MLWSREGIND=1");
+            commands.Add("lwm2mresettpb23", "AT+FATORYRESET=0");
+            commands.Add("sendmsgstrtpb23", "AT+MLWULDATA=");
+            commands.Add("sendmsgvertpb23", "AT+MLWULDATA=1,");
 
         }
 
@@ -185,8 +219,7 @@ namespace WindowsFormsApp2
             groupBox3.Height = groupBox4.Height - 35;
 
             tBoxDataIN.Height = groupBox3.Height - 54;
-            tBoxDataTemp.Width = groupBox3.Width - 90;
-            tBoxDataHumi.Width = groupBox3.Width - 90;
+            tBoxDataOut.Width = groupBox3.Width - 90;
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -213,10 +246,9 @@ namespace WindowsFormsApp2
                 groupBox4.Enabled = true;
                 logPrintInTextBox("COM PORT가 연결 되었습니다.","");
 
-                this.sendDataOut(commands["getcereg"]);
-                tBoxActionState.Text = states.getcereg.ToString();
-
-                timer1.Start();                
+                tBoxActionState.Text = states.booting.ToString();
+                timer2.Interval = 1000;     //초기에는 1초 타이머로 동작 
+                timer2.Start();                
             }
 
             catch (Exception err)
@@ -277,6 +309,19 @@ namespace WindowsFormsApp2
                 MessageBox.Show("RTS Enable", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else { serialPort1.RtsEnable = false; }
+        }
+
+        private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (tBoxDataOut.Text != "")
+            {
+                tBoxDataOut.Text = "";
+            }
+            if (cBoxATCMD.Text != "")
+            {
+                cBoxATCMD.Text = "";
+                cBoxATCMD.Items.Clear();
+            }
         }
 
         private void BtnATCMD_Click(object sender, EventArgs e)
@@ -344,7 +389,19 @@ namespace WindowsFormsApp2
                         {
                             tBoxActionState.Text = states.geticcid.ToString();
                         }
+                        else if (command == "AT+MUICCID")
+                        {
+                            tBoxActionState.Text = states.geticcid.ToString();
+                        }
+                        else if (command == "AT+MUICCID=?")
+                        {
+                            tBoxActionState.Text = states.geticcid.ToString();
+                        }
                         else if (command == "AT+GSN")
+                        {
+                            tBoxActionState.Text = states.getimei.ToString();
+                        }
+                        else if (command == "AT+CGSN=1")
                         {
                             tBoxActionState.Text = states.getimei.ToString();
                         }
@@ -614,18 +671,23 @@ namespace WindowsFormsApp2
             {
                 "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
                 "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
-                "AT",           // AT로 시작하는 것은 디바이스가 요청한 명령어로 제외
+                "+ICCID:",      // ICCID 값을 저장한다.
+                "+MUICCID:",    // ICCID (NB) 값을 저장한다.
+                "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
+                "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
+                "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
+                "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
+                //"AT+CIMI",
+                //"AT+GSN",
+                //"AT+CGMM",
+                //"AT+CGMI",
+                //"AT+CEREG=3",
+                //"AT+CEREG?",
                 "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
                 "+QLWEVENT:",    // 모듈 부팅시, LWM2M 등록 상태 이벤트, 진행 상태를 status bar에 진행율 표시
                 "+QLWDLDATA:",
-                "+ICCID:",
-                "ICCID:",
-                ">",
-                "+QMTRECV:",
-                "+QMTOPEN:",
-                "+QMTCONN:",
-                "+QMTUNS:"
-        };
+                "+QLWOBSERVE:"
+            };
 
             /* Debug를 위해 Hex로 문자열 표시*/
             /*
@@ -636,7 +698,7 @@ namespace WindowsFormsApp2
                 // Get the integral value of the character.
                 int value = Convert.ToInt32(_eachChar);
                 // Convert the decimal value to a hexadecimal value in string form.
-                hexOutput += String.Format("{0:XX}", value);
+                hexOutput += String.Format("{0:X}", value);
             }
             logPrintInTextBox(hexOutput,"");
             */
@@ -672,13 +734,11 @@ namespace WindowsFormsApp2
 
             // 후처리가 필요한 명령어인데 고정 값이 없고 data만 있는 경우
             //예를들어 IMSI, IMEI 요청에 대한 응답 값 등
-            if (find_msg == false)
+            if ((find_msg == false)&&(rxMsg!="\r") && (rxMsg != "\n"))
             {
                 //logPrintInTextBox("No Matching Data!!!","");
-                if(rxMsg.Length > 1)
-                {
-                    this.parseNoPrefixData(rxMsg);
-                }
+
+                this.parseNoPrefixData(rxMsg);
             }
 
         }
@@ -687,274 +747,597 @@ namespace WindowsFormsApp2
         // 응답을 받고 후 작업이 필요한지 확인한다. 
         void parseReceiveData(string s, string str2)
         {
-            if (s == "OK")
+            switch(s)
             {
-                states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
-                switch (state)
-                {
-                    case states.setservertype:
-                        // LWM2M bootstrap 자동 요청 순서
-                        // (servertype) - (endpointpame) - mbsps - bootstrap
-                        // EndPointName 플랫폼 device ID 설정
-                        //AT+QLWM2M="enps",0,<service code>
-                        //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
-                        this.sendDataOut(commands["setepns"] + tBoxSVCIP.Text + "\"");
-                        tBoxActionState.Text = states.setepns.ToString();
+                case "OK":
+                    OKReceived();
+                    break;
+                case "ERROR":
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = "";
+                    timer1.Stop();
 
-                        timer1.Start();
-                        nextcommand = "skip";
-                        break;
-                    case states.setepns:
-                        // LWM2M bootstrap 자동 요청 순서
-                        // servertype - (endpointpame) - (mbsps) - bootstrap
-                        // PLMN 정보 확인 후 진행
-                        string imsi = tBoxIMSI.Text;
-                        if (imsi.StartsWith("45006"))
+                    if (tBoxModel.Text == "알 수 없음")
+                    {
+                        isDeviceInfo();     // 모류 발생시 모듈 정보 확인(모델 정보 오류로 인해 전문 오류 발생할 수 있음)
+                    }
+                    timer2.Stop();
+                    break;
+                case "+ICCID:":
+                    // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    if (str2.Length > 19)
+                        tBoxIccid.Text = str2.Substring(str2.Length - 20, 19);
+                    else
+                        tBoxIccid.Text = str2;
+                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+
+                    if (tBoxActionState.Text == states.autogeticcid.ToString())
+                    {
+                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                    }
+                    break;
+                case "+MUICCID:":
+                    // AT+MUICCID (NB TPB23모델)의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    if (str2.Length > 19)
+                        tBoxIccid.Text = str2.Substring(str2.Length - 20, 19);
+                    else
+                        tBoxIccid.Text = str2;
+                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+
+                    if (tBoxActionState.Text == states.autogeticcidtpb23.ToString())
+                    {
+                        if (tSStatusLblLTE.Text != "registered")
+                            nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                    }
+                    else if (tBoxActionState.Text == states.autogeticcidlg.ToString())
+                    {
+                        if (tSStatusLblLTE.Text != "registered")       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         {
-                            string ctn = "0" + imsi.Substring(5, imsi.Length-5);
-
-                            // Bootstrap Parameter 설정
-                            //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
-                            string command = commands["setmbsps"] + tBoxSVCIP.Text + "\",\"";
-                            command = command + tBoxDeviceID.Text + "\",\"";
-                            command = command + ctn + "\",\"";
-
-                            string iccid = tBoxIccid.Text;
-                            command = command + iccid.Substring(iccid.Length - 6, 6) + "\",\"";
-                            command = command + tBoxSVCPort.Text +"\"";
-                            this.sendDataOut(command);
-                            tBoxActionState.Text = states.setmbsps.ToString();
+                            this.sendDataOut(commands["getcereg"]);
+                            tBoxActionState.Text = states.getcereg.ToString();
 
                             timer1.Start();
-                            nextcommand = "skip";
+                            logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
+                        }
+                    }
+                    break;
+                case "+CGSN:":
+                    // AT+CGSN=1 (NB TPB23모델)의 응답으로 IMEI 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    tBoxIMEI.Text = str2;
+                    logPrintInTextBox("IMEI값이 저장되었습니다.", "");
+                    break;
+                case "+CEREG:":
+                    // AT+CEREG의 응답으로 LTE attach 상태 확인하고 disable되어 있어면 attach 요청, 
+                    // attach가 완료되지 않았으면 1초 후에 재확인, (timer2 사용)
+                    // OK 응답이 따라온다
+                    timer2.Stop();
+
+                    // 수신한 데이터에 대해 space로 시작하는지 확인한다.
+                    if (str2.StartsWith(" "))
+                    {
+                        str2 = str2.Substring(1, str2.Length - 1);
+                    }
+
+                    string ltestatus = str2.Substring(0, 1);
+                    if (ltestatus == "0")
+                    {
+                        tSStatusLblLTE.Text = "disconnect";
+                        tSProgressLTE.Value = 0;
+
+                        network_chkcnt = 3;             // LTE attach disable을 경우 enable하고 getcereg 3회 확인
+                        if (tBoxModel.Text == "TPB23")
+                        {
+                            nextcommand = states.setceregtpb23.ToString();
                         }
                         else
                         {
-                            MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            nextcommand = "";
-                            timer1.Stop();
+                            nextcommand = states.setcereg.ToString();
                         }
-                        break;
-                    case states.setmbsps:
-                        // LWM2M bootstrap 자동 요청 순서
-                        // servertype - endpointpame - (mbsps) - (bootstrap) 마지막
-                        // Bootstrap 요청
-                        //AT+QLWM2M="bootstrap",1
-                        nextcommand = states.bootstrap.ToString();
-                        break;
-                    case states.setcereg:
-                        // LTE network attach 요청하면 정상적으로 attach 성공했는지 확인 필요
-                        nextcommand = states.getcereg.ToString();
-                        break;
-                    case states.mqttopen:
-                        // OK 수신한 다음에 +QMTOPEN을 기다렸다가 connect 시도해야 함.
-                        nextcommand = "skip";
-                        tSStatusLblMQTT.Text = "open";
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.automqttopen:
-                        // OK 수신한 다음에 +QMTOPEN을 기다렸다가 connect 시도해야 함.
-                        nextcommand = "skip";
-                        tSStatusLblMQTT.Text = "open";
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.mqttconn:
-                        // OK 수신한 다음에 +QMTCONN을 기다렸다가 subscribe 시도해야 함.
-                        tSStatusLblMQTT.Text = "connect";
-                        nextcommand = "skip";
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.automqttconn:
-                        // OK 수신한 다음에 +QMTCONN을 기다렸다가 subscribe 시도해야 함.
-                        tSStatusLblMQTT.Text = "connect";
-                        nextcommand = "skip";
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.mqttsub:
-                        // MQTT 서버 Subscribe 등록 성공
-                        tSStatusLblMQTT.Text = "subscribe";
-                        tSProgressMQTT.Value = 100;
-                        logPrintInTextBox("MQTT 서버에 Subscribe가 성공하였습니다.","");
-                        break;
-                    case states.mqttunsub:
-                        // MQTT 서버 Subscribe 해제
-                        tSStatusLblMQTT.Text = "connect";       //서버 연결 상태로 pub는 가능하나 subscribe 불가 상태
-                        nextcommand = "skip";
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.automqttunsub:
-                        // MQTT 서버 자동 연결 해제 요청시 +QMTUNS 기다렸다가 진행
-                        nextcommand = "skip";
-                        tSStatusLblMQTT.Text = "connect";       //서버 연결 상태로 pub는 가능하나 subscribe 불가 상태
-                        tSProgressMQTT.Value = 50;
-                        break;
-                    case states.mqttdisconn:
-                        // MQTT 서버 연결 해제
-                        tSStatusLblMQTT.Text = "disconnect";
-                        tSProgressMQTT.Value = 0;
-                        logPrintInTextBox("MQTT 서버와 연결이 해제되었습니다.", "");
-                        break;
-                    case states.mqttclose:
-                        // MQTT 서버 Socket 해제
-                        tSStatusLblMQTT.Text = "disconnect";
-                        tSProgressMQTT.Value = 0;
-                        break;
-                    default:
-                        break;
-                }
-
-                // 마지막 응답(OK)을 받은 후에 후속 작업이 필요한지 확인한다.
-                if (nextcommand != "skip")
-                {
-                    if (nextcommand != "")
+                        logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
+                    }
+                    else if ((ltestatus == "1") || (ltestatus == "3"))
                     {
-                        this.sendDataOut(commands[nextcommand]);
-                        tBoxActionState.Text = nextcommand;
-                        nextcommand = "";
+                        if (str2.Length > 1)
+                        {
+                            string lteregi = str2.Substring(2, 1);
 
-                        timer1.Start();
+                            if ((lteregi == "1") || (lteregi == "5"))
+                            {
+                                tSStatusLblLTE.Text = "registered";
+                                tSProgressLTE.Value = 100;
+                                timer2.Stop();
+                                logPrintInTextBox("LTE망에 연결 되었습니다.", "");
+                            }
+                            else
+                            {
+                                // LTE attach 시도 중
+                                tSStatusLblLTE.Text = "registerring";
+                                tSProgressLTE.Value = 50;
+
+                                timer2.Start();     // 1초 후에 AT+CEREG 호출
+                            }
+                        }
+                        else
+                        {
+                            if ((str2 == "1") || (str2 == "5"))
+                            {
+                                tSStatusLblLTE.Text = "registered";
+                                tSProgressLTE.Value = 100;
+                                timer2.Stop();
+                                logPrintInTextBox("LTE망에 연결 되었습니다.", "");
+                            }
+                            else
+                            {
+                                // LTE attach 시도 중
+                                tSStatusLblLTE.Text = "registerring";
+                                tSProgressLTE.Value = 50;
+
+                                timer2.Start();     // 1초 후에 AT+CEREG 호출
+                            }
+                        }
                     }
                     else
                     {
-                        tBoxActionState.Text = states.idle.ToString();
-                        timer1.Stop();
-                    }
-                }
-            }
-            else if (s == "ERROR")
-            {
-                tBoxActionState.Text = states.idle.ToString();
-                nextcommand = "";
-                timer1.Stop();
-            }
-            else if (s == "+ICCID:")
-            {
-                // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
-                // OK 응답이 따라온다
-                tBoxIccid.Text = str2.Substring(0, 20);
-                logPrintInTextBox("ICCID값이 저장되었습니다.","");
-            }
-            else if (s == "ICCID:")
-            {
-                // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
-                // OK 응답이 따라온다
-                tBoxIccid.Text = str2.Substring(0, 20);
-                logPrintInTextBox("ICCID값이 저장되었습니다.", "");
-            }
-            else if (s == "+CEREG:")
-            {
-                // AT+CEREG의 응답으로 LTE attach 상태 확인하고 disable되어 있어면 attach 요청, 
-                // attach가 완료되지 않았으면 1초 후에 재확인, (timer2 사용)
-                // OK 응답이 따라온다
-                timer2.Stop();
-
-                string ltestatus = str2.Substring(1, 1);
-                if(ltestatus == "0")
-                {
-                    tSStatusLblLTE.Text = "disconnect";
-                    tSProgressLTE.Value = 0;
-
-                    network_chkcnt = 3;             // LTE attach disable을 경우 enable하고 getcereg 3회 확인
-                    nextcommand = states.setcereg.ToString();
-                    logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
-                }
-                else if(ltestatus == "1")
-                {
-                    string lteregi = str2.Substring(3, 1);
-
-                    if ((lteregi == "1")|| (lteregi == "5"))
-                    {
-                        tSStatusLblLTE.Text = "registered";
+                        tSStatusLblLTE.Text = "enable";
                         tSProgressLTE.Value = 100;
+
                         timer2.Stop();
-                        logPrintInTextBox("LTE망에 연결 되었습니다.", "");
+                    }
+
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                    break;
+                case "+QLWEVENT:":
+                    // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
+                    // OK 응답 발생하지 않음
+                    char[] lwm2mstep = str2.ToCharArray();
+                    int value = Convert.ToInt32(lwm2mstep[1])-48;
+                    if (value < 5)
+                    {
+                        tSProgressLwm2m.Value = value * 20;
+
                     }
                     else
                     {
-                        // LTE attach 시도 중
-                        tSStatusLblLTE.Text = "registerring";
-                        tSProgressLTE.Value = 50;
+                        tSProgressLwm2m.Value = 100;
 
-                        timer2.Start();     // 1초 후에 AT+CEREG 호출
+                        tSStatusLblLTE.Text = "registered";     // 서버 정보를 받았다면 LTE망연결이 된 상태로 판단
+                        tSProgressLTE.Value = 100;
+
+                        if (tBoxModel.Text == "알 수 없음")
+                        {
+                            getDeviveInfo();
+                        }
+                    }
+
+                    int first = str2.IndexOf("\"");
+                    int last = str2.LastIndexOf("\"");
+                    string lwm2mstate = str2.Substring(first + 1, last - first - 2);
+                    tSStatusLblLWM2M.Text = lwm2mstate;
+
+                    if (nextcommand == states.getcereg.ToString())
+                        nextcommand = "";
+                    timer2.Stop();
+                    break;
+                case "AT+MLWEVTIND=":
+                    // 모듈이 LWM2M서버 연동 상태 이벤트,
+                    // OK 응답 발생하지 않음
+                    // AT+MLWEVTIND=<type>
+                    int type = Convert.ToInt32(str2);
+                    switch (str2)
+                    {
+                        case "0":
+                            logPrintInTextBox("registration completed", " ");
+                            tSProgressLwm2m.Value = 100;
+                            tSStatusLblLWM2M.Text = "registrated";
+                            break;
+                        case "1":
+                            logPrintInTextBox("deregistration completed", " ");
+                            tSProgressLwm2m.Value = 50;
+                            tSStatusLblLWM2M.Text = "connected";
+                            break;
+                        case "2":
+                            logPrintInTextBox("registration update completed", " ");
+                            tSProgressLwm2m.Value = 100;
+                            tSStatusLblLWM2M.Text = "registerd";
+                            break;
+                        case "3":
+                            logPrintInTextBox("10250 object subscription completed", " ");
+                            break;
+                        case "4":
+                            logPrintInTextBox("Bootstrap finished", " ");
+                            tSProgressLwm2m.Value = 50;
+                            tSStatusLblLWM2M.Text = "connected";
+                            break;
+                        case "5":
+                            logPrintInTextBox("5/0/3 object subscription completed", " ");
+                            break;
+                        case "6":
+                            logPrintInTextBox("fota downloading request", " ");
+                            break;
+                        case "7":
+                            logPrintInTextBox("fota update request", " ");
+                            break;
+                        case "8":
+                            logPrintInTextBox("26241 object subscription completed", " ");
+                            break;
+                    }
+                    break;
+                case "AT+MLWDLDATA=":
+                    // 모듈이 LWM2M서버에서 받은 데이터를 전달하는 이벤트,
+                    // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                    // AT+MLWDLDATA=(<type>),<length>,<hex data>
+                    string[] rxdatas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if(rxdatas.Length <3 )
+                    {
+                        // 10250 DATA object RECEIVED!!!
+                        if (Convert.ToInt32(rxdatas[0]) == rxdatas[1].Length / 2)    // data size 비교
+                        {
+                            //received hex data make to ascii code
+                            string receiveDataIN = BcdToString(rxdatas[1].ToCharArray());
+                            logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("data size가 맞지 않습니다.", "");
+                        }
+                    }
+                    else if(rxdatas[0] == "1")
+                    {
+                        // 26241 FOTA DATA object RECEIVED!!!
+                        receiveFotaData(rxdatas[1],rxdatas[2]);
+                    }
+                    else
+                    {
+                        logPrintInTextBox("data format이 맞지 않습니다.", "");
+                    }
+                    break;
+
+                case "+QLWDLDATA:":
+                    // 모듈이 LWM2M서버에서 받은 데이터를 전달하는 이벤트,
+                    // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                    string[] words = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (words[0] == " \"/10250/0/1\"")       // data object인지 확인
+                    {
+                        if (words[1] == "4")     // string data received
+                        {
+                            if (Convert.ToInt32(words[2]) == (words[3].Length - 2))    // data size 비교 (양쪽 끝의 " 크기 빼고)
+                            {
+                                logPrintInTextBox(words[3] + "를 수신하였습니다.", "");
+                            }
+                            else
+                            {
+                                logPrintInTextBox("data size가 맞지 않습니다.", "");
+                            }
+                        }
+                        else if (words[1] == "5")     // hex data received
+                        {
+                            if (Convert.ToInt32(words[2]) == (words[3].Length - 2) / 2)    // data size 비교 (양쪽 끝의 " 크기 빼고 2bytes가 1글자임)
+                            {
+                                //received hex data make to ascii code
+                                string hexInPut = words[3].Substring(1, words[3].Length - 2);
+                                string receiveDataIN = BcdToString(hexInPut.ToCharArray());
+                                logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                            }
+                            else
+                            {
+                                logPrintInTextBox("data size가 맞지 않습니다.", "");
+                            }
+                        }
+                        else
+                        {
+                            logPrintInTextBox("지원하지 않는 data object입니다.", "");
+                        }
+                    }
+                    else if (words[0] == " \"/26241/0/1\"")       // device firmware object인지 확인
+                    {
+                        if (words[1] == "5")     // hex data received
+                        {
+                            // 26241 FOTA DATA object RECEIVED!!!
+                            receiveFotaData(words[2], words[3].Substring(1,words[3].Length-2));
+                        }
+                        else
+                        {
+                            logPrintInTextBox("지원하지 않는 data object입니다.", "");
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("지원하지 않는 data object입니다.", "");
+                    }
+
+                    if (nextcommand == states.getcereg.ToString())
+                        nextcommand = "";
+                    timer2.Stop();
+                    break;
+                case "+QLWOBSERVE:":
+                    // 모듈이 LWM2M서버와 초기 접속시 받은 데이터를 전달하는 이벤트,
+                    // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                    string[] observes = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (observes[1] == "\"/10250/0/0\"")       // data object인지 확인
+                    {
+                    }
+                    else if (observes[1] == "\"/26241/0/0\"")       // device firmware object인지 확인
+                    {
+                        // 서버에서 모듈 펌웨어 처리 후에 디바이스 펌웨어 체크 가능, 일정 시간 후에 동작해야 함.
+                        // DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult, device_fota_index);
+                    }
+                    else
+                    {
+                        logPrintInTextBox("지원하지 않는 data object입니다.", "");
+                    }
+
+                    if (nextcommand == states.getcereg.ToString())
+                        nextcommand = "";
+                    timer2.Stop();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void receiveFotaData(string size, string rcvData)
+        {
+            int dataSize = rcvData.Length / 2;
+            if (Convert.ToInt32(size) == dataSize)    // data size 비교
+            {
+                // Firmware File Information Block Checking
+                if ((device_total_index == 0) && (dataSize == 8))
+                {
+                    //received hex data make to ascii code
+                    string fotaDataIN = BcdToString(rcvData.ToCharArray());
+                    logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
+
+                    if (Convert.ToInt32(fotaDataIN.Substring(0, 2)) == 0)
+                    {
+                        device_total_index = Convert.ToInt32(fotaDataIN.Substring(2, 2));
+                        device_fota_checksum = fotaDataIN.Substring(4, 4);
+                        device_fota_state = "1";
+                        logPrintInTextBox("Index= " + device_total_index + ", checksum = " + device_fota_checksum + "를 수신하였습니다.", "");
+
+                        // Create a file to write to.
+                        try
+                        {
+                            string pathname = @"c:\temp\seriallog\";
+                            DateTime currenttime = DateTime.Now;
+                            string filename = "fota_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+
+                            Directory.CreateDirectory(pathname);
+                            fotafs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
+                            fotasw = new StreamWriter(fotafs, Encoding.UTF8);
+                            fota_total_size = 0;
+                            fotaCurrentIndex = -1;
+                        }
+                        catch (Exception err)
+                        {
+                            MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                    }
+                }
+                // Firmware File Data Block Checking
+                else if (dataSize <= 512)
+                {
+                    //received hex data make to ascii code
+                    string fotaDataIN = BcdToString(rcvData.ToCharArray());
+                    logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
+
+                    device_fota_index = Convert.ToInt32(fotaDataIN.Substring(0, 2));
+                    if (device_total_index >= device_fota_index)
+                    {
+                        if (device_fota_index == fotaCurrentIndex + 1)
+                        {
+                            fotaCurrentIndex = device_fota_index;
+                            string fotaRealData = fotaDataIN.Substring(2, fotaDataIN.Length - 6);
+                            string pagecrc = fotaDataIN.Substring(fotaDataIN.Length - 4, 4);
+
+                            logPrintInTextBox(fotaRealData, "");
+
+                            try
+                            {
+                                char[] logmsg = fotaRealData.ToCharArray();
+                                fotasw.Write(logmsg, fota_total_size, fotaRealData.Length);     // 다운로드 데이터를 파일에 씀
+                                fota_total_size += fotaRealData.Length;
+                            }
+                            catch (Exception err)
+                            {
+                                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+
+                            if (device_total_index == device_fota_index)
+                            {
+                                device_total_index = 0;
+                                device_fota_state = "0";        // fota receive sucess
+                                try
+                                {
+                                    fotasw.Close();
+                                    fotafs.Close();
+                                }
+                                catch (Exception err)
+                                {
+                                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            logPrintInTextBox("packet index 순서를 확인이 필요합니다.", "");
+                            device_total_index = 0;
+                            device_fota_state = "1";        // fota receive 실패
+                            try
+                            {
+                                fotasw.Close();
+                                fotafs.Close();
+                            }
+                            catch (Exception err)
+                            {
+                                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("펌웨어 전체 크기를 초과하였습니다.", "");
                     }
                 }
                 else
                 {
-                    tSStatusLblLTE.Text = "enable";
-                    tSProgressLTE.Value = 100;
-
-                    timer2.Stop();
+                    logPrintInTextBox("FOTA 한 패키지 크기를 초과 하였습니다.", "");
                 }
 
-                tBoxActionState.Text = states.idle.ToString();
-                timer1.Stop();
             }
-            else if(s == ">")
+            else
             {
-                if (tBoxActionState.Text == "mqttpub")
+                logPrintInTextBox("data size가 맞지 않습니다.", "");
+            }
+        }
+
+        private void OKReceived()
+        {
+            states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
+            switch (state)
+            {
+                case states.setservertype:
+                    // LWM2M bootstrap 자동 요청 순서
+                    // (servertype) - (endpointpame) - mbsps - bootstrap
+                    // EndPointName 플랫폼 device ID 설정
+                    //AT+QLWM2M="enps",0,<service code>
+                    //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
+                    this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
+                    tBoxActionState.Text = states.setepns.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                // 단말 정보 자동 갱신 순서
+                // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
+                case states.autogetimeitpb23:
+                    if(tBoxModel.Text == "TPB23")
+                    {
+                        nextcommand = states.autogeticcidtpb23.ToString();
+                    }
+                    else
+                    {
+                        nextcommand = states.autogeticcidlg.ToString();
+                    }
+                    break;
+                case states.setepns:
+                    // LWM2M bootstrap 자동 요청 순서
+                    // servertype - (endpointpame) - (mbsps) - bootstrap
+                    // PLMN 정보 확인 후 진행
+                    string ctn = tBoxIMSI.Text;
+                    if (ctn != "알 수 없음")
+                    {
+                        // Bootstrap Parameter 설정
+                        //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
+                        string epncmd = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
+                        epncmd = epncmd + tBoxDeviceSN.Text + "\",\"";
+                        epncmd = epncmd + ctn + "\",\"";
+
+                        string epniccid = tBoxIccid.Text;
+                        epncmd = epncmd + epniccid.Substring(epniccid.Length - 6, 6) + "\",\"";
+                        epncmd = epncmd + tBoxDeviceModel.Text + "\"";
+                        this.sendDataOut(epncmd);
+                        tBoxActionState.Text = states.setmbsps.ToString();
+
+                        timer1.Start();
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        nextcommand = "";
+                        timer1.Stop();
+                    }
+                    break;
+                case states.setmbsps:
+                    // LWM2M bootstrap 자동 요청 순서
+                    // servertype - endpointpame - (mbsps) - (bootstrap) 마지막
+                    // Bootstrap 요청
+                    //AT+QLWM2M="bootstrap",1
+                    nextcommand = states.bootstrap.ToString();
+                    break;
+                case states.setcereg:
+                    // LTE network attach 요청하면 정상적으로 attach 성공했는지 확인 필요
+                    nextcommand = states.getcereg.ToString();
+                    break;
+                case states.setceregtpb23:
+                    // LTE network attach 요청하면 정상적으로 attach 성공했는지 확인 필요
+                    nextcommand = states.getcereg.ToString();
+                    break;
+                case states.setncdp:
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // (setncdp) - (setepnstpb23) - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                    // End Point Name Parameter 설정
+                    //AT+MLWEPNS="LWM2M 서버 entityID"
+                    String md5value = getMd5Hash(tBoxIMSI.Text + tBoxIccid.Text);
+                    logPrintInTextBox(md5value, "");
+
+                    string epn = md5value.Substring(0, 5) + md5value.Substring(md5value.Length - 5, 5);
+
+                    this.sendDataOut(commands["setepnstpb23"] + epn + "-" + tBoxSVCCD.Text);
+                    tBoxActionState.Text = states.setepnstpb23.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.setepnstpb23:
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // setncdp - (setepnstpb23) - (setmbspstpb23) - bootstrapmodetpb23 - bootstraptpb23
+                    // Bootstarp Parameter 설정
+                    //AT+MLWMBSPS="serviceCode=GAMR|deviceSerialNo=1234567|ctn=01022335078 | iccId = 127313 | deviceModel = Summer | mac = "
+
+                    string command = tBoxSVCCD.Text + "|deviceSerialNo=";
+                    command += tBoxDeviceSN.Text + "|ctn=";
+                    command += tBoxIMSI.Text + "|iccId=";
+
+                    string iccid = tBoxIccid.Text;
+                    command += iccid.Substring(iccid.Length - 6, 6) + "|deviceModel=";
+                    command += tBoxDeviceModel.Text + "|mac=";
+
+                    this.sendDataOut(commands["setmbspstpb23"] + command);
+                    tBoxActionState.Text = states.setmbspstpb23.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.setmbspstpb23:
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // setncdp - setepnstpb23 - (setmbspstpb23) - (bootstrapmodetpb23) - bootstraptpb23
+                    // LWM2M 서버 설정
+                    // BOOTSTARP MODE 설정
+                    //AT+MBOOTSTRAPMODE=1
+                    nextcommand = states.bootstrapmodetpb23.ToString();
+                    break;
+                case states.bootstrapmodetpb23:
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // setncdp - setepnstpb23 - setmbspstpb23 - (bootstrapmodetpb23) - (bootstraptpb23)
+                    // LWM2M서버에 Bootstarp 요청
+                    //  AT+MLWGOBOOTSTRAP=1
+                    nextcommand = states.bootstraptpb23.ToString();
+                    break;
+                default:
+                    break;
+            }
+
+            // 마지막 응답(OK)을 받은 후에 후속 작업이 필요한지 확인한다.
+            if (nextcommand != "skip")
+            {
+                if (nextcommand != "")
                 {
-                    this.sendDataOut(MQTT_Msg);
-                    tBoxActionState.Text = states.mqttpubtext.ToString();
+                    this.sendDataOut(commands[nextcommand]);
+                    tBoxActionState.Text = nextcommand;
+                    nextcommand = "";
+
                     timer1.Start();
                 }
                 else
                 {
-                    logPrintInTextBox("MQTT data 전송 상태가 아닙니다.", "");
-                }
-            }
-            else if (s == "+QMTRECV:")
-            {
-                // 모듈이 MQTT서버에서 받은 데이터를 전달하는 이벤트,
-                // OK 응답 발생하지 않음
-                string[] words = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                if (words[0] == " 0")       // MQTT 소켓 ID ("0"만 사용)
-                {
-                    string base64 = words[3].Substring(1, words[3].Length - 2);
-                    byte[] orgBytes = Convert.FromBase64String(base64);
-                    string orgStr = Encoding.UTF8.GetString(orgBytes);
-                    logPrintInTextBox("\"" + orgStr + "\"를 수신하였습니다.", "");
-
-                    InSensors inSensors1 = JsonConvert.DeserializeObject<InSensors>(orgStr);
-                    string text = "온도 : " + inSensors1.Temperature + ", 습도 : " + inSensors1.Humidity;
-
-                    logPrintInTextBox("\"" + text + "\"를 수신하였습니다.", "");
-                }
-                else
-                {
-                    logPrintInTextBox("지원하지 않는 data object입니다.", "");
-                }
-            }
-            else if (s == "+QMTOPEN:")
-            {
-                // 모듈이 MQTT서버 Socket Open이 완료되면 전달하는 이벤트,
-                // OK 응답 이후에 발생
-                if(tBoxActionState.Text == states.automqttopen.ToString())
-                {
-                    // MQTT 서버 자동 연결 요청시
-                    // (automqttopen) -> (automqttconn) -> mqttsub
-                    MqttServerConnect(states.automqttconn.ToString());
-                }
-            }
-            else if (s == "+QMTCONN:")
-            {
-                // 모듈이 MQTT서버와 연결이 되면 전달하는 이벤트,
-                // OK 응답 이후에 발생
-                if (tBoxActionState.Text == states.automqttconn.ToString())
-                {
-                    // MQTT 서버 자동 연결 요청시
-                    // automqttopen -> (automqttconn) -> (mqttsub)
-                    MqttSubscribe(states.mqttsub.ToString());
-                }
-            }
-            else if (s == "+QMTUNS:")
-            {
-                // 모듈이 MQTT서버와 Unsubscribe 되면 전달하는 이벤트,
-                // OK 응답 이후에 발생
-                if (tBoxActionState.Text == states.automqttunsub.ToString())
-                {
-                    // MQTT 서버 자동 연결 해제 요청시
-                    // automqttunsub -> mqttdisconn
-                    MqttServerDisconn(states.mqttdisconn.ToString());
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
                 }
             }
         }
@@ -983,45 +1366,51 @@ namespace WindowsFormsApp2
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - autogetmanufac - (autogetimsi) - (autogetimei) - geticcid
                 case states.autogetimsi:
-                    tBoxIMSI.Text = str1;
-                    tBoxDeviceID.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-                    nextcommand = states.autogetimei.ToString();
-                    this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
+                    if (str1.StartsWith("45006"))
+                    {
+                        string ctn = "0" + str1.Substring(5, str1.Length - 5);
+
+                        tBoxIMSI.Text = ctn;
+                        tBoxActionState.Text = states.idle.ToString();
+                        if (tBoxModel.Text == "BG96")
+                            nextcommand = states.autogetimei.ToString();
+                        else
+                            nextcommand = states.autogetimeitpb23.ToString();
+                        this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
+                    }
+                    else
+                        this.logPrintInTextBox("USIM 상태 확인이 필요합니다.", "");
                     break;
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-                    nextcommand = states.geticcid.ToString();
+                    tBoxActionState.Text = states.autogeticcid.ToString();
+                    nextcommand = states.autogeticcid.ToString();
                     this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
                     break;
                 case states.setservertype:
                     // EndPointName 플랫폼 device ID 설정
                     //AT+QLWM2M="enps",0,<service code>
                     //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
-                    this.sendDataOut(commands["setepns"] + tBoxSVCIP.Text + "\"");
+                    this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
                     tBoxActionState.Text = states.setepns.ToString();
 
                     timer1.Start();
                     nextcommand = "skip";
                     break;
                 case states.setepns:
-                    string imsi = tBoxIMSI.Text;
-                    if (imsi.StartsWith("45006"))
+                    if (tBoxIMSI.Text != "알 수 없음")
                     {
-                        string ctn = "0" + imsi.Substring(5, imsi.Length - 5);
-
                         // Bootstrap Parameter 설정
                         //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
-                        string command = commands["setmbsps"] + tBoxSVCIP.Text + "\",\"";
-                        command = command + tBoxDeviceID.Text + "\",\"";
-                        command = command + ctn + "\",\"";
+                        string command = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
+                        command = command + tBoxDeviceSN.Text + "\",\"";
+                        command = command + tBoxIMSI.Text + "\",\"";
 
                         string iccid = tBoxIccid.Text;
                         command = command + iccid.Substring(iccid.Length - 6, 6) + "\",\"";
-                        command = command + tBoxSVCPort.Text + "\"";
+                        command = command + tBoxDeviceModel.Text + "\"";
                         this.sendDataOut(command);
                         tBoxActionState.Text = states.setmbsps.ToString();
 
@@ -1041,11 +1430,19 @@ namespace WindowsFormsApp2
                     break;
 
                 case states.getimsi:
-                    tBoxIMSI.Text = str1;
-                    tBoxDeviceID.Text = str1;
+                    if (str1.StartsWith("45006"))
+                    {
+                        string ctn = "0" + str1.Substring(5, str1.Length - 5);
+
+                        tBoxIMSI.Text = ctn;
+                        tBoxActionState.Text = states.idle.ToString();
+                        this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
+                    }
+                    else
+                        this.logPrintInTextBox("USIM 상태 확인이 필요합니다.", "");
+
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
-                    this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
                     break;
                 case states.getimei:
                     tBoxIMEI.Text = str1;
@@ -1070,10 +1467,10 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void MQTTToolStripMenuDeviceInfo_Click(object sender, EventArgs e)
+        private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             getDeviveInfo();
-        }
+         }
 
         private void getDeviveInfo()
         {
@@ -1096,14 +1493,32 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["geticcid"]);
+            if(tBoxModel.Text == "TPB23")
+            {
+                this.sendDataOut(commands["geticcidtpb23"]);
+            }
+            else if(tBoxModel.Text == "BG96")
+            {
+                this.sendDataOut(commands["geticcid"]);
+            }
+            else
+            {
+                this.sendDataOut(commands["geticcidlg"]);
+            }
             tBoxActionState.Text = states.geticcid.ToString();
             timer1.Start();
         }
 
         private void btnIMEI_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["getimei"]);
+            if (tBoxModel.Text == "TPB23")
+            {
+                this.sendDataOut(commands["getimeitpb23"]);
+            }
+            else
+            {
+                this.sendDataOut(commands["getimei"]);
+            }
             tBoxActionState.Text = states.getimei.ToString();
             timer1.Start();
         }
@@ -1126,25 +1541,20 @@ namespace WindowsFormsApp2
         private void Timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            //logPrintInTextBox(tBoxActionState.Text+"요청에 대해 timeout이 발생하였습니다.","");
+            logPrintInTextBox(tBoxActionState.Text+"요청에 대해 timeout이 발생하였습니다.","");
             //MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            //tBoxActionState.Text = states.idle.ToString();
+            tBoxActionState.Text = states.idle.ToString();
 
-            //this.doOpenComPort();
+            this.doOpenComPort();
         }
 
         // menubar에서 LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
         private void ProvisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(tSStatusLblLTE.Text == "registered")
+            if (isDeviceInfo())
             {
-                if ((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
-                {
-                    this.getDeviveInfo();
-                    this.logPrintInTextBox("모듈 정보를 먼저 읽고 있습니다. 다시 시도해주세요.","");
-                }
-                if (isDeviceInfo())
+                if (tBoxModel.Text == "BG96")       //쿼텔
                 {
                     // LWM2M bootstrap 자동 요청 순서
                     // (servertype) - endpointpame - mbsps - bootstrap
@@ -1152,40 +1562,223 @@ namespace WindowsFormsApp2
                     //AT+QLWM2M="select",2
                     this.sendDataOut(commands["setservertype"]);
                     tBoxActionState.Text = states.setservertype.ToString();
-
-                    timer1.Start();
                 }
+                else if(tBoxModel.Text == "TPB23")
+                {
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                    // LWM2M 서버 설정
+                    // AT+NCDP=IP,PORT
+                    this.sendDataOut(commands["setncdp"] + "\"" + serverip + "\"," + serverport);
+                    tBoxActionState.Text = states.setncdp.ToString();
+                }
+                else            //일반(U+ command)
+                {
+                    // LWM2M bootstrap 자동 요청 순서
+                    // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                    // LWM2M 서버 설정
+                    // AT+NCDP=IP,PORT
+                    this.sendDataOut(commands["setncdp"] + serverip + "," + serverport);
+                    tBoxActionState.Text = states.setncdp.ToString();
+                }
+                timer1.Start();
             }
-            else
+        }
+
+        // Hash an input string and return the hash as
+        // a 32 character hexadecimal string.
+        static string getMd5Hash(string input)
+        {
+            // Create a new instance of the MD5CryptoServiceProvider object.
+            MD5 md5Hasher = MD5.Create();
+
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+                       
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+                       
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
             {
-                logPrintInTextBox("LTE 망에 연결되지 않았습니다.", "");
+                sBuilder.Append(data[i].ToString("x2"));
             }
+                       
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
         }
 
         private bool isDeviceInfo()
         {
-            if((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
+            if (tSStatusLblLTE.Text == "registered")
             {
-                this.getDeviveInfo();
-                MessageBox.Show("모듈 정보를 읽고 있습니다.\n다시 시도해주세요.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;  
+                if ((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
+                {
+                    if(tBoxModel.Text == "알 수 없음")
+                    {
+                        this.getDeviveInfo();
+                        MessageBox.Show("모듈 정보를 읽고 있습니다.\n다시 시도해주세요.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show("USIM 상태 확인이 필요합니다.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    return false;
+                }
+                return true;
             }
 
-            return true;
+            logPrintInTextBox("LTE 망에 연결되지 않았습니다.", "");
+            return false;
         }
 
+        private void DevserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "개발";
+        }
+
+        private void CvsserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "검증";
+        }
+
+        private void OpserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "상용";
+        }
+
+        private void CBoxSERVER_TextChanged(object sender, EventArgs e)
+        {
+            if(cBoxSERVER.Text == "개발")
+            {
+                serverip = "106.103.233.155";
+            }
+            else if (cBoxSERVER.Text == "검증")
+            {
+                serverip = "106.103.230.51";
+            }
+            else if (cBoxSERVER.Text == "상용")
+            {
+                serverip = "106.103.250.108";
+            }
+            serverport = "5783";
+
+            setLwm2mServer();
+        }
 
         private void setLwm2mServer()
         {
-            // 플랫폼 서버의 IP/port 설정
-            //AT+QLWM2M="cdp",<ip>,<port>
-            this.sendDataOut(commands["setserverinfo"] + serverip + "," + serverport);
-            tBoxActionState.Text = states.setserverinfo.ToString();
+            if (isDeviceInfo())
+            {
+                // 플랫폼 서버의 IP/port 설정
+                if (tBoxModel.Text == "BG96")
+                {
+                    //AT+QLWM2M="cdp",<ip>,<port>
+                    this.sendDataOut(commands["setserverinfo"] + "\"" + serverip + "\"," + serverport);
+                }
+                else if(tBoxModel.Text == "TPB23")
+                {
+                    //AT+NCDP=<ip>   TPB23모델
+                    this.sendDataOut(commands["setserverinfotpb23"] + "\"" + serverip + "\"," + serverport);
+                }
+                else
+                {
+                    //AT+NCDP=<ip>   TPB23모델
+                    this.sendDataOut(commands["setserverinfotpb23"] + serverip + "," + serverport);
+                }
+                tBoxActionState.Text = states.setserverinfo.ToString();
 
-            timer1.Start();
+                timer1.Start();
+            }
         }
 
- 
+        private void RegisterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                if (tBoxModel.Text == "BG96")
+                {
+                    // 플랫폼 등록 요청
+                    //AT+QLWM2M="register"
+                    this.sendDataOut(commands["register"]);
+                    tBoxActionState.Text = states.register.ToString();
+                }
+                else
+                {
+                    // 플랫폼 등록 요청
+                    //AT+MLWSREGIND=0
+                    this.sendDataOut(commands["registertpb23"]);
+                    tBoxActionState.Text = states.registertpb23.ToString();
+                }
+            }
+        }
+
+        private void DeregisterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+
+                if (tBoxModel.Text == "BG96")
+                {
+                    // 플랫폼 등록해제 요청
+                    //AT+QLWM2M="deregister"
+                    this.sendDataOut(commands["deregister"]);
+                    tBoxActionState.Text = states.deregister.ToString();
+                }
+                else
+                {
+                    // 플랫폼 등록 요청
+                    //AT+MLWSREGIND=1
+                    this.sendDataOut(commands["deregistertpb23"]);
+                    tBoxActionState.Text = states.deregistertpb23.ToString();
+                }
+            }
+        }
+
+        private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(tBoxModel.Text == "BG96")
+            {
+                // 플랫폼 정보 삭제 요청
+                //AT+QLWM2M="reset"
+                this.sendDataOut(commands["lwm2mreset"]);
+                tBoxActionState.Text = states.lwm2mreset.ToString();
+            }
+        }
+
+        private void CBoxAutoBS_CheckedChanged(object sender, EventArgs e)
+        {
+            if(tBoxModel.Text == "BG96")
+            {
+                if (cBoxAutoBS.Checked)
+                {
+                    // Auto BS & Registration 설정
+                    //AT+QLWM2M="enable",0 or 1
+                    this.sendDataOut(commands["setAutoBS"] + "1");
+                    tBoxActionState.Text = states.setAutoBS.ToString();
+                }
+                else
+                {
+                    // Auto BS & Registration 설정
+                    //AT+QLWM2M="enable",0 or 1
+                    this.sendDataOut(commands["setAutoBS"] + "0");
+                    tBoxActionState.Text = states.setAutoBS.ToString();
+                }
+            }
+        }
+
+        private void EnableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxAutoBS.Checked = true;
+        }
+
+        private void DisableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxAutoBS.Checked = false;
+        }
+
         private void TBoxDataIN_TextChanged(object sender, EventArgs e)
         {
             if(RxDispOrder == "BOTTOM")
@@ -1197,29 +1790,61 @@ namespace WindowsFormsApp2
 
         private void BtnSendData_Click(object sender, EventArgs e)
         {
-            string mqttstate = tSStatusLblMQTT.Text;
-            if ((mqttstate == "subscribe") || (mqttstate == "connect") || (mqttstate == "unsubscribe"))
+            //입력 Text값을 플랫폼 서버로 전송
+            sendDataToServer(tBoxDataOut.Text);
+        }
+
+        private void TBoxDataOut_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
             {
-                //온도와 습도 입력 Text값을 JSON 형태로 플랫폼 서버로 전송
-                InSensors inSensors = new InSensors();
-                inSensors.Temperature = tBoxDataTemp.Text;
-                inSensors.Humidity = tBoxDataHumi.Text;
-                string text = JsonConvert.SerializeObject(inSensors);
-                logPrintInTextBox(text, "");
-
-                string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
-
-                // Data send to SERVER (string original)
-                this.sendDataOut(commands["mqttpub"] + tBoxMqttTopic.Text + "\"," + base64.Length);
-                tBoxActionState.Text = states.mqttpub.ToString();
-
-                MQTT_Msg = base64;
-
-                timer1.Start();
+                //입력 Text값을 플랫폼 서버로 전송
+                this.sendDataToServer(tBoxDataOut.Text);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
-            else
+        }
+
+        private void sendDataToServer(string text)
+        {
+            if (isDeviceInfo())
             {
-                logPrintInTextBox("MQTT 서버 연결 상태를 확인하시고 재시도하세요.", "");
+
+                if (tBoxModel.Text == "BG96")
+                {
+                    if (cBoxSendHex.Checked == false)
+                    {
+                        // Data send to SERVER (string original)
+                        //AT+QLWM2M="uldata",<object>,<length>,<data>
+                        this.sendDataOut(commands["sendmsgstr"] + text.Length + ",\"" + text + "\"");
+                        tBoxActionState.Text = states.sendmsgstr.ToString();
+
+                        timer1.Start();
+                    }
+                    else
+                    {
+                        // Data send to SERVER (string to BCD convert)
+                        //AT+QLWM2M="ulhex",<object>,<length>,<data>
+
+                        string hexOutput = StringToBCD(text.ToCharArray());
+
+                        this.sendDataOut(commands["sendmsghex"] + hexOutput.Length / 2 + ",\"" + hexOutput + "\"");
+                        tBoxActionState.Text = states.sendmsghex.ToString();
+
+                        timer1.Start();
+                    }
+                }
+                else
+                {
+                    // Data send to SERVER (string original)
+                    //AT+MLWULDATA=<length>,<data>
+                    string hexOutput = StringToBCD(text.ToCharArray());
+
+                    this.sendDataOut(commands["sendmsgstrtpb23"] + hexOutput.Length / 2 + "," + hexOutput);
+                    tBoxActionState.Text = states.sendmsgstr.ToString();
+
+                    timer1.Start();
+                }
             }
         }
 
@@ -1260,7 +1885,7 @@ namespace WindowsFormsApp2
             {
                 string pathname = @"c:\temp\seriallog\";
                 DateTime currenttime = DateTime.Now;
-                string filename = "mqtt_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                string filename = "lwm2m_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
 
                 Directory.CreateDirectory(pathname);
 
@@ -1289,121 +1914,106 @@ namespace WindowsFormsApp2
         {
             timer2.Stop();
 
-            if (network_chkcnt-- > 0)
+            if(tBoxActionState.Text=="booting")
             {
-                this.sendDataOut(commands["getcereg"]);
-                tBoxActionState.Text = states.getcereg.ToString();
-
-                timer1.Start();
-                logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
+                getDeviveInfo();
+                timer2.Interval = 10000;        // 10초 타이머로 동작
             }
             else
             {
-                this.sendDataOut(commands["reset"]);
-                tBoxActionState.Text = states.reset.ToString();
+                if (network_chkcnt-- > 0)
+                {
+                    this.sendDataOut(commands["getcereg"]);
+                    tBoxActionState.Text = states.getcereg.ToString();
+
+                    timer1.Start();
+                    logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
+                }
+                else
+                {
+                    this.sendDataOut(commands["reset"]);
+                    tBoxActionState.Text = states.reset.ToString();
+
+                    timer1.Start();
+                    logPrintInTextBox("3회 가 over하여 모듈을 reset합니다.", "");
+                }
+            }
+        }
+
+        private void 단말버전전송ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
+        private void Button6_Click(object sender, EventArgs e)
+        {
+                DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
+        private void DeviceFWVerSend(string ver, string state, string result)
+        {
+            // Device firmware 버전 등록 전문 예 : fwVr=1.0|fwSt=1|fwRt=0
+            // fwVr ={ VERSION}| fwSt ={ STATUS}| fwRt ={ RESULT_CODE}(|fwIn={index})(|szx={buffersize})
+            // fwVr: 현재 Device Firmware 버전
+            // fwSt: Firmware Status
+            //      1: Success
+            //      2: Progress
+            //      3: Failure
+            // fwRt : Firmware Update 결과(OMA Spec 과 같은 값 사용)
+            //      0: Initial value.
+            //      1: Firmware updated successfully
+            //      2: Not enough flash memory
+            //      3: Out of RAM during downloading process.
+            //      4: Connection lost during downloading process.
+            //      5: Integrity check failure
+            //      6: Unsupported package type.
+            //      8: Firmware update failed
+            //  fwIn : 단말에서 문제가 발생 하여 특정 Index부터 다시 받고 싶을 때 사용
+            //      만약 fwSt 가 2(Progress)이면서 fwIn 에 특정 Index 를 보내면
+            //      기존에 upload Process 는 중지 하고 해당 Index 부터 다시 Upload 시작 함
+            //      fwSt 가 2 가 아닐 경우, fwIn 값이 없거나 0 보다 작을 경우 이어 받기 동작하지 않음
+            //      fwIn 의 값이 전체 Index 보다 클 경우 이전 내려받기는 취소 되고 에러 처리 됨
+            // szx : FOTA buffer size (1:32, 2:64, 3:128, 4:256, 5:512(default), 6:1024 
+
+            string text = "fwVr=" + ver + "|fwSt=" + state + "|fwRt=" + result;
+
+            if (state=="2")
+            {
+                text += "|fwIn=" + Convert.ToString(device_fota_index);
+            }
+
+            if(cBoxFOTASize.Checked == true)
+            {
+                text += "|szx=6";       // FOTA buffer size set 1024bytes.
+            }
+
+            if (tBoxModel.Text == "BG96")
+            {
+                // Data send to SERVER (string to BCD convert)
+                //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
+
+                this.sendDataOut(commands["sendmsgver"] + text.Length + ",\"" + text + "\"");
+                tBoxActionState.Text = states.sendmsgver.ToString();
 
                 timer1.Start();
-                logPrintInTextBox("3회 가 over하여 모듈을 reset합니다.", "");
-            }
-        }
-
-        private void MQTTStartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MqttServerOpen(states.mqttopen.ToString());
-        }
-
-        private void MqttServerOpen(string cmd)
-        {
-            this.sendDataOut(commands[cmd] + tBoxSVCIP.Text + "\"," + tBoxSVCPort.Text);
-            tBoxActionState.Text = cmd;
-            timer1.Start();
-        }
-
-        private void MQTTToolStripMenuConnect_Click(object sender, EventArgs e)
-        {
-            MqttServerConnect(states.mqttconn.ToString());
-        }
-
-        private void MqttServerConnect(string cmd)
-        {
-            this.sendDataOut(commands[cmd] + tBoxDeviceID.Text + "\"");
-            tBoxActionState.Text = cmd;
-            timer1.Start();
-        }
-
-        private void MQTTToolStripMenuSubscribe_Click(object sender, EventArgs e)
-        {
-            MqttSubscribe(states.mqttsub.ToString());
-        }
-
-        private void MqttSubscribe(string cmd)
-        {
-            this.sendDataOut(commands[cmd] + tBoxMqttTopic.Text + "\",0");
-            tBoxActionState.Text = cmd;
-            timer1.Start();
-        }
-
-        private void MQTTToolStripMenuItemUnsubcribe_Click(object sender, EventArgs e)
-        {
-            MqttUnSubscribe(states.mqttunsub.ToString());
-        }
-
-        private void MqttUnSubscribe(string cmd)
-        {
-            this.sendDataOut(commands[cmd] + tBoxMqttTopic.Text + "\"");
-            tBoxActionState.Text = cmd;
-            timer1.Start();
-        }
-
-        private void MQTTToolStripMenuDisconn_Click(object sender, EventArgs e)
-        {
-            MqttServerDisconn(states.mqttdisconn.ToString());
-        }
-
-        private void MqttServerDisconn(string cmd)
-        {
-            this.sendDataOut(commands[cmd]);          // Diconnect가 성공하면 Close도 동시에 됨
-            tBoxActionState.Text = cmd;
-            timer1.Start();
-        }
-
-        private void MQTTToolStripMenuClose_Click(object sender, EventArgs e)
-        {
-            this.sendDataOut(commands["mqttclose"]);
-            tBoxActionState.Text = states.mqttclose.ToString();
-            timer1.Start();
-        }
-
-        private void BtnMqttSocketOpen_Click(object sender, EventArgs e)
-        {
-            if (tSStatusLblMQTT.Text == "disconnect")
-            {
-                // MQTT 서버 자동 연결 요청시
-                // automqttopen -> automqttconn -> mqttsub
-                MqttServerOpen(states.automqttopen.ToString());
-            }
-            else if (tSStatusLblMQTT.Text == "open")
-            {
-                // MQTT 서버 자동 연결 요청시
-                // (automqttopen) -> (automqttconn) -> mqttsub
-                MqttServerConnect(states.automqttconn.ToString());
-            }
-            else if (tSStatusLblMQTT.Text == "connect")
-            {
-                // MQTT 서버 자동 연결 요청시
-                // automqttopen -> (automqttconn) -> (mqttsub)
-                MqttSubscribe(states.mqttsub.ToString());
-            }
-            else if (tSStatusLblMQTT.Text == "subscribe")
-            {
-                // MQTT 서버 자동 연결 해제 요청시
-                // automqttunsub -> mqttdisconn
-                MqttUnSubscribe(states.automqttunsub.ToString());
             }
             else
             {
-                MqttServerDisconn(states.mqttdisconn.ToString());
+                // Data send to SERVER (string original)
+                //AT+MLWULDATA=<length>,<data>
+                string hexOutput = StringToBCD(text.ToCharArray());
+
+                this.sendDataOut(commands["sendmsgvertpb23"] + hexOutput.Length / 2 + "," + hexOutput);
+                tBoxActionState.Text = states.sendmsgvertpb23.ToString();
+
+                timer1.Start();
             }
+        }
+
+        private void BtnFOTAConti_Click(object sender, EventArgs e)
+        {
+            device_fota_index = Convert.ToInt32(tBoxFOTAIndex.Text);
+            DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
         }
     }
 }

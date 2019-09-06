@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LGUMQTT.Properties {
+namespace LGUoneM2M.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

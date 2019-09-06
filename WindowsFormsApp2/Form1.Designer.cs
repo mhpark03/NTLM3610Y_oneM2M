@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.chBoxRTSEnable = new System.Windows.Forms.CheckBox();
             this.chBoxDtrEnable = new System.Windows.Forms.CheckBox();
             this.cBoxParityBits = new System.Windows.Forms.ComboBox();
@@ -41,7 +40,7 @@
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.btnSendData = new System.Windows.Forms.Button();
-            this.tBoxDataTemp = new System.Windows.Forms.TextBox();
+            this.tBoxDataOut = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,43 +73,53 @@
             this.rTPControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuRTSDisable = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuRTSEnable = new System.Windows.Forms.ToolStripMenuItem();
-            this.송신ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TRXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.수신창내용지우기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuEndLineNone = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuEndLineBoth = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuEndLineLF = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuEndLineCR = new System.Windows.Forms.ToolStripMenuItem();
-            this.수ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ClearRXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuDown = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuDeviceInfo = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuConnect = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuSubscribe = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuItemUnsubcribe = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuDisconn = new System.Windows.Forms.ToolStripMenuItem();
-            this.mQTTToolStripMenuClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.수신창표시방향ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.위로ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.아래로ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.initinfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deregisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverTSMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.devserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cvsserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.단말버전전송ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.tBoxDataHumi = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tBoxMqttTopic = new System.Windows.Forms.TextBox();
-            this.btnMqttTopic = new System.Windows.Forms.Button();
-            this.tBoxDeviceID = new System.Windows.Forms.TextBox();
+            this.tBoxFOTAIndex = new System.Windows.Forms.TextBox();
+            this.btnFOTAConti = new System.Windows.Forms.Button();
+            this.tBoxDeviceVer = new System.Windows.Forms.TextBox();
+            this.button6 = new System.Windows.Forms.Button();
+            this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
-            this.tBoxSVCPort = new System.Windows.Forms.TextBox();
+            this.tBoxDeviceModel = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
-            this.tBoxSVCIP = new System.Windows.Forms.TextBox();
-            this.btnMqttSocketOpen = new System.Windows.Forms.Button();
+            this.cBoxSERVER = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.tBoxSVCCD = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tBoxIccid = new System.Windows.Forms.TextBox();
             this.btnICCID = new System.Windows.Forms.Button();
             this.tBoxActionState = new System.Windows.Forms.TextBox();
@@ -125,15 +134,18 @@
             this.btnModel = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cBoxFOTASize = new System.Windows.Forms.CheckBox();
+            this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
             this.cBoxLogSave = new System.Windows.Forms.CheckBox();
+            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSStatusLblLTE = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSProgressLTE = new System.Windows.Forms.ToolStripProgressBar();
             this.tSStatusLblLWM2M1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSStatusLblMQTT = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSProgressMQTT = new System.Windows.Forms.ToolStripProgressBar();
+            this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -229,7 +241,7 @@
             this.cBoxBaudRate.Name = "cBoxBaudRate";
             this.cBoxBaudRate.Size = new System.Drawing.Size(70, 20);
             this.cBoxBaudRate.TabIndex = 2;
-            this.cBoxBaudRate.Text = "115200";
+            this.cBoxBaudRate.Text = "9600";
             // 
             // cBoxCOMPORT
             // 
@@ -260,13 +272,13 @@
             // 
             this.tBoxDataIN.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBoxDataIN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tBoxDataIN.Location = new System.Drawing.Point(3, 69);
+            this.tBoxDataIN.Location = new System.Drawing.Point(3, 48);
             this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataIN.Multiline = true;
             this.tBoxDataIN.Name = "tBoxDataIN";
             this.tBoxDataIN.ReadOnly = true;
             this.tBoxDataIN.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tBoxDataIN.Size = new System.Drawing.Size(460, 212);
+            this.tBoxDataIN.Size = new System.Drawing.Size(460, 233);
             this.tBoxDataIN.TabIndex = 6;
             this.tBoxDataIN.TextChanged += new System.EventHandler(this.TBoxDataIN_TextChanged);
             // 
@@ -276,21 +288,21 @@
             this.btnSendData.Location = new System.Drawing.Point(378, 0);
             this.btnSendData.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnSendData.Name = "btnSendData";
-            this.btnSendData.Size = new System.Drawing.Size(82, 51);
+            this.btnSendData.Size = new System.Drawing.Size(82, 22);
             this.btnSendData.TabIndex = 2;
-            this.btnSendData.Text = "PUBLISH";
+            this.btnSendData.Text = "서버전송";
             this.btnSendData.UseVisualStyleBackColor = true;
             this.btnSendData.Click += new System.EventHandler(this.BtnSendData_Click);
             // 
-            // tBoxDataTemp
+            // tBoxDataOut
             // 
-            this.tBoxDataTemp.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tBoxDataTemp.Location = new System.Drawing.Point(0, 0);
-            this.tBoxDataTemp.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.tBoxDataTemp.Name = "tBoxDataTemp";
-            this.tBoxDataTemp.Size = new System.Drawing.Size(378, 21);
-            this.tBoxDataTemp.TabIndex = 3;
-            this.tBoxDataTemp.Text = "30 도";
+            this.tBoxDataOut.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tBoxDataOut.Location = new System.Drawing.Point(0, 0);
+            this.tBoxDataOut.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.tBoxDataOut.Name = "tBoxDataOut";
+            this.tBoxDataOut.Size = new System.Drawing.Size(378, 21);
+            this.tBoxDataOut.TabIndex = 3;
+            this.tBoxDataOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TBoxDataOut_KeyDown);
             // 
             // menuStrip1
             // 
@@ -299,14 +311,13 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.COMCTRLToolStripMenuItem,
-            this.송신ToolStripMenuItem,
-            this.수ToolStripMenuItem,
-            this.mQTTToolStripMenuItem,
+            this.TRXToolStripMenuItem,
+            this.testToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(733, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(732, 24);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -555,13 +566,30 @@
             this.tSMenuRTSEnable.Text = "Enable";
             this.tSMenuRTSEnable.Click += new System.EventHandler(this.TSMenuRTSEnable_Click);
             // 
-            // 송신ToolStripMenuItem
+            // TRXToolStripMenuItem
             // 
-            this.송신ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.writeToolStripMenuItem});
-            this.송신ToolStripMenuItem.Name = "송신ToolStripMenuItem";
-            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.송신ToolStripMenuItem.Text = "송신";
+            this.TRXToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ClearToolStripMenuItem,
+            this.수신창내용지우기ToolStripMenuItem,
+            this.writeToolStripMenuItem,
+            this.수신창표시방향ToolStripMenuItem});
+            this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
+            this.TRXToolStripMenuItem.Text = "송수신창";
+            // 
+            // ClearToolStripMenuItem
+            // 
+            this.ClearToolStripMenuItem.Name = "ClearToolStripMenuItem";
+            this.ClearToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.ClearToolStripMenuItem.Text = "송신창 내용 지우기";
+            this.ClearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
+            // 
+            // 수신창내용지우기ToolStripMenuItem
+            // 
+            this.수신창내용지우기ToolStripMenuItem.Name = "수신창내용지우기ToolStripMenuItem";
+            this.수신창내용지우기ToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.수신창내용지우기ToolStripMenuItem.Text = "수신창 내용 지우기";
+            this.수신창내용지우기ToolStripMenuItem.Click += new System.EventHandler(this.ClearRXToolStripMenuItem_Click);
             // 
             // writeToolStripMenuItem
             // 
@@ -571,8 +599,8 @@
             this.tSMenuEndLineLF,
             this.tSMenuEndLineCR});
             this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
-            this.writeToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.writeToolStripMenuItem.Text = "End Line";
+            this.writeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.writeToolStripMenuItem.Text = "자동 전송 문자(LF/CR)";
             // 
             // tSMenuEndLineNone
             // 
@@ -602,107 +630,145 @@
             this.tSMenuEndLineCR.Text = "맨앞줄(CR)";
             this.tSMenuEndLineCR.Click += new System.EventHandler(this.TSMenuEndLineCR_Click);
             // 
-            // 수ToolStripMenuItem
+            // 수신창표시방향ToolStripMenuItem
             // 
-            this.수ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ClearRXToolStripMenuItem,
-            this.CursorToolStripMenuItem});
-            this.수ToolStripMenuItem.Name = "수ToolStripMenuItem";
-            this.수ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.수ToolStripMenuItem.Text = "수신";
+            this.수신창표시방향ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.위로ToolStripMenuItem,
+            this.아래로ToolStripMenuItem});
+            this.수신창표시방향ToolStripMenuItem.Name = "수신창표시방향ToolStripMenuItem";
+            this.수신창표시방향ToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.수신창표시방향ToolStripMenuItem.Text = "수신창 표시 방향";
             // 
-            // ClearRXToolStripMenuItem
+            // 위로ToolStripMenuItem
             // 
-            this.ClearRXToolStripMenuItem.Name = "ClearRXToolStripMenuItem";
-            this.ClearRXToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.ClearRXToolStripMenuItem.Text = "내용 지우기";
-            this.ClearRXToolStripMenuItem.Click += new System.EventHandler(this.ClearRXToolStripMenuItem_Click);
+            this.위로ToolStripMenuItem.Name = "위로ToolStripMenuItem";
+            this.위로ToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.위로ToolStripMenuItem.Text = "위로";
+            this.위로ToolStripMenuItem.Click += new System.EventHandler(this.TSMenuTop_Click);
             // 
-            // CursorToolStripMenuItem
+            // 아래로ToolStripMenuItem
             // 
-            this.CursorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuTop,
-            this.tSMenuDown});
-            this.CursorToolStripMenuItem.Name = "CursorToolStripMenuItem";
-            this.CursorToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.CursorToolStripMenuItem.Text = "표시위치";
+            this.아래로ToolStripMenuItem.Name = "아래로ToolStripMenuItem";
+            this.아래로ToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.아래로ToolStripMenuItem.Text = "아래로";
+            this.아래로ToolStripMenuItem.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
-            // tSMenuTop
+            // testToolStripMenuItem
             // 
-            this.tSMenuTop.Name = "tSMenuTop";
-            this.tSMenuTop.Size = new System.Drawing.Size(123, 22);
-            this.tSMenuTop.Text = "위로";
-            this.tSMenuTop.Click += new System.EventHandler(this.TSMenuTop_Click);
+            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.initinfoToolStripMenuItem,
+            this.provisionToolStripMenuItem,
+            this.registerToolStripMenuItem,
+            this.deregisterToolStripMenuItem,
+            this.resetToolStripMenuItem,
+            this.autobsToolStripMenuItem,
+            this.serverTSMenu,
+            this.단말버전전송ToolStripMenuItem});
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.testToolStripMenuItem.Text = "LWM2M";
             // 
-            // tSMenuDown
+            // initinfoToolStripMenuItem
             // 
-            this.tSMenuDown.Name = "tSMenuDown";
-            this.tSMenuDown.Size = new System.Drawing.Size(123, 22);
-            this.tSMenuDown.Text = "아래로";
-            this.tSMenuDown.Click += new System.EventHandler(this.TSMenuDown_Click);
+            this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
+            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.initinfoToolStripMenuItem.Text = "단말정보 ";
+            this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuItem
+            // provisionToolStripMenuItem
             // 
-            this.mQTTToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mQTTToolStripMenuDeviceInfo,
-            this.mQTTToolStripMenuOpen,
-            this.mQTTToolStripMenuConnect,
-            this.mQTTToolStripMenuSubscribe,
-            this.mQTTToolStripMenuItemUnsubcribe,
-            this.mQTTToolStripMenuDisconn,
-            this.mQTTToolStripMenuClose});
-            this.mQTTToolStripMenuItem.Name = "mQTTToolStripMenuItem";
-            this.mQTTToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.mQTTToolStripMenuItem.Text = "oneM2M";
+            this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.provisionToolStripMenuItem.Text = "서버설정(BOOTSTRAP)";
+            this.provisionToolStripMenuItem.Click += new System.EventHandler(this.ProvisionToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuDeviceInfo
+            // registerToolStripMenuItem
             // 
-            this.mQTTToolStripMenuDeviceInfo.Name = "mQTTToolStripMenuDeviceInfo";
-            this.mQTTToolStripMenuDeviceInfo.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuDeviceInfo.Text = "기기정보읽기";
-            this.mQTTToolStripMenuDeviceInfo.Click += new System.EventHandler(this.MQTTToolStripMenuDeviceInfo_Click);
+            this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.registerToolStripMenuItem.Text = "서버등록(REGISTER)";
+            this.registerToolStripMenuItem.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuOpen
+            // deregisterToolStripMenuItem
             // 
-            this.mQTTToolStripMenuOpen.Name = "mQTTToolStripMenuOpen";
-            this.mQTTToolStripMenuOpen.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuOpen.Text = "소켓 설정";
-            this.mQTTToolStripMenuOpen.Click += new System.EventHandler(this.MQTTStartToolStripMenuItem_Click);
+            this.deregisterToolStripMenuItem.Name = "deregisterToolStripMenuItem";
+            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.deregisterToolStripMenuItem.Text = "서버해제(DEREGISTER)";
+            this.deregisterToolStripMenuItem.Click += new System.EventHandler(this.DeregisterToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuConnect
+            // resetToolStripMenuItem
             // 
-            this.mQTTToolStripMenuConnect.Name = "mQTTToolStripMenuConnect";
-            this.mQTTToolStripMenuConnect.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuConnect.Text = "서버 연결";
-            this.mQTTToolStripMenuConnect.Click += new System.EventHandler(this.MQTTToolStripMenuConnect_Click);
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.resetToolStripMenuItem.Text = "서버정보초기화";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuSubscribe
+            // autobsToolStripMenuItem
             // 
-            this.mQTTToolStripMenuSubscribe.Name = "mQTTToolStripMenuSubscribe";
-            this.mQTTToolStripMenuSubscribe.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuSubscribe.Text = "수신등록(SUB)";
-            this.mQTTToolStripMenuSubscribe.Click += new System.EventHandler(this.MQTTToolStripMenuSubscribe_Click);
+            this.autobsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enableToolStripMenuItem,
+            this.disableToolStripMenuItem});
+            this.autobsToolStripMenuItem.Name = "autobsToolStripMenuItem";
+            this.autobsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.autobsToolStripMenuItem.Text = "자동 실행 설정(AutoBS)";
             // 
-            // mQTTToolStripMenuItemUnsubcribe
+            // enableToolStripMenuItem
             // 
-            this.mQTTToolStripMenuItemUnsubcribe.Name = "mQTTToolStripMenuItemUnsubcribe";
-            this.mQTTToolStripMenuItemUnsubcribe.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuItemUnsubcribe.Text = "수신해제(SUB)";
-            this.mQTTToolStripMenuItemUnsubcribe.Click += new System.EventHandler(this.MQTTToolStripMenuItemUnsubcribe_Click);
+            this.enableToolStripMenuItem.Name = "enableToolStripMenuItem";
+            this.enableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.enableToolStripMenuItem.Text = "Enable";
+            this.enableToolStripMenuItem.Click += new System.EventHandler(this.EnableToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuDisconn
+            // disableToolStripMenuItem
             // 
-            this.mQTTToolStripMenuDisconn.Name = "mQTTToolStripMenuDisconn";
-            this.mQTTToolStripMenuDisconn.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuDisconn.Text = "서버 해제";
-            this.mQTTToolStripMenuDisconn.Click += new System.EventHandler(this.MQTTToolStripMenuDisconn_Click);
+            this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.disableToolStripMenuItem.Text = "Disable";
+            this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
             // 
-            // mQTTToolStripMenuClose
+            // serverTSMenu
             // 
-            this.mQTTToolStripMenuClose.Name = "mQTTToolStripMenuClose";
-            this.mQTTToolStripMenuClose.Size = new System.Drawing.Size(180, 22);
-            this.mQTTToolStripMenuClose.Text = "소켓해제";
-            this.mQTTToolStripMenuClose.Click += new System.EventHandler(this.MQTTToolStripMenuClose_Click);
+            this.serverTSMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.devserverToolStripMenuItem,
+            this.cvsserverToolStripMenuItem,
+            this.opserverToolStripMenuItem,
+            this.toolStripMenuItem1});
+            this.serverTSMenu.Name = "serverTSMenu";
+            this.serverTSMenu.Size = new System.Drawing.Size(235, 22);
+            this.serverTSMenu.Text = "대상서버설정";
+            // 
+            // devserverToolStripMenuItem
+            // 
+            this.devserverToolStripMenuItem.Name = "devserverToolStripMenuItem";
+            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.devserverToolStripMenuItem.Text = "개발 서버";
+            this.devserverToolStripMenuItem.Click += new System.EventHandler(this.DevserverToolStripMenuItem_Click);
+            // 
+            // cvsserverToolStripMenuItem
+            // 
+            this.cvsserverToolStripMenuItem.Name = "cvsserverToolStripMenuItem";
+            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.cvsserverToolStripMenuItem.Text = "검증 서버";
+            this.cvsserverToolStripMenuItem.Click += new System.EventHandler(this.CvsserverToolStripMenuItem_Click);
+            // 
+            // opserverToolStripMenuItem
+            // 
+            this.opserverToolStripMenuItem.Name = "opserverToolStripMenuItem";
+            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.opserverToolStripMenuItem.Text = "상용서버";
+            this.opserverToolStripMenuItem.Click += new System.EventHandler(this.OpserverToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            // 
+            // 단말버전전송ToolStripMenuItem
+            // 
+            this.단말버전전송ToolStripMenuItem.Name = "단말버전전송ToolStripMenuItem";
+            this.단말버전전송ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.단말버전전송ToolStripMenuItem.Text = "단말버전전송";
+            this.단말버전전송ToolStripMenuItem.Click += new System.EventHandler(this.단말버전전송ToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -716,7 +782,7 @@
             this.groupBox3.Controls.Add(this.panel3);
             this.groupBox3.Controls.Add(this.tBoxDataIN);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox3.Location = new System.Drawing.Point(3, 40);
+            this.groupBox3.Location = new System.Drawing.Point(3, 72);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -726,24 +792,14 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.tBoxDataHumi);
             this.panel3.Controls.Add(this.btnSendData);
-            this.panel3.Controls.Add(this.tBoxDataTemp);
+            this.panel3.Controls.Add(this.tBoxDataOut);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(3, 16);
             this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(460, 51);
+            this.panel3.Size = new System.Drawing.Size(460, 22);
             this.panel3.TabIndex = 11;
-            // 
-            // tBoxDataHumi
-            // 
-            this.tBoxDataHumi.Location = new System.Drawing.Point(0, 25);
-            this.tBoxDataHumi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tBoxDataHumi.Name = "tBoxDataHumi";
-            this.tBoxDataHumi.Size = new System.Drawing.Size(378, 21);
-            this.tBoxDataHumi.TabIndex = 4;
-            this.tBoxDataHumi.Text = "70 %";
             // 
             // panel1
             // 
@@ -754,7 +810,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(733, 396);
+            this.panel1.Size = new System.Drawing.Size(732, 427);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -763,7 +819,7 @@
             this.groupBox4.Controls.Add(this.groupBox3);
             this.groupBox4.Location = new System.Drawing.Point(225, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(472, 326);
+            this.groupBox4.Size = new System.Drawing.Size(472, 358);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
             // 
@@ -805,14 +861,18 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.tBoxMqttTopic);
-            this.groupBox1.Controls.Add(this.btnMqttTopic);
-            this.groupBox1.Controls.Add(this.tBoxDeviceID);
+            this.groupBox1.Controls.Add(this.tBoxFOTAIndex);
+            this.groupBox1.Controls.Add(this.btnFOTAConti);
+            this.groupBox1.Controls.Add(this.tBoxDeviceVer);
+            this.groupBox1.Controls.Add(this.button6);
+            this.groupBox1.Controls.Add(this.tBoxDeviceSN);
             this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.tBoxSVCPort);
+            this.groupBox1.Controls.Add(this.tBoxDeviceModel);
             this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.tBoxSVCIP);
-            this.groupBox1.Controls.Add(this.btnMqttSocketOpen);
+            this.groupBox1.Controls.Add(this.cBoxSERVER);
+            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.tBoxSVCCD);
+            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.tBoxIccid);
             this.groupBox1.Controls.Add(this.btnICCID);
             this.groupBox1.Controls.Add(this.tBoxActionState);
@@ -829,85 +889,126 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(209, 326);
+            this.groupBox1.Size = new System.Drawing.Size(209, 358);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             // 
-            // tBoxMqttTopic
+            // tBoxFOTAIndex
             // 
-            this.tBoxMqttTopic.Location = new System.Drawing.Point(77, 272);
-            this.tBoxMqttTopic.Name = "tBoxMqttTopic";
-            this.tBoxMqttTopic.Size = new System.Drawing.Size(126, 21);
-            this.tBoxMqttTopic.TabIndex = 25;
-            this.tBoxMqttTopic.Text = "topic/test";
+            this.tBoxFOTAIndex.Location = new System.Drawing.Point(77, 299);
+            this.tBoxFOTAIndex.Name = "tBoxFOTAIndex";
+            this.tBoxFOTAIndex.Size = new System.Drawing.Size(126, 21);
+            this.tBoxFOTAIndex.TabIndex = 27;
+            this.tBoxFOTAIndex.Text = "2";
             // 
-            // btnMqttTopic
+            // btnFOTAConti
             // 
-            this.btnMqttTopic.Enabled = false;
-            this.btnMqttTopic.Location = new System.Drawing.Point(6, 271);
-            this.btnMqttTopic.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMqttTopic.Name = "btnMqttTopic";
-            this.btnMqttTopic.Size = new System.Drawing.Size(66, 24);
-            this.btnMqttTopic.TabIndex = 24;
-            this.btnMqttTopic.Text = "topic";
-            this.btnMqttTopic.UseVisualStyleBackColor = true;
+            this.btnFOTAConti.Location = new System.Drawing.Point(6, 299);
+            this.btnFOTAConti.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnFOTAConti.Name = "btnFOTAConti";
+            this.btnFOTAConti.Size = new System.Drawing.Size(66, 24);
+            this.btnFOTAConti.TabIndex = 26;
+            this.btnFOTAConti.Text = "이어받기";
+            this.btnFOTAConti.UseVisualStyleBackColor = true;
+            this.btnFOTAConti.Click += new System.EventHandler(this.BtnFOTAConti_Click);
             // 
-            // tBoxDeviceID
+            // tBoxDeviceVer
             // 
-            this.tBoxDeviceID.Location = new System.Drawing.Point(77, 242);
-            this.tBoxDeviceID.Name = "tBoxDeviceID";
-            this.tBoxDeviceID.Size = new System.Drawing.Size(126, 21);
-            this.tBoxDeviceID.TabIndex = 23;
-            this.tBoxDeviceID.Text = "450061222990103";
+            this.tBoxDeviceVer.Location = new System.Drawing.Point(77, 271);
+            this.tBoxDeviceVer.Name = "tBoxDeviceVer";
+            this.tBoxDeviceVer.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceVer.TabIndex = 25;
+            this.tBoxDeviceVer.Text = "1.0.0";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(6, 271);
+            this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(66, 24);
+            this.button6.TabIndex = 24;
+            this.button6.Text = "단말버전";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
+            // 
+            // tBoxDeviceSN
+            // 
+            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 242);
+            this.tBoxDeviceSN.Name = "tBoxDeviceSN";
+            this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceSN.TabIndex = 23;
+            this.tBoxDeviceSN.Text = "123456";
             // 
             // button5
             // 
-            this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(6, 242);
             this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(66, 24);
             this.button5.TabIndex = 22;
-            this.button5.Text = "ClientID";
+            this.button5.Text = "단말SN";
             this.button5.UseVisualStyleBackColor = true;
             // 
-            // tBoxSVCPort
+            // tBoxDeviceModel
             // 
-            this.tBoxSVCPort.Location = new System.Drawing.Point(77, 214);
-            this.tBoxSVCPort.Name = "tBoxSVCPort";
-            this.tBoxSVCPort.Size = new System.Drawing.Size(126, 21);
-            this.tBoxSVCPort.TabIndex = 21;
-            this.tBoxSVCPort.Text = "1883";
+            this.tBoxDeviceModel.Location = new System.Drawing.Point(77, 214);
+            this.tBoxDeviceModel.Name = "tBoxDeviceModel";
+            this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceModel.TabIndex = 21;
+            this.tBoxDeviceModel.Text = "LWEMG";
             // 
             // button3
             // 
-            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(6, 214);
             this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(66, 24);
             this.button3.TabIndex = 20;
-            this.button3.Text = "서버포트";
+            this.button3.Text = "단말모델";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // tBoxSVCIP
+            // cBoxSERVER
             // 
-            this.tBoxSVCIP.Location = new System.Drawing.Point(77, 185);
-            this.tBoxSVCIP.Name = "tBoxSVCIP";
-            this.tBoxSVCIP.Size = new System.Drawing.Size(126, 21);
-            this.tBoxSVCIP.TabIndex = 17;
-            this.tBoxSVCIP.Text = "54.180.145.119";
+            this.cBoxSERVER.FormattingEnabled = true;
+            this.cBoxSERVER.Items.AddRange(new object[] {
+            "개발",
+            "검증",
+            "상용",
+            "TEST"});
+            this.cBoxSERVER.Location = new System.Drawing.Point(77, 327);
+            this.cBoxSERVER.Name = "cBoxSERVER";
+            this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
+            this.cBoxSERVER.TabIndex = 19;
+            this.cBoxSERVER.Text = "개발";
+            this.cBoxSERVER.TextChanged += new System.EventHandler(this.CBoxSERVER_TextChanged);
             // 
-            // btnMqttSocketOpen
+            // button2
             // 
-            this.btnMqttSocketOpen.Location = new System.Drawing.Point(6, 185);
-            this.btnMqttSocketOpen.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMqttSocketOpen.Name = "btnMqttSocketOpen";
-            this.btnMqttSocketOpen.Size = new System.Drawing.Size(66, 24);
-            this.btnMqttSocketOpen.TabIndex = 16;
-            this.btnMqttSocketOpen.Text = "서버주소";
-            this.btnMqttSocketOpen.UseVisualStyleBackColor = true;
-            this.btnMqttSocketOpen.Click += new System.EventHandler(this.BtnMqttSocketOpen_Click);
+            this.button2.Location = new System.Drawing.Point(6, 326);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(66, 24);
+            this.button2.TabIndex = 18;
+            this.button2.Text = "서버";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // tBoxSVCCD
+            // 
+            this.tBoxSVCCD.Location = new System.Drawing.Point(77, 185);
+            this.tBoxSVCCD.Name = "tBoxSVCCD";
+            this.tBoxSVCCD.Size = new System.Drawing.Size(126, 21);
+            this.tBoxSVCCD.TabIndex = 17;
+            this.tBoxSVCCD.Text = "FOTA";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 185);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(66, 24);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "SVCCD";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // tBoxIccid
             // 
@@ -985,7 +1086,7 @@
             this.btnIMSI.Name = "btnIMSI";
             this.btnIMSI.Size = new System.Drawing.Size(66, 24);
             this.btnIMSI.TabIndex = 8;
-            this.btnIMSI.Text = "IMSI";
+            this.btnIMSI.Text = "CTN";
             this.btnIMSI.UseVisualStyleBackColor = true;
             this.btnIMSI.Click += new System.EventHandler(this.btnIMSI_Click);
             // 
@@ -1041,24 +1142,54 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 341);
+            this.panel2.Location = new System.Drawing.Point(0, 372);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
-            this.panel2.Size = new System.Drawing.Size(733, 55);
+            this.panel2.Size = new System.Drawing.Size(732, 55);
             this.panel2.TabIndex = 10;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cBoxFOTASize);
+            this.groupBox2.Controls.Add(this.cBoxAutoBS);
             this.groupBox2.Controls.Add(this.cBoxLogSave);
+            this.groupBox2.Controls.Add(this.cBoxSendHex);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(506, 0);
+            this.groupBox2.Location = new System.Drawing.Point(450, 0);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(227, 53);
+            this.groupBox2.Size = new System.Drawing.Size(282, 53);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
+            // 
+            // cBoxFOTASize
+            // 
+            this.cBoxFOTASize.AutoSize = true;
+            this.cBoxFOTASize.Checked = true;
+            this.cBoxFOTASize.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxFOTASize.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxFOTASize.Location = new System.Drawing.Point(206, 12);
+            this.cBoxFOTASize.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cBoxFOTASize.Name = "cBoxFOTASize";
+            this.cBoxFOTASize.Size = new System.Drawing.Size(78, 17);
+            this.cBoxFOTASize.TabIndex = 23;
+            this.cBoxFOTASize.Text = "FOTA SIZE";
+            this.cBoxFOTASize.UseVisualStyleBackColor = true;
+            // 
+            // cBoxAutoBS
+            // 
+            this.cBoxAutoBS.AutoSize = true;
+            this.cBoxAutoBS.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxAutoBS.Location = new System.Drawing.Point(56, 12);
+            this.cBoxAutoBS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cBoxAutoBS.Name = "cBoxAutoBS";
+            this.cBoxAutoBS.Size = new System.Drawing.Size(70, 17);
+            this.cBoxAutoBS.TabIndex = 14;
+            this.cBoxAutoBS.Text = "AUTO BS";
+            this.cBoxAutoBS.UseVisualStyleBackColor = true;
+            this.cBoxAutoBS.CheckedChanged += new System.EventHandler(this.CBoxAutoBS_CheckedChanged);
             // 
             // cBoxLogSave
             // 
@@ -1074,6 +1205,20 @@
             this.cBoxLogSave.Text = "LOG SAVE";
             this.cBoxLogSave.UseVisualStyleBackColor = true;
             // 
+            // cBoxSendHex
+            // 
+            this.cBoxSendHex.AutoSize = true;
+            this.cBoxSendHex.Checked = true;
+            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
+            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cBoxSendHex.Name = "cBoxSendHex";
+            this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
+            this.cBoxSendHex.TabIndex = 15;
+            this.cBoxSendHex.Text = "HEX";
+            this.cBoxSendHex.UseVisualStyleBackColor = true;
+            // 
             // timer1
             // 
             this.timer1.Interval = 10000;
@@ -1087,11 +1232,11 @@
             this.tSStatusLblLTE,
             this.tSProgressLTE,
             this.tSStatusLblLWM2M1,
-            this.tSStatusLblMQTT,
-            this.tSProgressMQTT});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
+            this.tSStatusLblLWM2M,
+            this.tSProgressLwm2m});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 429);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(733, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(732, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -1115,19 +1260,19 @@
             // tSStatusLblLWM2M1
             // 
             this.tSStatusLblLWM2M1.Name = "tSStatusLblLWM2M1";
-            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(115, 17);
-            this.tSStatusLblLWM2M1.Text = "     oneM2M 통신 : ";
+            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(112, 17);
+            this.tSStatusLblLWM2M1.Text = "     LWM2M 통신 : ";
             // 
-            // tSStatusLblMQTT
+            // tSStatusLblLWM2M
             // 
-            this.tSStatusLblMQTT.Name = "tSStatusLblMQTT";
-            this.tSStatusLblMQTT.Size = new System.Drawing.Size(65, 17);
-            this.tSStatusLblMQTT.Text = "disconnect";
+            this.tSStatusLblLWM2M.Name = "tSStatusLblLWM2M";
+            this.tSStatusLblLWM2M.Size = new System.Drawing.Size(65, 17);
+            this.tSStatusLblLWM2M.Text = "disconnect";
             // 
-            // tSProgressMQTT
+            // tSProgressLwm2m
             // 
-            this.tSProgressMQTT.Name = "tSProgressMQTT";
-            this.tSProgressMQTT.Size = new System.Drawing.Size(150, 16);
+            this.tSProgressLwm2m.Name = "tSProgressLwm2m";
+            this.tSProgressLwm2m.Size = new System.Drawing.Size(150, 16);
             // 
             // timer2
             // 
@@ -1138,18 +1283,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 420);
+            this.ClientSize = new System.Drawing.Size(732, 451);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MaximumSize = new System.Drawing.Size(1920, 1074);
+            this.MaximumSize = new System.Drawing.Size(1920, 1076);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(748, 450);
+            this.MinimumSize = new System.Drawing.Size(748, 452);
             this.Name = "Form1";
-            this.Text = "LGU+ oneM2M ATcommand";
+            this.Text = "LGU+ ATcommand TEST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
@@ -1185,22 +1329,20 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox tBoxDataIN;
         private System.Windows.Forms.Button btnSendData;
-        private System.Windows.Forms.TextBox tBoxDataTemp;
+        private System.Windows.Forms.TextBox tBoxDataOut;
         private System.Windows.Forms.CheckBox chBoxRTSEnable;
         private System.Windows.Forms.CheckBox chBoxDtrEnable;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem COMCTRLToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 송신ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 수ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TRXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CloseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ClearRXToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ClearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ToolStripMenuItem CursorToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -1237,8 +1379,6 @@
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineBoth;
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineLF;
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineCR;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuTop;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuDown;
         private System.Windows.Forms.TextBox tBoxActionState;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox tBoxIMEI;
@@ -1250,37 +1390,54 @@
         private System.Windows.Forms.TextBox tBoxModel;
         private System.Windows.Forms.TextBox tBoxIccid;
         private System.Windows.Forms.Button btnICCID;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem initinfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem provisionToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TextBox tBoxSVCIP;
-        private System.Windows.Forms.Button btnMqttSocketOpen;
-        private System.Windows.Forms.TextBox tBoxSVCPort;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox tBoxSVCCD;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox cBoxAutoBS;
+        private System.Windows.Forms.ComboBox cBoxSERVER;
+        private System.Windows.Forms.ToolStripMenuItem registerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autobsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deregisterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serverTSMenu;
+        private System.Windows.Forms.ToolStripMenuItem devserverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cvsserverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opserverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.TextBox tBoxDeviceModel;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnATCMD;
+        private System.Windows.Forms.CheckBox cBoxSendHex;
         private System.Windows.Forms.CheckBox cBoxLogSave;
         private System.Windows.Forms.ComboBox cBoxATCMD;
-        private System.Windows.Forms.TextBox tBoxDeviceID;
+        private System.Windows.Forms.TextBox tBoxDeviceSN;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TextBox tBoxMqttTopic;
-        private System.Windows.Forms.Button btnMqttTopic;
+        private System.Windows.Forms.TextBox tBoxDeviceVer;
+        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLTE;
         private System.Windows.Forms.ToolStripProgressBar tSProgressLTE;
-        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblMQTT;
+        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M1;
-        private System.Windows.Forms.ToolStripProgressBar tSProgressMQTT;
+        private System.Windows.Forms.ToolStripProgressBar tSProgressLwm2m;
         private System.Windows.Forms.Timer timer2;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuOpen;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuConnect;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuSubscribe;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuItemUnsubcribe;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuDisconn;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuClose;
-        private System.Windows.Forms.ToolStripMenuItem mQTTToolStripMenuDeviceInfo;
-        private System.Windows.Forms.TextBox tBoxDataHumi;
+        private System.Windows.Forms.ToolStripMenuItem 수신창내용지우기ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 수신창표시방향ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 위로ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 아래로ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 단말버전전송ToolStripMenuItem;
+        private System.Windows.Forms.CheckBox cBoxFOTASize;
+        private System.Windows.Forms.TextBox tBoxFOTAIndex;
+        private System.Windows.Forms.Button btnFOTAConti;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 
