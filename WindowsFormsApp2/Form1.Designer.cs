@@ -90,9 +90,6 @@
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deregisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverTSMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.devserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cvsserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -241,7 +238,7 @@
             this.cBoxBaudRate.Name = "cBoxBaudRate";
             this.cBoxBaudRate.Size = new System.Drawing.Size(70, 20);
             this.cBoxBaudRate.TabIndex = 2;
-            this.cBoxBaudRate.Text = "9600";
+            this.cBoxBaudRate.Text = "115200";
             // 
             // cBoxCOMPORT
             // 
@@ -661,70 +658,46 @@
             this.registerToolStripMenuItem,
             this.deregisterToolStripMenuItem,
             this.resetToolStripMenuItem,
-            this.autobsToolStripMenuItem,
             this.serverTSMenu,
             this.단말버전전송ToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.testToolStripMenuItem.Text = "LWM2M";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.testToolStripMenuItem.Text = "oneM2M";
             // 
             // initinfoToolStripMenuItem
             // 
             this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
-            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.initinfoToolStripMenuItem.Text = "단말정보 ";
             this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
             // provisionToolStripMenuItem
             // 
             this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
-            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.provisionToolStripMenuItem.Text = "서버설정(BOOTSTRAP)";
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.provisionToolStripMenuItem.Text = "서버설정(MEF_AUTH)";
             this.provisionToolStripMenuItem.Click += new System.EventHandler(this.ProvisionToolStripMenuItem_Click);
             // 
             // registerToolStripMenuItem
             // 
             this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
-            this.registerToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.registerToolStripMenuItem.Text = "서버등록(REGISTER)";
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.registerToolStripMenuItem.Text = "서버등록(remoteCSE)";
             this.registerToolStripMenuItem.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
             // 
             // deregisterToolStripMenuItem
             // 
             this.deregisterToolStripMenuItem.Name = "deregisterToolStripMenuItem";
-            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.deregisterToolStripMenuItem.Text = "서버해제(DEREGISTER)";
             this.deregisterToolStripMenuItem.Click += new System.EventHandler(this.DeregisterToolStripMenuItem_Click);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.resetToolStripMenuItem.Text = "서버정보초기화";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItem_Click);
-            // 
-            // autobsToolStripMenuItem
-            // 
-            this.autobsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.enableToolStripMenuItem,
-            this.disableToolStripMenuItem});
-            this.autobsToolStripMenuItem.Name = "autobsToolStripMenuItem";
-            this.autobsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.autobsToolStripMenuItem.Text = "자동 실행 설정(AutoBS)";
-            // 
-            // enableToolStripMenuItem
-            // 
-            this.enableToolStripMenuItem.Name = "enableToolStripMenuItem";
-            this.enableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.enableToolStripMenuItem.Text = "Enable";
-            this.enableToolStripMenuItem.Click += new System.EventHandler(this.EnableToolStripMenuItem_Click);
-            // 
-            // disableToolStripMenuItem
-            // 
-            this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.disableToolStripMenuItem.Text = "Disable";
-            this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
             // 
             // serverTSMenu
             // 
@@ -734,7 +707,7 @@
             this.opserverToolStripMenuItem,
             this.toolStripMenuItem1});
             this.serverTSMenu.Name = "serverTSMenu";
-            this.serverTSMenu.Size = new System.Drawing.Size(235, 22);
+            this.serverTSMenu.Size = new System.Drawing.Size(221, 22);
             this.serverTSMenu.Text = "대상서버설정";
             // 
             // devserverToolStripMenuItem
@@ -766,7 +739,7 @@
             // 단말버전전송ToolStripMenuItem
             // 
             this.단말버전전송ToolStripMenuItem.Name = "단말버전전송ToolStripMenuItem";
-            this.단말버전전송ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.단말버전전송ToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.단말버전전송ToolStripMenuItem.Text = "단말버전전송";
             this.단말버전전송ToolStripMenuItem.Click += new System.EventHandler(this.단말버전전송ToolStripMenuItem_Click);
             // 
@@ -946,7 +919,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(66, 24);
             this.button5.TabIndex = 22;
-            this.button5.Text = "단말SN";
+            this.button5.Text = "폴더명/SN";
             this.button5.UseVisualStyleBackColor = true;
             // 
             // tBoxDeviceModel
@@ -955,7 +928,7 @@
             this.tBoxDeviceModel.Name = "tBoxDeviceModel";
             this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceModel.TabIndex = 21;
-            this.tBoxDeviceModel.Text = "LWEMG";
+            this.tBoxDeviceModel.Text = "NTM_Simulator";
             // 
             // button3
             // 
@@ -1400,9 +1373,6 @@
         private System.Windows.Forms.CheckBox cBoxAutoBS;
         private System.Windows.Forms.ComboBox cBoxSERVER;
         private System.Windows.Forms.ToolStripMenuItem registerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem autobsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deregisterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serverTSMenu;
         private System.Windows.Forms.ToolStripMenuItem devserverToolStripMenuItem;

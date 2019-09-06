@@ -48,6 +48,13 @@ namespace WindowsFormsApp2
             sendmsghex,
             sendmsgver,
 
+            setmefauthnt,
+            getCSEbase,
+            getremoteCSE,
+            setremoteCSE,
+            setcontainer,
+            setsubscript,
+
             setcereg,
             setceregtpb23,
             getcereg,
@@ -78,7 +85,7 @@ namespace WindowsFormsApp2
         }
 
         string sendWith;
-        string dataIN;
+        string dataIN = "";
         string RxDispOrder;
         string serverip = "106.103.233.155";
         string serverport = "5783";
@@ -193,7 +200,13 @@ namespace WindowsFormsApp2
             commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",10250,");
             commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
             commands.Add("sendmsgver", "AT+QLWM2M=\"uldata\",26241,");
-            
+
+            commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
+            commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
+            commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
+            commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
+            commands.Add("setcontainer", "AT$OM_C_CON_REQ=");
+            commands.Add("setsubscript", "AT$OM_C_SUB_REQ=");
 
             commands.Add("setserverinfotpb23", "AT+NCDP=");
             commands.Add("setncdp", "AT+NCDP=");
@@ -632,35 +645,56 @@ namespace WindowsFormsApp2
         // serial port에서 data 수신이 될 때, 발생하는 이벤트 함수
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            dataIN = serialPort1.ReadExisting();    // 수신한 버퍼에 있는 데이터 모두 받음
+            dataIN += serialPort1.ReadExisting();    // 수신한 버퍼에 있는 데이터 모두 받음
             this.Invoke(new EventHandler(ShowData));
         }
 
         // 수신 데이터 처리 thread 시작
         private void ShowData(object sender, EventArgs e)
         {
-            //logPrintInTextBox(dataIN,"rx");
+            /* Debug를 위해 Hex로 문자열 표시*/
 
-            string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-
-            foreach (var word in words)
+            char[] charValues = dataIN.ToCharArray();
+            /*
+            string hexOutput = "";
+            foreach (char _eachChar in charValues)
             {
-                string str1;
+                // Get the integral value of the character.
+                int value = Convert.ToInt32(_eachChar);
+                // Convert the decimal value to a hexadecimal value in string form.
+                hexOutput += String.Format("{0:X}", value);
+            }
+            logPrintInTextBox(hexOutput, "");
+            */
 
-                int lflength = word.IndexOf("\r");
-                if(lflength>1)
-                {
-                    str1 = word.Substring(0 , lflength);    // \r\n를 제외하고 명령어만 처리하기 위함
-                }
-                else
-                {
-                    str1 = word;
-                }
+            if(charValues[charValues.Length-1]=='\n')
+            {
+                string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
-                if (str1 != "")             // 빈 줄은 제외하기 위함
+                foreach (var word in words)
                 {
-                    this.parseRXData(str1);
+                    string str1;
+
+                    int lflength = word.IndexOf("\r");
+                    if (lflength > 1)
+                    {
+                        str1 = word.Substring(0, lflength);    // \r\n를 제외하고 명령어만 처리하기 위함
+                    }
+                    else
+                    {
+                        str1 = word;
+                    }
+
+                    if (str1 != "")             // 빈 줄은 제외하기 위함
+                    {
+                        this.parseRXData(str1);
+                    }
                 }
+                dataIN = "";
+            }
+            else
+            {
+                //logPrintInTextBox("CR로 끝나지 않아서 다음 문자열을 기다립니다.", "");
             }
         }
 
@@ -672,6 +706,7 @@ namespace WindowsFormsApp2
                 "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
                 "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
                 "+ICCID:",      // ICCID 값을 저장한다.
+                "ICCID:",      // ICCID 값을 저장한다.
                 "+MUICCID:",    // ICCID (NB) 값을 저장한다.
                 "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
@@ -686,22 +721,15 @@ namespace WindowsFormsApp2
                 "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
                 "+QLWEVENT:",    // 모듈 부팅시, LWM2M 등록 상태 이벤트, 진행 상태를 status bar에 진행율 표시
                 "+QLWDLDATA:",
-                "+QLWOBSERVE:"
-            };
+                "+QLWOBSERVE:",
 
-            /* Debug를 위해 Hex로 문자열 표시*/
-            /*
-            char[] charValues = rxMsg.ToCharArray();
-            string hexOutput = "";
-            foreach (char _eachChar in charValues)
-            {
-                // Get the integral value of the character.
-                int value = Convert.ToInt32(_eachChar);
-                // Convert the decimal value to a hexadecimal value in string form.
-                hexOutput += String.Format("{0:X}", value);
-            }
-            logPrintInTextBox(hexOutput,"");
-            */
+                "$OM_B_CSE_RSP=",
+                "$OM_R_CSE_RSP=",
+                "$OM_C_CSE_RSP=",
+                "$OM_C_CON_RSP=",
+                "$OM_C_SUB_RSP=",
+        };
+
 
             logPrintInTextBox(rxMsg,"rx");          // 수신한 데이터 한줄을 표시
             bool find_msg = false;
@@ -764,6 +792,20 @@ namespace WindowsFormsApp2
                     timer2.Stop();
                     break;
                 case "+ICCID:":
+                    // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    if (str2.Length > 19)
+                        tBoxIccid.Text = str2.Substring(str2.Length - 20, 19);
+                    else
+                        tBoxIccid.Text = str2;
+                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+
+                    if (tBoxActionState.Text == states.autogeticcid.ToString())
+                    {
+                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                    }
+                    break;
+                case "ICCID:":
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     if (str2.Length > 19)
@@ -889,6 +931,61 @@ namespace WindowsFormsApp2
 
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
+                    break;
+                case "$OM_B_CSE_RSP=":
+                    // oneM2M CSEBase 조회 결과
+                    if (str2 == "2000")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // (getCSEbase) - (getremoteCSE) - setremoteCSE - setcontainer - setsubscript,
+
+                        this.sendDataOut(commands["getremoteCSE"]);
+                        tBoxActionState.Text = states.getremoteCSE.ToString();
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 이능 정보 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "$OM_R_CSE_RSP=":
+                    // oneM2M remoteCSE 조회 결과, 4004이면 생성/2004이면 container 확인
+                    if (str2 == "2004")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - (getremoteCSE) - setremoteCSE - (setcontainer) - setsubscript,
+
+                        this.sendDataOut(commands["setcontainer"]+tBoxDeviceSN.Text);
+                        tBoxActionState.Text = states.setcontainer.ToString();
+                    }
+                    else
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - (getremoteCSE) - (setremoteCSE) - setcontainer - setsubscript,
+
+                        this.sendDataOut(commands["setremoteCSE"]);
+                        tBoxActionState.Text = states.setremoteCSE.ToString();
+                    }
+                    break;
+                case "$OM_C_CSE_RSP=":
+                    // oneM2M remoteCSE 생성 결과, 2001이면 container 생성 요청
+                    if (str2 == "2001")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - getremoteCSE - (setremoteCSE) - (setcontainer) - setsubscript,
+
+                        this.sendDataOut(commands["setcontainer"] + tBoxDeviceSN.Text);
+                        tBoxActionState.Text = states.setcontainer.ToString();
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "$OM_C_CON_RSP=":
+                    // oneM2M container 생성 결과, 2001이면 subscript 신청
+                    break;
+                case "$OM_C_SUB_RSP=":
+                    // oneM2M subscription 신청 결과
                     break;
                 case "+QLWEVENT:":
                     // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
@@ -1372,7 +1469,7 @@ namespace WindowsFormsApp2
 
                         tBoxIMSI.Text = ctn;
                         tBoxActionState.Text = states.idle.ToString();
-                        if (tBoxModel.Text == "BG96")
+                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y")
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -1501,6 +1598,10 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["geticcid"]);
             }
+            else if (tBoxModel.Text == "NTLM3610Y")
+            {
+                this.sendDataOut(commands["geticcid"]);
+            }
             else
             {
                 this.sendDataOut(commands["geticcidlg"]);
@@ -1554,7 +1655,13 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text == "BG96")       //쿼텔
+                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M : MEF Auth인증 요청
+                {
+                    // 플랫폼 서버 MEF AUTH 요청
+                    this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                    tBoxActionState.Text = states.setmefauthnt.ToString();
+                }
+                else if (tBoxModel.Text == "BG96")       //쿼텔
                 {
                     // LWM2M bootstrap 자동 요청 순서
                     // (servertype) - endpointpame - mbsps - bootstrap
@@ -1563,7 +1670,7 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["setservertype"]);
                     tBoxActionState.Text = states.setservertype.ToString();
                 }
-                else if(tBoxModel.Text == "TPB23")
+                else if (tBoxModel.Text == "TPB23")
                 {
                     // LWM2M bootstrap 자동 요청 순서 (V150)
                     // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
@@ -1698,7 +1805,15 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text == "BG96")
+                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M : MEF Auth인증 요청
+                {
+                    // 플랫폼 서버 remoteCSE, container 등록 요청
+                    // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
+
+                    this.sendDataOut(commands["getCSEbase"]);
+                    tBoxActionState.Text = states.getCSEbase.ToString();
+                }
+                else if (tBoxModel.Text == "BG96")
                 {
                     // 플랫폼 등록 요청
                     //AT+QLWM2M="register"
@@ -1934,6 +2049,7 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["reset"]);
                     tBoxActionState.Text = states.reset.ToString();
 
+                    network_chkcnt = 3;
                     timer1.Start();
                     logPrintInTextBox("3회 가 over하여 모듈을 reset합니다.", "");
                 }
