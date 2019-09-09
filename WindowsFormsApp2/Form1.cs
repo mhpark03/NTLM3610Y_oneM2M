@@ -32,6 +32,8 @@ namespace WindowsFormsApp2
             bootstrap,
             setserverinfo,
             setserverinfotpb23,
+            setmefserverinfo,
+            sethttpserverinfo,
             setncdp,
             setservertype,
             setepns,
@@ -48,12 +50,15 @@ namespace WindowsFormsApp2
             sendmsghex,
             sendmsgver,
 
+            sendonemsgstr,
+
             setmefauthnt,
             getCSEbase,
             getremoteCSE,
             setremoteCSE,
             setcontainer,
             setsubscript,
+            getonem2mdata,
 
             setcereg,
             setceregtpb23,
@@ -101,6 +106,11 @@ namespace WindowsFormsApp2
         int device_total_index = 0;
         int fota_total_size = 0;
         string device_fota_checksum = "";
+
+        string oneM2MMEFIP = "106.103.234.198";
+        string oneM2MMEFPort = "80";
+        string oneM2MBRKIP = "106.103.234.117";
+        string oneM2MBRKPort = "80";
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -201,12 +211,15 @@ namespace WindowsFormsApp2
             commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
             commands.Add("sendmsgver", "AT+QLWM2M=\"uldata\",26241,");
 
+            commands.Add("sendonemsgstr", "AT$OM_C_INS_REQ=");
+
             commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
             commands.Add("setcontainer", "AT$OM_C_CON_REQ=");
             commands.Add("setsubscript", "AT$OM_C_SUB_REQ=");
+            commands.Add("getonem2mdata", "AT$OM_R_INS_REQ=");
 
             commands.Add("setserverinfotpb23", "AT+NCDP=");
             commands.Add("setncdp", "AT+NCDP=");
@@ -219,6 +232,9 @@ namespace WindowsFormsApp2
             commands.Add("lwm2mresettpb23", "AT+FATORYRESET=0");
             commands.Add("sendmsgstrtpb23", "AT+MLWULDATA=");
             commands.Add("sendmsgvertpb23", "AT+MLWULDATA=1,");
+
+            commands.Add("setmefserverinfo", "AT$OM_SVR_INFO=1,");
+            commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
 
         }
 
@@ -728,6 +744,8 @@ namespace WindowsFormsApp2
                 "$OM_C_CSE_RSP=",
                 "$OM_C_CON_RSP=",
                 "$OM_C_SUB_RSP=",
+                "$OM_NOTI_IND=",
+                "$OM_R_INS_RSP=",
         };
 
 
@@ -983,9 +1001,60 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_C_CON_RSP=":
                     // oneM2M container 생성 결과, 2001이면 subscript 신청
+                    if (str2 == "2001")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - getremoteCSE - setremoteCSE - (setcontainer) - (setsubscript),
+
+                        this.sendDataOut(commands["setsubscript"] + tBoxDeviceSN.Text);
+                        tBoxActionState.Text = states.setsubscript.ToString();
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
                     break;
                 case "$OM_C_SUB_RSP=":
                     // oneM2M subscription 신청 결과
+                    if (str2 == "2001")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - (setsubscript),
+
+                        logPrintInTextBox("oneM2M서버 정상 등록을 완료하였습니다.", "");
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "$OM_NOTI_IND=":
+                    // oneM2M subscription 설정에 의한 data 변경 이벤트
+                    // 플랫폼 서버에 data 수신 요청
+                    this.sendDataOut(commands["getonem2mdata"] + str2);
+                    tBoxActionState.Text = states.getonem2mdata.ToString();
+                    break;
+                case "$OM_R_INS_RSP=":
+                    // 플랫폼 서버에 data 수신
+
+                    string[] rxwords = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (rxwords[0] == "2000")
+                    {
+                        // 수신한 데이터 사이즈 확이
+                        int rxsize = Convert.ToInt32(rxwords[1]);
+                        if(rxsize == rxwords[2].Length)
+                        {
+                            logPrintInTextBox(rxwords[2]+"를 수신하였습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
                     break;
                 case "+QLWEVENT:":
                     // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
@@ -1297,6 +1366,17 @@ namespace WindowsFormsApp2
             states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
             switch (state)
             {
+                case states.setmefserverinfo:
+                    //AT$OM_SVR_INFO=<svr>,<ip>,<port>
+                    this.sendDataOut(commands["sethttpserverinfo"] + oneM2MBRKIP + "," + oneM2MBRKPort);
+                    tBoxActionState.Text = states.sethttpserverinfo.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.sethttpserverinfo:
+                    nextcommand = "";           // 서버 설정 완료
+                    break;
                 case states.setservertype:
                     // LWM2M bootstrap 자동 요청 순서
                     // (servertype) - (endpointpame) - mbsps - bootstrap
@@ -1761,14 +1841,29 @@ namespace WindowsFormsApp2
             if(cBoxSERVER.Text == "개발")
             {
                 serverip = "106.103.233.155";
+
+                oneM2MMEFIP = "106.103.234.198";
+                oneM2MMEFPort = "80";
+                oneM2MBRKIP = "106.103.234.117";
+                oneM2MBRKPort = "80";
             }
             else if (cBoxSERVER.Text == "검증")
             {
                 serverip = "106.103.230.51";
+
+                oneM2MMEFIP = "106.103.230.209";
+                oneM2MMEFPort = "80";
+                oneM2MBRKIP = "106.103.230.207";
+                oneM2MBRKPort = "8080";
             }
             else if (cBoxSERVER.Text == "상용")
             {
                 serverip = "106.103.250.108";
+
+                oneM2MMEFIP = "106.103.210.126";
+                oneM2MMEFPort = "80";
+                oneM2MBRKIP = "106.103.210.104";
+                oneM2MBRKPort = "8080";
             }
             serverport = "5783";
 
@@ -1780,22 +1875,30 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // 플랫폼 서버의 IP/port 설정
-                if (tBoxModel.Text == "BG96")
+                if (tBoxModel.Text == "NTLM3610Y")
+                {
+                    //AT$OM_SVR_INFO=<svr>,<ip>,<port>
+                    this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
+                    tBoxActionState.Text = states.setmefserverinfo.ToString();
+                }
+                else if (tBoxModel.Text == "BG96")
                 {
                     //AT+QLWM2M="cdp",<ip>,<port>
                     this.sendDataOut(commands["setserverinfo"] + "\"" + serverip + "\"," + serverport);
+                    tBoxActionState.Text = states.setserverinfo.ToString();
                 }
-                else if(tBoxModel.Text == "TPB23")
+                else if (tBoxModel.Text == "TPB23")
                 {
                     //AT+NCDP=<ip>   TPB23모델
                     this.sendDataOut(commands["setserverinfotpb23"] + "\"" + serverip + "\"," + serverport);
+                    tBoxActionState.Text = states.setserverinfo.ToString();
                 }
                 else
                 {
-                    //AT+NCDP=<ip>   TPB23모델
+                    //AT+NCDP=<ip>   일반 LwM2M
                     this.sendDataOut(commands["setserverinfotpb23"] + serverip + "," + serverport);
+                    tBoxActionState.Text = states.setserverinfo.ToString();
                 }
-                tBoxActionState.Text = states.setserverinfo.ToString();
 
                 timer1.Start();
             }
@@ -1924,8 +2027,32 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M
+                {
+                    // 플랫폼 서버 data 전송
+                    if (cBoxSendHex.Checked == false)
+                    {
+                        // Data send to SERVER (string original)
+                        //AT$OM_C_INS_REQ=<object>,<length>,<data>
+                        this.sendDataOut(commands["sendonemsgstr"] + tBoxDeviceSN.Text +"," + text.Length + "," + text);
+                        tBoxActionState.Text = states.sendonemsgstr.ToString();
 
-                if (tBoxModel.Text == "BG96")
+                        timer1.Start();
+                    }
+                    else
+                    {
+                        // Data send to SERVER (string to BCD convert)
+                        //AT+QLWM2M="ulhex",<object>,<length>,<data>
+
+                        string hexOutput = StringToBCD(text.ToCharArray());
+
+                        this.sendDataOut(commands["sendonemsgstr"] + tBoxDeviceSN.Text + "," + hexOutput.Length + "," + hexOutput);
+                        tBoxActionState.Text = states.sendonemsgstr.ToString();
+
+                        timer1.Start();
+                    }
+                }
+                else if (tBoxModel.Text == "BG96")
                 {
                     if (cBoxSendHex.Checked == false)
                     {
