@@ -87,9 +87,15 @@ namespace WindowsFormsApp2
 
             geticcidlg,
             autogeticcidlg,
+
+            getmodemver,
+            getmodemSvrVer,
+            setmodemSvrVer,
+            modemFWUPfinish,
+            modemFWUPstart,
         }
 
-        string sendWith;
+    string sendWith;
         string dataIN = "";
         string RxDispOrder;
         string serverip = "106.103.233.155";
@@ -111,6 +117,10 @@ namespace WindowsFormsApp2
         string oneM2MMEFPort = "80";
         string oneM2MBRKIP = "106.103.234.117";
         string oneM2MBRKPort = "80";
+
+        string modemVer = "";
+        string modemSvrVer = "";
+        string deviceSvrVer = "";
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -235,6 +245,12 @@ namespace WindowsFormsApp2
 
             commands.Add("setmefserverinfo", "AT$OM_SVR_INFO=1,");
             commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
+
+            commands.Add("getmodemver", "AT*ST*INFO?");
+            commands.Add("getmodemSvrVer", "AT*OM_MODEM_FWUP_REQ");
+            commands.Add("setmodemver", "AT$OM_C_MODEM_FWUP_REQ");
+            commands.Add("modemFWUPfinish", "AT*OM_MODEM_FWUP_FINISH");
+            commands.Add("modemFWUPstart", "AT$OM_MODEM_FWUP_START");
 
         }
 
@@ -746,6 +762,11 @@ namespace WindowsFormsApp2
                 "$OM_C_SUB_RSP=",
                 "$OM_NOTI_IND=",
                 "$OM_R_INS_RSP=",
+                "$OM_C_MODEM_FWUP_RSP=",
+                "$OM_MODEM_FWUP_RSP=",
+                "$OM_PUSH_MODEM_FWUP_RSP=",
+
+                "*ST*INFO:",
         };
 
 
@@ -1049,6 +1070,61 @@ namespace WindowsFormsApp2
                         else
                         {
                             logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "*ST*INFO:":
+                    string[] modeminfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    modemVer = modeminfos[1].Substring(1,modeminfos[1].Length-1);
+                    logPrintInTextBox("MODEM의 버전은 " + modemVer + "입니다.", "");
+
+                    nextcommand = "getmodemSvrVer";
+                    break;
+                case "$OM_C_MODEM_FWUP_RSP=":
+                    break;
+                case "$OM_MODEM_FWUP_RSP=":
+                    string[] modemverinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if(modemverinfos[0] == "2000")
+                    {
+                        modemSvrVer = modemverinfos[1];
+                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다.", "");
+
+                        if(modemVer == modemSvrVer)
+                        {
+                            this.sendDataOut(commands["modemFWUPfinish"]);
+                            tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                        }
+                        else
+                        {
+                            this.sendDataOut(commands["modemFWUPstart"] + tBoxDeviceSN.Text);
+                            tBoxActionState.Text = states.modemFWUPstart.ToString();
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "$OM_PUSH_MODEM_FWUP_RSP=":
+                    string[] modempushinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (modempushinfos[0] == "2000")
+                    {
+                        modemSvrVer = modempushinfos[1];
+                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다.", "");
+
+                        if (modemVer == modemSvrVer)
+                        {
+                            this.sendDataOut(commands["modemFWUPfinish"]);
+                            tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                        }
+                        else
+                        {
+                            this.sendDataOut(commands["modemFWUPstart"] + tBoxDeviceSN.Text);
+                            tBoxActionState.Text = states.modemFWUPstart.ToString();
                         }
                     }
                     else
@@ -2257,6 +2333,14 @@ namespace WindowsFormsApp2
         {
             device_fota_index = Convert.ToInt32(tBoxFOTAIndex.Text);
             DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
+        }
+
+        private void TSMenuModemVer_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmodemver"]);
+            tBoxActionState.Text = states.getmodemver.ToString();
+
+            timer1.Start();
         }
     }
 }
