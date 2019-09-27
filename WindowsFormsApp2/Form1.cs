@@ -85,6 +85,9 @@ namespace WindowsFormsApp2
             sendmsghextpb23,
             sendmsgvertpb23,
 
+            geticcidamtel,
+            autogeticcidamtel,
+
             geticcidlg,
             autogeticcidlg,
 
@@ -188,6 +191,7 @@ namespace WindowsFormsApp2
             commands.Add("getimei", "AT+GSN");
             commands.Add("geticcidtpb23", "AT+MUICCID");
             commands.Add("geticcidlg", "AT+MUICCID=?");
+            commands.Add("geticcidamtel", "AT@ICCID?");
             commands.Add("getimeitpb23", "AT+CGSN=1");
             commands.Add("getmodel", "AT+CGMM");
             commands.Add("getmanufac", "AT+CGMI");
@@ -202,6 +206,7 @@ namespace WindowsFormsApp2
             commands.Add("autogeticcid", "AT+ICCID");
             commands.Add("autogetimei", "AT+GSN");
             commands.Add("autogeticcidtpb23", "AT+MUICCID");
+            commands.Add("autogeticcidamtel", "AT@ICCID?");
             commands.Add("autogeticcidlg", "AT+MUICCID=?");
             commands.Add("autogetimeitpb23", "AT+CGSN=1");
             commands.Add("autogetmodel", "AT+CGMM");
@@ -433,6 +438,10 @@ namespace WindowsFormsApp2
                         else if (command == "AT+ICCID")
                         {
                             tBoxActionState.Text = states.geticcid.ToString();
+                        }
+                        else if (command == "AT@ICCID?")
+                        {
+                            tBoxActionState.Text = states.geticcidamtel.ToString();
                         }
                         else if (command == "AT+MUICCID")
                         {
@@ -740,6 +749,7 @@ namespace WindowsFormsApp2
                 "+ICCID:",      // ICCID 값을 저장한다.
                 "ICCID:",      // ICCID 값을 저장한다.
                 "+MUICCID:",    // ICCID (NB) 값을 저장한다.
+                "@ICCID:",    // ICCID (AMTEL) 값을 저장한다.
                 "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
                 "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
@@ -882,6 +892,20 @@ namespace WindowsFormsApp2
                             timer1.Start();
                             logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
                         }
+                    }
+                    break;
+                case "@ICCID:":
+                    // AT@ICCID?의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    if (str2.Length > 19)
+                        tBoxIccid.Text = str2.Substring(str2.Length - 20, 19);
+                    else
+                        tBoxIccid.Text = str2;
+                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+
+                    if (tBoxActionState.Text == states.autogeticcidamtel.ToString())
+                    {
+                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                     }
                     break;
                 case "+CGSN:":
@@ -1468,7 +1492,7 @@ namespace WindowsFormsApp2
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
                 case states.autogetimeitpb23:
-                    if(tBoxModel.Text == "TPB23")
+                    if (tBoxModel.Text == "TPB23")
                     {
                         nextcommand = states.autogeticcidtpb23.ToString();
                     }
@@ -1607,6 +1631,15 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     nextcommand = states.autogetmanufac.ToString();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
+
+                    if(str1 == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    {
+                        this.sendDataOut(commands["autogetmanufac"]);
+                        tBoxActionState.Text = states.autogetmanufac.ToString();
+
+                        timer1.Start();
+                        nextcommand = "skip";
+                    }
                     break;
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - (autogetmanufac) - (autogetimsi) - autogetimei - geticcid
@@ -1615,6 +1648,15 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     nextcommand = states.autogetimsi.ToString();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
+
+                    if (tBoxModel.Text == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    {
+                        this.sendDataOut(commands["autogetimsi"]);
+                        tBoxActionState.Text = states.autogetimsi.ToString();
+
+                        timer1.Start();
+                        nextcommand = "skip";
+                    }
                     break;
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - autogetmanufac - (autogetimsi) - (autogetimei) - geticcid
@@ -1625,7 +1667,7 @@ namespace WindowsFormsApp2
 
                         tBoxIMSI.Text = ctn;
                         tBoxActionState.Text = states.idle.ToString();
-                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y")
+                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y" || tBoxModel.Text == "AMM5400LGB")
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -1638,8 +1680,16 @@ namespace WindowsFormsApp2
                 // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    tBoxActionState.Text = states.autogeticcid.ToString();
-                    nextcommand = states.autogeticcid.ToString();
+                    if (tBoxModel.Text == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    {
+                        tBoxActionState.Text = states.autogeticcidamtel.ToString();
+                        nextcommand = states.autogeticcidamtel.ToString();
+                    }
+                    else
+                    {
+                        tBoxActionState.Text = states.autogeticcid.ToString();
+                        nextcommand = states.autogeticcid.ToString();
+                    }
                     this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
                     break;
                 case states.setservertype:
@@ -1746,7 +1796,11 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            if(tBoxModel.Text == "TPB23")
+            if (tBoxModel.Text == "AMM5400LGB")
+            {
+                this.sendDataOut(commands["geticcidamtel"]);
+            }
+            else if (tBoxModel.Text == "TPB23")
             {
                 this.sendDataOut(commands["geticcidtpb23"]);
             }
