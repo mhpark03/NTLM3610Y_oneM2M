@@ -96,9 +96,12 @@ namespace WindowsFormsApp2
             setmodemSvrVer,
             modemFWUPfinish,
             modemFWUPstart,
+
+            getdeviceSvrVer,
+            setdeviceSvrVer,
         }
 
-    string sendWith;
+        string sendWith;
         string dataIN = "";
         string RxDispOrder;
         string serverip = "106.103.233.155";
@@ -252,11 +255,13 @@ namespace WindowsFormsApp2
             commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
 
             commands.Add("getmodemver", "AT*ST*INFO?");
-            commands.Add("getmodemSvrVer", "AT*OM_MODEM_FWUP_REQ");
+            commands.Add("getmodemSvrVer", "AT$OM_MODEM_FWUP_REQ");
             commands.Add("setmodemver", "AT$OM_C_MODEM_FWUP_REQ");
-            commands.Add("modemFWUPfinish", "AT*OM_MODEM_FWUP_FINISH");
+            commands.Add("modemFWUPfinish", "AT$OM_MODEM_FWUP_FINISH");
             commands.Add("modemFWUPstart", "AT$OM_MODEM_FWUP_START");
 
+            commands.Add("getdeviceSvrVer", "AT$OM_DEV_FWUP_REQ");
+            commands.Add("setdeviceSrvver", "AT$OM_C_DEV_FWUP_REQ");
         }
 
         private void setWindowLayOut()
@@ -1865,7 +1870,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M : MEF Auth인증 요청
+                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))      // oneM2M : MEF Auth인증 요청
                 {
                     // 플랫폼 서버 MEF AUTH 요청
                     this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
@@ -2005,7 +2010,7 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // 플랫폼 서버의 IP/port 설정
-                if (tBoxModel.Text == "NTLM3610Y")
+                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
@@ -2038,13 +2043,15 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M : MEF Auth인증 요청
+                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))   //oneM2M : remoteCSE 요청
                 {
                     // 플랫폼 서버 remoteCSE, container 등록 요청
                     // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
 
-                    this.sendDataOut(commands["getCSEbase"]);
-                    tBoxActionState.Text = states.getCSEbase.ToString();
+                    //this.sendDataOut(commands["getCSEbase"]);
+                    //tBoxActionState.Text = states.getCSEbase.ToString();
+                    this.sendDataOut(commands["getremoteCSE"]);
+                    tBoxActionState.Text = states.getremoteCSE.ToString();
                 }
                 else if (tBoxModel.Text == "BG96")
                 {
@@ -2157,7 +2164,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text == "NTLM3610Y")       //NTmore oneM2M
+                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))      // oneM2M
                 {
                     // 플랫폼 서버 data 전송
                     if (cBoxSendHex.Checked == false)
@@ -2391,10 +2398,18 @@ namespace WindowsFormsApp2
 
         private void TSMenuModemVer_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["getmodemver"]);
-            tBoxActionState.Text = states.getmodemver.ToString();
+            this.sendDataOut(commands["getmodemSvrVer"]);
+            tBoxActionState.Text = states.getmodemSvrVer.ToString();
+            //this.sendDataOut(commands["getmodemver"]);
+            //tBoxActionState.Text = states.getmodemver.ToString();
 
             timer1.Start();
+        }
+
+        private void TSMenuDeviceVer_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getdeviceSvrVer"]);
+            tBoxActionState.Text = states.getdeviceSvrVer.ToString();
         }
     }
 }

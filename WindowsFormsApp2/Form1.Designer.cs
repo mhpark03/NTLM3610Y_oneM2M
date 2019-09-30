@@ -804,6 +804,7 @@
             this.tSMenuDeviceVer.Name = "tSMenuDeviceVer";
             this.tSMenuDeviceVer.Size = new System.Drawing.Size(214, 22);
             this.tSMenuDeviceVer.Text = "디바이스펌웨어버전";
+            this.tSMenuDeviceVer.Click += new System.EventHandler(this.TSMenuDeviceVer_Click);
             // 
             // toolStripMenuItem8
             // 
