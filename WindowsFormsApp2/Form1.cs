@@ -91,7 +91,6 @@ namespace WindowsFormsApp2
             geticcidlg,
             autogeticcidlg,
 
-            getmodemver,
             getmodemSvrVer,
             setmodemSvrVer,
             modemFWUPfinish,
@@ -99,6 +98,8 @@ namespace WindowsFormsApp2
 
             getdeviceSvrVer,
             setdeviceSvrVer,
+            deviceFWUPfinish,
+            deviceFWUPstart,
         }
 
         string sendWith;
@@ -254,7 +255,6 @@ namespace WindowsFormsApp2
             commands.Add("setmefserverinfo", "AT$OM_SVR_INFO=1,");
             commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
 
-            commands.Add("getmodemver", "AT*ST*INFO?");
             commands.Add("getmodemSvrVer", "AT$OM_MODEM_FWUP_REQ");
             commands.Add("setmodemver", "AT$OM_C_MODEM_FWUP_REQ");
             commands.Add("modemFWUPfinish", "AT$OM_MODEM_FWUP_FINISH");
@@ -262,6 +262,8 @@ namespace WindowsFormsApp2
 
             commands.Add("getdeviceSvrVer", "AT$OM_DEV_FWUP_REQ");
             commands.Add("setdeviceSrvver", "AT$OM_C_DEV_FWUP_REQ");
+            commands.Add("deviceFWUPfinish", "AT$OM_DEV_FWUP_FINISH");
+            commands.Add("deviceFWUPstart", "AT$OM_DEV_FWUP_START");
         }
 
         private void setWindowLayOut()
@@ -780,6 +782,10 @@ namespace WindowsFormsApp2
                 "$OM_C_MODEM_FWUP_RSP=",
                 "$OM_MODEM_FWUP_RSP=",
                 "$OM_PUSH_MODEM_FWUP_RSP=",
+                "$OM_MODEM_UPDATE_FINISH",
+                "$OM_DEV_FWUP_RSP=",
+                "$OM_PUSH_DEV_FWUP_RSP=",
+                "$OM_DEV_FWDL_FINISH",
 
                 "*ST*INFO:",
         };
@@ -1116,50 +1122,52 @@ namespace WindowsFormsApp2
                 case "$OM_C_MODEM_FWUP_RSP=":
                     break;
                 case "$OM_MODEM_FWUP_RSP=":
+                case "$OM_PUSH_MODEM_FWUP_RSP=":
                     string[] modemverinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                     if(modemverinfos[0] == "2000")
                     {
                         modemSvrVer = modemverinfos[1];
-                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다.", "");
+                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다. 업데이트를 시도합니다.", "");
 
-                        if(modemVer == modemSvrVer)
-                        {
-                            this.sendDataOut(commands["modemFWUPfinish"]);
-                            tBoxActionState.Text = states.modemFWUPfinish.ToString();
-                        }
-                        else
-                        {
-                            this.sendDataOut(commands["modemFWUPstart"] + tBoxDeviceSN.Text);
-                            tBoxActionState.Text = states.modemFWUPstart.ToString();
-                        }
+                        this.sendDataOut(commands["modemFWUPstart"]);
+                        tBoxActionState.Text = states.modemFWUPstart.ToString();
+                    }
+                    else if (modemverinfos[0] == "9001")
+                    {
+                        logPrintInTextBox("현재 MODEM 버전이 최신버전입니다.", "");
                     }
                     else
                     {
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
                     }
                     break;
-                case "$OM_PUSH_MODEM_FWUP_RSP=":
-                    string[] modempushinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                    if (modempushinfos[0] == "2000")
+                case "$OM_MODEM_UPDATE_FINISH":
+                    this.sendDataOut(commands["modemFWUPfinish"]);
+                    tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                    break;
+                case "$OM_DEV_FWUP_RSP=":
+                case "$OM_PUSH_DEV_FWUP_RSP=":
+                    string[] deviceverinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (deviceverinfos[0] == "2000")
                     {
-                        modemSvrVer = modempushinfos[1];
-                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다.", "");
+                        deviceSvrVer = deviceverinfos[1];
+                        logPrintInTextBox("수신한 DEVICE의 버전은 " + deviceSvrVer + "입니다. 업데이트를 시도합니다.", "");
 
-                        if (modemVer == modemSvrVer)
-                        {
-                            this.sendDataOut(commands["modemFWUPfinish"]);
-                            tBoxActionState.Text = states.modemFWUPfinish.ToString();
-                        }
-                        else
-                        {
-                            this.sendDataOut(commands["modemFWUPstart"] + tBoxDeviceSN.Text);
-                            tBoxActionState.Text = states.modemFWUPstart.ToString();
-                        }
+                        this.sendDataOut(commands["deviceFWUPstart"]);
+                        tBoxActionState.Text = states.deviceFWUPstart.ToString();
+                    }
+                    else if (deviceverinfos[0] == "9001")
+                    {
+                        logPrintInTextBox("현재 DEVICE 버전이 최신버전입니다.", "");
                     }
                     else
                     {
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
                     }
+                    break;
+                case "$OM_DEV_FWDL_FINISH":
+                    this.sendDataOut(commands["deviceFWUPfinish"]);
+                    tBoxActionState.Text = states.deviceFWUPfinish.ToString();
                     break;
                 case "+QLWEVENT:":
                     // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
@@ -2400,8 +2408,6 @@ namespace WindowsFormsApp2
         {
             this.sendDataOut(commands["getmodemSvrVer"]);
             tBoxActionState.Text = states.getmodemSvrVer.ToString();
-            //this.sendDataOut(commands["getmodemver"]);
-            //tBoxActionState.Text = states.getmodemver.ToString();
 
             timer1.Start();
         }
@@ -2410,6 +2416,8 @@ namespace WindowsFormsApp2
         {
             this.sendDataOut(commands["getdeviceSvrVer"]);
             tBoxActionState.Text = states.getdeviceSvrVer.ToString();
+
+            timer1.Start();
         }
     }
 }
