@@ -1645,7 +1645,7 @@ namespace WindowsFormsApp2
                     nextcommand = states.autogetmanufac.ToString();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
-                    if(str1 == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    if(str1.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
                     {
                         this.sendDataOut(commands["autogetmanufac"]);
                         tBoxActionState.Text = states.autogetmanufac.ToString();
@@ -1662,7 +1662,7 @@ namespace WindowsFormsApp2
                     nextcommand = states.autogetimsi.ToString();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
 
-                    if (tBoxModel.Text == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
                     {
                         this.sendDataOut(commands["autogetimsi"]);
                         tBoxActionState.Text = states.autogetimsi.ToString();
@@ -1680,7 +1680,7 @@ namespace WindowsFormsApp2
 
                         tBoxIMSI.Text = ctn;
                         tBoxActionState.Text = states.idle.ToString();
-                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y" || tBoxModel.Text == "AMM5400LGB")
+                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y" || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -1693,7 +1693,7 @@ namespace WindowsFormsApp2
                 // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    if (tBoxModel.Text == "AMM5400LGB")        //AMTEL 모듈은 OK가 오지 않음
+                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
                     {
                         tBoxActionState.Text = states.autogeticcidamtel.ToString();
                         nextcommand = states.autogeticcidamtel.ToString();
@@ -1809,7 +1809,7 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            if (tBoxModel.Text == "AMM5400LGB")
+            if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
             {
                 this.sendDataOut(commands["geticcidamtel"]);
             }
@@ -1878,7 +1878,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))      // oneM2M : MEF Auth인증 요청
+                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
                 {
                     // 플랫폼 서버 MEF AUTH 요청
                     this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
@@ -2018,7 +2018,7 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // 플랫폼 서버의 IP/port 설정
-                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))
+                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
@@ -2051,7 +2051,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))   //oneM2M : remoteCSE 요청
+                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))   //oneM2M : remoteCSE 요청
                 {
                     // 플랫폼 서버 remoteCSE, container 등록 요청
                     // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
@@ -2172,7 +2172,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || (tBoxModel.Text == "AMM5400LGB"))      // oneM2M
+                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M
                 {
                     // 플랫폼 서버 data 전송
                     if (cBoxSendHex.Checked == false)
