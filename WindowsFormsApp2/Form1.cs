@@ -715,7 +715,7 @@ namespace WindowsFormsApp2
             logPrintInTextBox(hexOutput, "");
             */
 
-            if(charValues[charValues.Length-1]=='\n')
+            if(charValues[charValues.Length-1]=='\n' || charValues[charValues.Length - 2] == '\n')
             {
                 string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
@@ -1652,6 +1652,19 @@ namespace WindowsFormsApp2
 
                         timer1.Start();
                         nextcommand = "skip";
+
+                        tSMenuOneM2M.Visible = true;
+                        tSMenuLwM2M.Visible = false;
+                    }
+                    else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = true;
+                        tSMenuLwM2M.Visible = false;
+                    }
+                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = false;
+                        tSMenuLwM2M.Visible = true;
                     }
                     break;
                 // 단말 정보 자동 갱신 순서
@@ -1771,6 +1784,24 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
+
+                    if (str1.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 oneM2M메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = true;
+                        tSMenuLwM2M.Visible = false;
+                    }
+                    else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = true;
+                        tSMenuLwM2M.Visible = false;
+                    }
+                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = false;
+                        tSMenuLwM2M.Visible = true;
+                    }
+                    break;
+
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;

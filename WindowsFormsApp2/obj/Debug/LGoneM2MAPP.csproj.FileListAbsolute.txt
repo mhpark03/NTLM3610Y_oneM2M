@@ -11,3 +11,15 @@ C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUoneM2M.pdb
 C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.Properties.Resources.resources
 C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.exe
 C:\androidtech\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.pdb
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUoneM2M.exe.config
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUoneM2M.exe
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\LGUoneM2M.pdb
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csprojAssemblyReference.cache
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.Properties.Resources.resources
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.GenerateResource.cache
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CopyComplete
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.exe
+D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.pdb

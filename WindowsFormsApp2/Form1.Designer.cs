@@ -84,7 +84,7 @@
             this.수신창표시방향ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.위로ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.아래로ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuLwM2M = new System.Windows.Forms.ToolStripMenuItem();
             this.initinfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,7 +96,7 @@
             this.opserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.단말버전전송ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuOneM2M = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuAuth = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuRemteCSE = new System.Windows.Forms.ToolStripMenuItem();
@@ -321,13 +321,12 @@
             this.fileToolStripMenuItem,
             this.COMCTRLToolStripMenuItem,
             this.TRXToolStripMenuItem,
-            this.testToolStripMenuItem,
-            this.toolStripMenuItem2,
+            this.tSMenuLwM2M,
+            this.tSMenuOneM2M,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(837, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(837, 28);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -336,7 +335,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -359,7 +358,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
             this.COMCTRLToolStripMenuItem.Text = "COM설정";
             // 
             // OpenToolStripMenuItem
@@ -584,7 +583,7 @@
             this.writeToolStripMenuItem,
             this.수신창표시방향ToolStripMenuItem});
             this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
-            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 21);
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
             this.TRXToolStripMenuItem.Text = "송수신창";
             // 
             // ClearToolStripMenuItem
@@ -663,9 +662,9 @@
             this.아래로ToolStripMenuItem.Text = "아래로";
             this.아래로ToolStripMenuItem.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
-            // testToolStripMenuItem
+            // tSMenuLwM2M
             // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tSMenuLwM2M.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.initinfoToolStripMenuItem,
             this.provisionToolStripMenuItem,
             this.registerToolStripMenuItem,
@@ -673,10 +672,10 @@
             this.resetToolStripMenuItem,
             this.serverTSMenu,
             this.단말버전전송ToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
-            this.testToolStripMenuItem.Text = "LwM2M";
-            this.testToolStripMenuItem.Visible = false;
+            this.tSMenuLwM2M.Name = "tSMenuLwM2M";
+            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 24);
+            this.tSMenuLwM2M.Text = "LwM2M";
+            this.tSMenuLwM2M.Visible = false;
             // 
             // initinfoToolStripMenuItem
             // 
@@ -757,9 +756,9 @@
             this.단말버전전송ToolStripMenuItem.Text = "단말버전전송";
             this.단말버전전송ToolStripMenuItem.Click += new System.EventHandler(this.단말버전전송ToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem2
+            // tSMenuOneM2M
             // 
-            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tSMenuOneM2M.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem3,
             this.tSMenuAuth,
             this.tSMenuRemteCSE,
@@ -767,9 +766,9 @@
             this.tSMenuDeviceVer,
             this.toolStripMenuItem8,
             this.toolStripMenuItem13});
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(76, 21);
-            this.toolStripMenuItem2.Text = "oneM2M";
+            this.tSMenuOneM2M.Name = "tSMenuOneM2M";
+            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 24);
+            this.tSMenuOneM2M.Text = "oneM2M";
             // 
             // toolStripMenuItem3
             // 
@@ -849,7 +848,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -883,10 +882,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 25);
+            this.panel1.Location = new System.Drawing.Point(0, 28);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 539);
+            this.panel1.Size = new System.Drawing.Size(837, 536);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -1232,7 +1231,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 470);
+            this.panel2.Location = new System.Drawing.Point(0, 467);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -1481,7 +1480,7 @@
         private System.Windows.Forms.TextBox tBoxModel;
         private System.Windows.Forms.TextBox tBoxIccid;
         private System.Windows.Forms.Button btnICCID;
-        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuLwM2M;
         private System.Windows.Forms.ToolStripMenuItem initinfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem provisionToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
@@ -1526,7 +1525,7 @@
         private System.Windows.Forms.TextBox tBoxFOTAIndex;
         private System.Windows.Forms.Button btnFOTAConti;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuOneM2M;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem tSMenuAuth;
         private System.Windows.Forms.ToolStripMenuItem tSMenuRemteCSE;
