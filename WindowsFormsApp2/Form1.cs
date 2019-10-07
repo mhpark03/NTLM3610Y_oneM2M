@@ -1655,16 +1655,19 @@ namespace WindowsFormsApp2
 
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxDeviceModel.Text = "NTM_Simulator";
                     }
                     else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxDeviceModel.Text = "NTM_Simulator";
                     }
                     else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        tBoxDeviceModel.Text = "LWEMG";
                     }
                     break;
                 // 단말 정보 자동 갱신 순서
@@ -1789,16 +1792,19 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxDeviceModel.Text = "NTM_Simulator";
                     }
                     else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxDeviceModel.Text = "NTM_Simulator";
                     }
                     else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        tBoxDeviceModel.Text = "LWEMG";
                     }
                     break;
 
