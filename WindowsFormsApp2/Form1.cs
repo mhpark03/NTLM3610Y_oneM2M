@@ -52,6 +52,8 @@ namespace WindowsFormsApp2
 
             sendonemsgstr,
 
+            getonem2mmode,
+            setonem2mmode,
             setmefauthnt,
             getCSEbase,
             getremoteCSE,
@@ -232,6 +234,8 @@ namespace WindowsFormsApp2
 
             commands.Add("sendonemsgstr", "AT$OM_C_INS_REQ=");
 
+            commands.Add("getonem2mmode", "AT$LGTMPF?");
+            commands.Add("setonem2mmode", "AT$LGTMPF=5");
             commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
@@ -787,10 +791,12 @@ namespace WindowsFormsApp2
                 "$OM_DEV_FWUP_RSP=",
                 "$OM_PUSH_DEV_FWUP_RSP=",
                 "$OM_DEV_FWDL_FINISH",
+                "$LGTMPF=",
 
                 "*ST*INFO:",
                 "@NOTI:",
                 "@NETSTI:",
+                "$OM_AUTH_RSP=",
         };
 
 
@@ -1009,6 +1015,21 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     break;
+                case "$OM_AUTH_RSP=":
+                    // oneM2M CSEBase 조회 결과
+                    if (str2 == "2000")
+                    {
+                        logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 인증 정보 확인이 필요합니다.", "");
+                    }
+
+                    timer1.Stop();
+                    timer2.Stop();
+                    nextcommand = "";
+                    break;
                 case "$OM_B_CSE_RSP=":
                     // oneM2M CSEBase 조회 결과
                     if (str2 == "2000")
@@ -1021,7 +1042,7 @@ namespace WindowsFormsApp2
                     }
                     else
                     {
-                        logPrintInTextBox("oneM2M서버 이능 정보 확인이 필요합니다.", "");
+                        logPrintInTextBox("oneM2M서버 인증 정보 확인이 필요합니다.", "");
                     }
                     break;
                 case "$OM_R_CSE_RSP=":
@@ -1368,6 +1389,20 @@ namespace WindowsFormsApp2
                         tBoxActionState.Text = states.autogetmodel.ToString();
                     }
                     break;
+                case "$LGTMPF=":
+                    if (str2 == "5")
+                    {
+                        // 플랫폼 서버 MEF AUTH 요청
+                        this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                        tBoxActionState.Text = states.setmefauthnt.ToString();
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        // 모듈 oneM2M 플랫폼 모드 요청
+                        nextcommand = "setonem2mmode";
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1503,6 +1538,7 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.sethttpserverinfo:
+
                     nextcommand = "";           // 서버 설정 완료
                     break;
                 case states.setservertype:
@@ -1623,6 +1659,9 @@ namespace WindowsFormsApp2
                     // LWM2M서버에 Bootstarp 요청
                     //  AT+MLWGOBOOTSTRAP=1
                     nextcommand = states.bootstraptpb23.ToString();
+                    break;
+                case states.setonem2mmode:
+                    nextcommand = states.getonem2mmode.ToString();
                     break;
                 default:
                     break;
@@ -1932,9 +1971,13 @@ namespace WindowsFormsApp2
             {
                 if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
                 {
+                    // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
+                    this.sendDataOut(commands["getonem2mmode"]);
+                    tBoxActionState.Text = states.getonem2mmode.ToString();
+                    
                     // 플랫폼 서버 MEF AUTH 요청
-                    this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
-                    tBoxActionState.Text = states.setmefauthnt.ToString();
+                    //this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                    //tBoxActionState.Text = states.setmefauthnt.ToString();
                 }
                 else if (tBoxModel.Text == "BG96")       //쿼텔
                 {
