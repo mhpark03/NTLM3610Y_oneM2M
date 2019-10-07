@@ -760,6 +760,7 @@ namespace WindowsFormsApp2
                 "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
                 "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
+                "AT+CGMM",
                 "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
                 //"AT+CIMI",
                 //"AT+GSN",
@@ -788,6 +789,8 @@ namespace WindowsFormsApp2
                 "$OM_DEV_FWDL_FINISH",
 
                 "*ST*INFO:",
+                "@NOTI:",
+                "@NETSTI:",
         };
 
 
@@ -1022,8 +1025,8 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case "$OM_R_CSE_RSP=":
-                    // oneM2M remoteCSE 조회 결과, 4004이면 생성/2004이면 container 확인
-                    if (str2 == "2004")
+                    // oneM2M remoteCSE 조회 결과, 4004이면 생성/2000 또는 2004이면 container 확인
+                    if (str2 == "2004" || str2 == "2000")
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - (getremoteCSE) - setremoteCSE - (setcontainer) - setsubscript,
@@ -1042,7 +1045,7 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_C_CSE_RSP=":
                     // oneM2M remoteCSE 생성 결과, 2001이면 container 생성 요청
-                    if (str2 == "2001")
+                    if (str2 == "2001" || str2 == "2000" || str2 == "4105")
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - getremoteCSE - (setremoteCSE) - (setcontainer) - setsubscript,
@@ -1057,7 +1060,7 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_C_CON_RSP=":
                     // oneM2M container 생성 결과, 2001이면 subscript 신청
-                    if (str2 == "2001")
+                    if (str2 == "2001" || str2 == "2000" || str2 == "4105")
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - getremoteCSE - setremoteCSE - (setcontainer) - (setsubscript),
@@ -1072,7 +1075,7 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_C_SUB_RSP=":
                     // oneM2M subscription 신청 결과
-                    if (str2 == "2001")
+                    if (str2 == "2001" || str2 == "2000" || str2 == "4105")
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - (setsubscript),
@@ -1352,6 +1355,18 @@ namespace WindowsFormsApp2
                     if (nextcommand == states.getcereg.ToString())
                         nextcommand = "";
                     timer2.Stop();
+                    break;
+                case "@NETSTI:":
+                    // AMTEL booting end, device info rerequest
+                    getDeviveInfo();
+                    timer2.Interval = 10000;        // 10초 타이머로 동작
+                    break;
+                case "AT+CGMM":
+                    // AMTEL booting 시 모델명 재요청인 경우인지 확인
+                    if(tBoxActionState.Text == "idle" && tSStatusLblLTE.Text != "registered")
+                    {
+                        tBoxActionState.Text = states.autogetmodel.ToString();
+                    }
                     break;
                 default:
                     break;
@@ -2377,61 +2392,74 @@ namespace WindowsFormsApp2
 
         private void DeviceFWVerSend(string ver, string state, string result)
         {
-            // Device firmware 버전 등록 전문 예 : fwVr=1.0|fwSt=1|fwRt=0
-            // fwVr ={ VERSION}| fwSt ={ STATUS}| fwRt ={ RESULT_CODE}(|fwIn={index})(|szx={buffersize})
-            // fwVr: 현재 Device Firmware 버전
-            // fwSt: Firmware Status
-            //      1: Success
-            //      2: Progress
-            //      3: Failure
-            // fwRt : Firmware Update 결과(OMA Spec 과 같은 값 사용)
-            //      0: Initial value.
-            //      1: Firmware updated successfully
-            //      2: Not enough flash memory
-            //      3: Out of RAM during downloading process.
-            //      4: Connection lost during downloading process.
-            //      5: Integrity check failure
-            //      6: Unsupported package type.
-            //      8: Firmware update failed
-            //  fwIn : 단말에서 문제가 발생 하여 특정 Index부터 다시 받고 싶을 때 사용
-            //      만약 fwSt 가 2(Progress)이면서 fwIn 에 특정 Index 를 보내면
-            //      기존에 upload Process 는 중지 하고 해당 Index 부터 다시 Upload 시작 함
-            //      fwSt 가 2 가 아닐 경우, fwIn 값이 없거나 0 보다 작을 경우 이어 받기 동작하지 않음
-            //      fwIn 의 값이 전체 Index 보다 클 경우 이전 내려받기는 취소 되고 에러 처리 됨
-            // szx : FOTA buffer size (1:32, 2:64, 3:128, 4:256, 5:512(default), 6:1024 
-
-            string text = "fwVr=" + ver + "|fwSt=" + state + "|fwRt=" + result;
-
-            if (state=="2")
+            if (isDeviceInfo())
             {
-                text += "|fwIn=" + Convert.ToString(device_fota_index);
-            }
+                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                {
+                    // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                    this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                    tBoxActionState.Text = states.setmefauthnt.ToString();
+                    timer1.Start();
+                }
+                else            //oneM2M 모델이 아님
+                {
+                    // Device firmware 버전 등록 전문 예 : fwVr=1.0|fwSt=1|fwRt=0
+                    // fwVr ={ VERSION}| fwSt ={ STATUS}| fwRt ={ RESULT_CODE}(|fwIn={index})(|szx={buffersize})
+                    // fwVr: 현재 Device Firmware 버전
+                    // fwSt: Firmware Status
+                    //      1: Success
+                    //      2: Progress
+                    //      3: Failure
+                    // fwRt : Firmware Update 결과(OMA Spec 과 같은 값 사용)
+                    //      0: Initial value.
+                    //      1: Firmware updated successfully
+                    //      2: Not enough flash memory
+                    //      3: Out of RAM during downloading process.
+                    //      4: Connection lost during downloading process.
+                    //      5: Integrity check failure
+                    //      6: Unsupported package type.
+                    //      8: Firmware update failed
+                    //  fwIn : 단말에서 문제가 발생 하여 특정 Index부터 다시 받고 싶을 때 사용
+                    //      만약 fwSt 가 2(Progress)이면서 fwIn 에 특정 Index 를 보내면
+                    //      기존에 upload Process 는 중지 하고 해당 Index 부터 다시 Upload 시작 함
+                    //      fwSt 가 2 가 아닐 경우, fwIn 값이 없거나 0 보다 작을 경우 이어 받기 동작하지 않음
+                    //      fwIn 의 값이 전체 Index 보다 클 경우 이전 내려받기는 취소 되고 에러 처리 됨
+                    // szx : FOTA buffer size (1:32, 2:64, 3:128, 4:256, 5:512(default), 6:1024 
 
-            if(cBoxFOTASize.Checked == true)
-            {
-                text += "|szx=6";       // FOTA buffer size set 1024bytes.
-            }
+                    string text = "fwVr=" + ver + "|fwSt=" + state + "|fwRt=" + result;
 
-            if (tBoxModel.Text == "BG96")
-            {
-                // Data send to SERVER (string to BCD convert)
-                //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
+                    if (state == "2")
+                    {
+                        text += "|fwIn=" + Convert.ToString(device_fota_index);
+                    }
 
-                this.sendDataOut(commands["sendmsgver"] + text.Length + ",\"" + text + "\"");
-                tBoxActionState.Text = states.sendmsgver.ToString();
+                    if (cBoxFOTASize.Checked == true)
+                    {
+                        text += "|szx=6";       // FOTA buffer size set 1024bytes.
+                    }
 
-                timer1.Start();
-            }
-            else
-            {
-                // Data send to SERVER (string original)
-                //AT+MLWULDATA=<length>,<data>
-                string hexOutput = StringToBCD(text.ToCharArray());
+                    if (tBoxModel.Text == "BG96")
+                    {
+                        // Data send to SERVER (string to BCD convert)
+                        //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
 
-                this.sendDataOut(commands["sendmsgvertpb23"] + hexOutput.Length / 2 + "," + hexOutput);
-                tBoxActionState.Text = states.sendmsgvertpb23.ToString();
+                        this.sendDataOut(commands["sendmsgver"] + text.Length + ",\"" + text + "\"");
+                        tBoxActionState.Text = states.sendmsgver.ToString();
 
-                timer1.Start();
+                        timer1.Start();
+                    }
+                    else
+                    {
+                        // Data send to SERVER (string original)
+                        //AT+MLWULDATA=<length>,<data>
+                        string hexOutput = StringToBCD(text.ToCharArray());
+
+                        this.sendDataOut(commands["sendmsgvertpb23"] + hexOutput.Length / 2 + "," + hexOutput);
+                        tBoxActionState.Text = states.sendmsgvertpb23.ToString();
+
+                        timer1.Start();
+                    }
+                }
             }
         }
 
@@ -2455,6 +2483,11 @@ namespace WindowsFormsApp2
             tBoxActionState.Text = states.getdeviceSvrVer.ToString();
 
             timer1.Start();
+        }
+
+        private void tSMenuTxVersion_Click(object sender, EventArgs e)
+        {
+            DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
         }
     }
 }

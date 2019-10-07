@@ -107,7 +107,7 @@
             this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTxVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -335,7 +335,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -358,7 +358,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
             this.COMCTRLToolStripMenuItem.Text = "COM설정";
             // 
             // OpenToolStripMenuItem
@@ -583,7 +583,7 @@
             this.writeToolStripMenuItem,
             this.수신창표시방향ToolStripMenuItem});
             this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
-            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 21);
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
             this.TRXToolStripMenuItem.Text = "송수신창";
             // 
             // ClearToolStripMenuItem
@@ -673,7 +673,7 @@
             this.serverTSMenu,
             this.단말버전전송ToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
-            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 21);
+            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 24);
             this.tSMenuLwM2M.Text = "LwM2M";
             this.tSMenuLwM2M.Visible = false;
             // 
@@ -765,9 +765,9 @@
             this.tSMenuModemVer,
             this.tSMenuDeviceVer,
             this.toolStripMenuItem8,
-            this.toolStripMenuItem13});
+            this.tSMenuTxVersion});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
-            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 21);
+            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 24);
             this.tSMenuOneM2M.Text = "oneM2M";
             // 
             // toolStripMenuItem3
@@ -839,16 +839,17 @@
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
             this.toolStripMenuItem12.Size = new System.Drawing.Size(180, 26);
             // 
-            // toolStripMenuItem13
+            // tSMenuTxVersion
             // 
-            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(270, 26);
-            this.toolStripMenuItem13.Text = "단말버전전송";
+            this.tSMenuTxVersion.Name = "tSMenuTxVersion";
+            this.tSMenuTxVersion.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuTxVersion.Text = "단말버전전송";
+            this.tSMenuTxVersion.Click += new System.EventHandler(this.tSMenuTxVersion_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -1018,7 +1019,7 @@
             this.tBoxDeviceSN.Name = "tBoxDeviceSN";
             this.tBoxDeviceSN.Size = new System.Drawing.Size(143, 25);
             this.tBoxDeviceSN.TabIndex = 23;
-            this.tBoxDeviceSN.Text = "123456";
+            this.tBoxDeviceSN.Text = "TEST";
             // 
             // button5
             // 
@@ -1536,7 +1537,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem13;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuTxVersion;
     }
 }
 
