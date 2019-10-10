@@ -118,7 +118,7 @@ namespace WindowsFormsApp2
         string device_fota_reseult = "0";
         int device_fota_index = 0;
         int fotaCurrentIndex = -1;
-        int device_total_index = 0;
+        string device_total_index = "0";
         int fota_total_size = 0;
         string device_fota_checksum = "";
 
@@ -704,9 +704,9 @@ namespace WindowsFormsApp2
         // 수신 데이터 처리 thread 시작
         private void ShowData(object sender, EventArgs e)
         {
-            /* Debug를 위해 Hex로 문자열 표시*/
-
             char[] charValues = dataIN.ToCharArray();
+
+            /* Debug를 위해 Hex로 문자열 표시*/
             /*
             string hexOutput = "";
             foreach (char _eachChar in charValues)
@@ -719,7 +719,7 @@ namespace WindowsFormsApp2
             logPrintInTextBox(hexOutput, "");
             */
 
-            if(charValues[charValues.Length-1]=='\n' || charValues[charValues.Length - 2] == '\n')
+            if (charValues[charValues.Length-1]=='\n' || charValues[charValues.Length - 2] == '\n')
             {
                 string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
@@ -1020,6 +1020,17 @@ namespace WindowsFormsApp2
                     if (str2 == "2000")
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
+
+                        tSProgressLwm2m.Value = 100;
+                        tSStatusLblLWM2M.Text = "registered";
+
+                        tSStatusLblLTE.Text = "registered";     // 서버 정보를 받았다면 LTE망연결이 된 상태로 판단
+                        tSProgressLTE.Value = 100;
+
+                        if (tBoxModel.Text == "알 수 없음")
+                        {
+                            getDeviveInfo();
+                        }
                     }
                     else
                     {
@@ -1414,19 +1425,28 @@ namespace WindowsFormsApp2
             if (Convert.ToInt32(size) == dataSize)    // data size 비교
             {
                 // Firmware File Information Block Checking
-                if ((device_total_index == 0) && (dataSize == 8))
+                if ((device_total_index == "0") && (dataSize == 8))
                 {
-                    //received hex data make to ascii code
-                    string fotaDataIN = BcdToString(rcvData.ToCharArray());
+                    string fotaDataIN;
+                    if (tBoxModel.Text == "TPB23")
+                    {
+                        fotaDataIN = rcvData;
+                    }
+                    else
+                    {
+                        //received hex data make to ascii code
+                        fotaDataIN = BcdToString(rcvData.ToCharArray());
+                    }
                     logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
 
-                    if (Convert.ToInt32(fotaDataIN.Substring(0, 2)) == 0)
+                    if (Convert.ToInt32(fotaDataIN.Substring(0, 4)) == 0)
                     {
-                        device_total_index = Convert.ToInt32(fotaDataIN.Substring(2, 2));
-                        device_fota_checksum = fotaDataIN.Substring(4, 4);
+                        device_total_index = fotaDataIN.Substring(4, 4);
+                        device_fota_checksum = fotaDataIN.Substring(8, 8);
                         device_fota_state = "1";
-                        logPrintInTextBox("Index= " + device_total_index + ", checksum = " + device_fota_checksum + "를 수신하였습니다.", "");
+                        logPrintInTextBox("total Index= " + device_total_index + ", checksum = " + device_fota_checksum + "를 수신하였습니다.", "");
 
+                        /*
                         // Create a file to write to.
                         try
                         {
@@ -1444,16 +1464,21 @@ namespace WindowsFormsApp2
                         {
                             MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+                        */
 
+                        DeviceFWVerSend(tBoxDeviceVer.Text, "3", "0");
                     }
                 }
                 // Firmware File Data Block Checking
-                else if (dataSize <= 512)
+                else if (dataSize <= 1024)
                 {
                     //received hex data make to ascii code
-                    string fotaDataIN = BcdToString(rcvData.ToCharArray());
-                    logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
+                    //string fotaDataIN = BcdToString(rcvData.ToCharArray());
+                    logPrintInTextBox("FOTA DATA를 수신하였습니다.", "");
+                    this.sendDataOut("OK");
 
+
+                    /*
                     device_fota_index = Convert.ToInt32(fotaDataIN.Substring(0, 2));
                     if (device_total_index >= device_fota_index)
                     {
@@ -1511,6 +1536,7 @@ namespace WindowsFormsApp2
                     {
                         logPrintInTextBox("펌웨어 전체 크기를 초과하였습니다.", "");
                     }
+                    */
                 }
                 else
                 {
@@ -1710,18 +1736,32 @@ namespace WindowsFormsApp2
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
                         tBoxDeviceModel.Text = "NTM_Simulator";
+                        btSNConst.Text = "폴더명";
+                        tBoxDeviceSN.Text = "TEST";
                     }
                     else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
                         tBoxDeviceModel.Text = "NTM_Simulator";
+                        btSNConst.Text = "폴더명";
+                        tBoxDeviceSN.Text = "TEST";
                     }
                     else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
                         tBoxDeviceModel.Text = "LWEMG";
+                        btSNConst.Text = "단말SN";
+                        tBoxDeviceSN.Text = "123456";
+                        if(str1=="TPB23")
+                        {
+                            cBoxFOTASize.Checked = false;
+                        }
+                        else
+                        {
+                            cBoxFOTASize.Checked = true;
+                        }
                     }
                     break;
                 // 단말 정보 자동 갱신 순서
@@ -1847,18 +1887,32 @@ namespace WindowsFormsApp2
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
                         tBoxDeviceModel.Text = "NTM_Simulator";
+                        btSNConst.Text = "폴더명";
+                        tBoxDeviceSN.Text = "TEST";
                     }
                     else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
                         tBoxDeviceModel.Text = "NTM_Simulator";
+                        btSNConst.Text = "폴더명";
+                        tBoxDeviceSN.Text = "TEST";
                     }
                     else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
                         tBoxDeviceModel.Text = "LWEMG";
+                        btSNConst.Text = "단말SN";
+                        tBoxDeviceSN.Text = "123456";
+                        if (str1 == "TPB23")
+                        {
+                            cBoxFOTASize.Checked = false;
+                        }
+                        else
+                        {
+                            cBoxFOTASize.Checked = true;
+                        }
                     }
                     break;
 
@@ -2480,6 +2534,8 @@ namespace WindowsFormsApp2
                     {
                         text += "|szx=6";       // FOTA buffer size set 1024bytes.
                     }
+
+                    logPrintInTextBox(text + " 로 FOTA응답하였습니다.", "");
 
                     if (tBoxModel.Text == "BG96")
                     {

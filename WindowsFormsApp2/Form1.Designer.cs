@@ -122,7 +122,7 @@
             this.tBoxDeviceVer = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
             this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btSNConst = new System.Windows.Forms.Button();
             this.tBoxDeviceModel = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.cBoxSERVER = new System.Windows.Forms.ComboBox();
@@ -326,7 +326,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(837, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(837, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -385,6 +385,7 @@
             // 
             // tSCBoxComPort
             // 
+            this.tSCBoxComPort.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tSCBoxComPort.Name = "tSCBoxComPort";
             this.tSCBoxComPort.Size = new System.Drawing.Size(121, 28);
             this.tSCBoxComPort.TextChanged += new System.EventHandler(this.TSCBoxComPort_TextChanged);
@@ -883,10 +884,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 28);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 536);
+            this.panel1.Size = new System.Drawing.Size(837, 539);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -945,7 +946,7 @@
             this.groupBox1.Controls.Add(this.tBoxDeviceVer);
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.tBoxDeviceSN);
-            this.groupBox1.Controls.Add(this.button5);
+            this.groupBox1.Controls.Add(this.btSNConst);
             this.groupBox1.Controls.Add(this.tBoxDeviceModel);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.cBoxSERVER);
@@ -1019,17 +1020,17 @@
             this.tBoxDeviceSN.Name = "tBoxDeviceSN";
             this.tBoxDeviceSN.Size = new System.Drawing.Size(143, 25);
             this.tBoxDeviceSN.TabIndex = 23;
-            this.tBoxDeviceSN.Text = "TEST";
+            this.tBoxDeviceSN.Text = "123456";
             // 
-            // button5
+            // btSNConst
             // 
-            this.button5.Location = new System.Drawing.Point(7, 302);
-            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 30);
-            this.button5.TabIndex = 22;
-            this.button5.Text = "폴더명/SN";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btSNConst.Location = new System.Drawing.Point(7, 302);
+            this.btSNConst.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btSNConst.Name = "btSNConst";
+            this.btSNConst.Size = new System.Drawing.Size(75, 30);
+            this.btSNConst.TabIndex = 22;
+            this.btSNConst.Text = "폴더명/SN";
+            this.btSNConst.UseVisualStyleBackColor = true;
             // 
             // tBoxDeviceModel
             // 
@@ -1232,7 +1233,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 467);
+            this.panel2.Location = new System.Drawing.Point(0, 470);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -1351,8 +1352,8 @@
             // tSStatusLblLWM2M1
             // 
             this.tSStatusLblLWM2M1.Name = "tSStatusLblLWM2M1";
-            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(139, 20);
-            this.tSStatusLblLWM2M1.Text = "     LWM2M 통신 : ";
+            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(156, 20);
+            this.tSStatusLblLWM2M1.Text = "     LGU플랫폼 통신 : ";
             // 
             // tSStatusLblLWM2M
             // 
@@ -1506,7 +1507,7 @@
         private System.Windows.Forms.CheckBox cBoxLogSave;
         private System.Windows.Forms.ComboBox cBoxATCMD;
         private System.Windows.Forms.TextBox tBoxDeviceSN;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btSNConst;
         private System.Windows.Forms.TextBox tBoxDeviceVer;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.StatusStrip statusStrip1;
