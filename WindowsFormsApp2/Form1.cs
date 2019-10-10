@@ -116,10 +116,8 @@ namespace WindowsFormsApp2
 
         string device_fota_state = "1";
         string device_fota_reseult = "0";
-        int device_fota_index = 0;
-        int fotaCurrentIndex = -1;
+        string device_fota_index = "0";
         string device_total_index = "0";
-        int fota_total_size = 0;
         string device_fota_checksum = "";
 
         string oneM2MMEFIP = "106.103.234.198";
@@ -133,10 +131,6 @@ namespace WindowsFormsApp2
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
-
-        FileStream fotafs = null;
-        StreamWriter fotasw;
-
 
         public Form1()
         {
@@ -1377,7 +1371,7 @@ namespace WindowsFormsApp2
                     else if (observes[1] == "\"/26241/0/0\"")       // device firmware object인지 확인
                     {
                         // 서버에서 모듈 펌웨어 처리 후에 디바이스 펌웨어 체크 가능, 일정 시간 후에 동작해야 함.
-                        // DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult, device_fota_index);
+                        // DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
                     }
                     else
                     {
@@ -1437,7 +1431,7 @@ namespace WindowsFormsApp2
                         //received hex data make to ascii code
                         fotaDataIN = BcdToString(rcvData.ToCharArray());
                     }
-                    logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
+                    //logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
 
                     if (Convert.ToInt32(fotaDataIN.Substring(0, 4)) == 0)
                     {
@@ -1457,16 +1451,12 @@ namespace WindowsFormsApp2
                             Directory.CreateDirectory(pathname);
                             fotafs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
                             fotasw = new StreamWriter(fotafs, Encoding.UTF8);
-                            fota_total_size = 0;
-                            fotaCurrentIndex = -1;
                         }
                         catch (Exception err)
                         {
                             MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         */
-
-                        DeviceFWVerSend(tBoxDeviceVer.Text, "3", "0");
                     }
                 }
                 // Firmware File Data Block Checking
@@ -1474,69 +1464,19 @@ namespace WindowsFormsApp2
                 {
                     //received hex data make to ascii code
                     //string fotaDataIN = BcdToString(rcvData.ToCharArray());
-                    logPrintInTextBox("FOTA DATA를 수신하였습니다.", "");
-                    this.sendDataOut("OK");
+                    device_fota_index = rcvData.Substring(0, 4);
+                    tBoxFOTAIndex.Text = device_fota_index;
+                    logPrintInTextBox(device_fota_index + "번째 FOTA DATA를 수신하였습니다.", "");
 
-
-                    /*
-                    device_fota_index = Convert.ToInt32(fotaDataIN.Substring(0, 2));
-                    if (device_total_index >= device_fota_index)
+                    if (device_total_index == device_fota_index)
                     {
-                        if (device_fota_index == fotaCurrentIndex + 1)
-                        {
-                            fotaCurrentIndex = device_fota_index;
-                            string fotaRealData = fotaDataIN.Substring(2, fotaDataIN.Length - 6);
-                            string pagecrc = fotaDataIN.Substring(fotaDataIN.Length - 4, 4);
+                        device_total_index = "0";
+                        device_fota_index = "0";
+                        device_fota_state = "0";        // fota receive sucess
+                        tBoxFOTAIndex.Text = device_fota_index;
 
-                            logPrintInTextBox(fotaRealData, "");
-
-                            try
-                            {
-                                char[] logmsg = fotaRealData.ToCharArray();
-                                fotasw.Write(logmsg, fota_total_size, fotaRealData.Length);     // 다운로드 데이터를 파일에 씀
-                                fota_total_size += fotaRealData.Length;
-                            }
-                            catch (Exception err)
-                            {
-                                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-
-                            if (device_total_index == device_fota_index)
-                            {
-                                device_total_index = 0;
-                                device_fota_state = "0";        // fota receive sucess
-                                try
-                                {
-                                    fotasw.Close();
-                                    fotafs.Close();
-                                }
-                                catch (Exception err)
-                                {
-                                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            logPrintInTextBox("packet index 순서를 확인이 필요합니다.", "");
-                            device_total_index = 0;
-                            device_fota_state = "1";        // fota receive 실패
-                            try
-                            {
-                                fotasw.Close();
-                                fotafs.Close();
-                            }
-                            catch (Exception err)
-                            {
-                                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
+                        DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
                     }
-                    else
-                    {
-                        logPrintInTextBox("펌웨어 전체 크기를 초과하였습니다.", "");
-                    }
-                    */
                 }
                 else
                 {
@@ -2527,7 +2467,7 @@ namespace WindowsFormsApp2
 
                     if (state == "2")
                     {
-                        text += "|fwIn=" + Convert.ToString(device_fota_index);
+                        text += "|fwIn=" + device_fota_index;
                     }
 
                     if (cBoxFOTASize.Checked == true)
@@ -2564,7 +2504,7 @@ namespace WindowsFormsApp2
 
         private void BtnFOTAConti_Click(object sender, EventArgs e)
         {
-            device_fota_index = Convert.ToInt32(tBoxFOTAIndex.Text);
+            device_fota_index = tBoxFOTAIndex.Text;
             DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
         }
 
