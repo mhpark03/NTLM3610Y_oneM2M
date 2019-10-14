@@ -715,34 +715,33 @@ namespace WindowsFormsApp2
             logPrintInTextBox(hexOutput, "");
             */
 
-            if (charValues[charValues.Length-1]=='\n' || charValues[charValues.Length - 2] == '\n')
+            if (charValues.Length >= 2)
             {
-                string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-
-                foreach (var word in words)
+                if (charValues[charValues.Length - 1] == '\n' || charValues[charValues.Length - 2] == '\n')
                 {
-                    string str1;
+                    string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
-                    int lflength = word.IndexOf("\r");
-                    if (lflength > 1)
+                    foreach (var word in words)
                     {
-                        str1 = word.Substring(0, lflength);    // \r\n를 제외하고 명령어만 처리하기 위함
-                    }
-                    else
-                    {
-                        str1 = word;
-                    }
+                        string str1;
 
-                    if (str1 != "")             // 빈 줄은 제외하기 위함
-                    {
-                        this.parseRXData(str1);
+                        int lflength = word.IndexOf("\r");
+                        if (lflength > 1)
+                        {
+                            str1 = word.Substring(0, lflength);    // \r\n를 제외하고 명령어만 처리하기 위함
+                        }
+                        else
+                        {
+                            str1 = word;
+                        }
+
+                        if (str1 != "")             // 빈 줄은 제외하기 위함
+                        {
+                            this.parseRXData(str1);
+                        }
                     }
+                    dataIN = "";
                 }
-                dataIN = "";
-            }
-            else
-            {
-                //logPrintInTextBox("CR로 끝나지 않아서 다음 문자열을 기다립니다.", "");
             }
         }
 
@@ -1158,8 +1157,15 @@ namespace WindowsFormsApp2
                     logPrintInTextBox("FOTA 이미지 크기는 " + str2 + "입니다.", "");
                     break;
                 case "$BIN_DATA=":
-                    string[] oneM2Minfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                    oneM2Mrcvsize += Convert.ToUInt32(oneM2Minfos[0]);
+                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
+                    {
+                        string[] oneM2Minfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                        oneM2Mrcvsize += Convert.ToUInt32(oneM2Minfos[0]);
+                    }
+                    else
+                    {
+                        oneM2Mrcvsize += (UInt32)str2.Length / 2;
+                    }
                     logPrintInTextBox("index= " + oneM2Mrcvsize + "/" + oneM2Mtotalsize + "를 수신하였습니다.", "");
                     break;
                 case "$OM_C_MODEM_FWUP_RSP=":
@@ -1198,6 +1204,9 @@ namespace WindowsFormsApp2
 
                         this.sendDataOut(commands["deviceFWUPstart"]);
                         tBoxActionState.Text = states.deviceFWUPstart.ToString();
+
+                        oneM2Mrcvsize = 0;
+                        oneM2Mtotalsize = 0;
                     }
                     else if (deviceverinfos[0] == "9001")
                     {
@@ -1832,8 +1841,6 @@ namespace WindowsFormsApp2
                             cBoxFOTASize.Checked = true;
                         }
                     }
-                    break;
-
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
