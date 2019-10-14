@@ -119,6 +119,8 @@ namespace WindowsFormsApp2
         string device_fota_index = "0";
         string device_total_index = "0";
         string device_fota_checksum = "";
+        UInt32 oneM2Mtotalsize = 0;
+        UInt32 oneM2Mrcvsize = 0;
 
         string oneM2MMEFIP = "106.103.234.198";
         string oneM2MMEFPort = "80";
@@ -791,6 +793,9 @@ namespace WindowsFormsApp2
                 "@NOTI:",
                 "@NETSTI:",
                 "$OM_AUTH_RSP=",
+
+                "$OM_DEV_FWDL_START=",
+                "$BIN_DATA=",
         };
 
 
@@ -1148,6 +1153,15 @@ namespace WindowsFormsApp2
 
                     nextcommand = "getmodemSvrVer";
                     break;
+                case "$OM_DEV_FWDL_START=":
+                    oneM2Mtotalsize = Convert.ToUInt32(str2);
+                    logPrintInTextBox("FOTA 이미지 크기는 " + str2 + "입니다.", "");
+                    break;
+                case "$BIN_DATA=":
+                    string[] oneM2Minfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    oneM2Mrcvsize += Convert.ToUInt32(oneM2Minfos[0]);
+                    logPrintInTextBox("index= " + oneM2Mrcvsize + "/" + oneM2Mtotalsize + "를 수신하였습니다.", "");
+                    break;
                 case "$OM_C_MODEM_FWUP_RSP=":
                     break;
                 case "$OM_MODEM_FWUP_RSP=":
@@ -1421,68 +1435,32 @@ namespace WindowsFormsApp2
                 // Firmware File Information Block Checking
                 if ((device_total_index == "0") && (dataSize == 8))
                 {
-                    string fotaDataIN;
-                    if (tBoxModel.Text == "TPB23")
+                    if (rcvData.Substring(0, 4) == "0000")
                     {
-                        fotaDataIN = rcvData;
-                    }
-                    else
-                    {
-                        //received hex data make to ascii code
-                        fotaDataIN = BcdToString(rcvData.ToCharArray());
-                    }
-                    //logPrintInTextBox("\"" + fotaDataIN + "\"를 수신하였습니다.", "");
-
-                    if (Convert.ToInt32(fotaDataIN.Substring(0, 4)) == 0)
-                    {
-                        device_total_index = fotaDataIN.Substring(4, 4);
-                        device_fota_checksum = fotaDataIN.Substring(8, 8);
-                        device_fota_state = "1";
+                        device_total_index = rcvData.Substring(4, 4);
+                        device_fota_checksum = rcvData.Substring(8, 8);
+                        device_fota_state = "2";
                         logPrintInTextBox("total Index= " + device_total_index + ", checksum = " + device_fota_checksum + "를 수신하였습니다.", "");
-
-                        /*
-                        // Create a file to write to.
-                        try
-                        {
-                            string pathname = @"c:\temp\seriallog\";
-                            DateTime currenttime = DateTime.Now;
-                            string filename = "fota_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
-
-                            Directory.CreateDirectory(pathname);
-                            fotafs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
-                            fotasw = new StreamWriter(fotafs, Encoding.UTF8);
-                        }
-                        catch (Exception err)
-                        {
-                            MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        */
                     }
                 }
                 // Firmware File Data Block Checking
-                else if (dataSize <= 1024)
+                else
                 {
-                    //received hex data make to ascii code
-                    //string fotaDataIN = BcdToString(rcvData.ToCharArray());
                     device_fota_index = rcvData.Substring(0, 4);
                     tBoxFOTAIndex.Text = device_fota_index;
-                    logPrintInTextBox(device_fota_index + "번째 FOTA DATA를 수신하였습니다.", "");
+                    string checksum = rcvData.Substring(4, 8);
+                    logPrintInTextBox("index= " + device_fota_index + "/" + device_total_index + ", checksum= " + checksum + "를 수신하였습니다.", "");
 
                     if (device_total_index == device_fota_index)
                     {
                         device_total_index = "0";
                         device_fota_index = "0";
-                        device_fota_state = "0";        // fota receive sucess
+                        device_fota_state = "1";        // fota receive sucess
                         tBoxFOTAIndex.Text = device_fota_index;
 
                         DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
                     }
                 }
-                else
-                {
-                    logPrintInTextBox("FOTA 한 패키지 크기를 초과 하였습니다.", "");
-                }
-
             }
             else
             {
