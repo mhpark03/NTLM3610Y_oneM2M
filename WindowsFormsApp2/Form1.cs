@@ -58,6 +58,7 @@ namespace WindowsFormsApp2
             getCSEbase,
             getremoteCSE,
             setremoteCSE,
+            updateremoteCSE,
             setcontainer,
             setsubscript,
             getonem2mdata,
@@ -236,6 +237,7 @@ namespace WindowsFormsApp2
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
+            commands.Add("updateremoteCSE", "AT$OM_U_CSE_REQ");
             commands.Add("setcontainer", "AT$OM_C_CON_REQ=");
             commands.Add("setsubscript", "AT$OM_C_SUB_REQ=");
             commands.Add("getonem2mdata", "AT$OM_R_INS_REQ=");
@@ -740,7 +742,15 @@ namespace WindowsFormsApp2
                             this.parseRXData(str1);
                         }
                     }
-                    dataIN = "";
+
+                    if (charValues[charValues.Length - 2] == '\n')
+                    {
+                        dataIN = charValues[charValues.Length - 1].ToString();    // \r\n를 제외하고 나머지 한글자 저장
+                    }
+                    else
+                    {
+                        dataIN = "";
+                    }
                 }
             }
         }
@@ -1061,8 +1071,13 @@ namespace WindowsFormsApp2
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - (getremoteCSE) - setremoteCSE - (setcontainer) - setsubscript,
 
-                        this.sendDataOut(commands["setcontainer"]+tBoxDeviceSN.Text);
-                        tBoxActionState.Text = states.setcontainer.ToString();
+                        //this.sendDataOut(commands["setcontainer"]+tBoxDeviceSN.Text);
+                        //tBoxActionState.Text = states.setcontainer.ToString();
+
+                        // getCSEbase - (getremoteCSE) - (updateremoteCSE) - setcontainer - setsubscript,
+
+                        this.sendDataOut(commands["updateremoteCSE"]);
+                        tBoxActionState.Text = states.updateremoteCSE.ToString();
                     }
                     else
                     {
