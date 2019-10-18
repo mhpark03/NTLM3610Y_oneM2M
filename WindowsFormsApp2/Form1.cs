@@ -673,10 +673,20 @@ namespace WindowsFormsApp2
         // 명령어에 대해 동작시각과 방향을 포함하여 저장한다.
         private string makeLogPrintLine(string msg, string kind)
         {
-            string msg_form;
+            string msg_form = "";
             DateTime currenttime = DateTime.Now;
-            msg_form = currenttime.ToString("hh:mm:ss.fff") + " : ";
-            if(kind == "tx")
+
+            msg = msg.Replace("\0", "");
+            msg = msg.Replace("\r", "");
+            msg = msg.Replace("\n", "");
+
+            if (kind == "tx")
+            {
+                msg_form = "\r\n";
+            }
+            msg_form += currenttime.ToString("hh:mm:ss.fff") + " : ";
+
+            if (kind == "tx")
             {
                 msg_form += "==> : ";
             }
@@ -688,7 +698,8 @@ namespace WindowsFormsApp2
             {
                 msg_form += "     : ";
             }
-            msg_form = msg_form  + msg + "\r\n";
+
+            msg_form = msg_form + msg + "\r\n";
             return msg_form;
         }
 
@@ -802,6 +813,7 @@ namespace WindowsFormsApp2
                 "@NOTI:",
                 "@NETSTI:",
                 "$OM_AUTH_RSP=",
+                "$OM_U_CSE_RSP=",
 
                 "$OM_DEV_FWDL_START=",
                 "$BIN_DATA=",
@@ -1094,6 +1106,21 @@ namespace WindowsFormsApp2
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - getremoteCSE - (setremoteCSE) - (setcontainer) - setsubscript,
+
+                        this.sendDataOut(commands["setcontainer"] + tBoxDeviceSN.Text);
+                        tBoxActionState.Text = states.setcontainer.ToString();
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
+                    break;
+                case "$OM_U_CSE_RSP=":
+                    // oneM2M remoteCSE 업데이트 결과, 2004이면 container 생성 요청
+                    if (str2 == "2004" || str2 == "2000")
+                    {
+                        // 플랫폼 서버 remoteCSE, container 등록 요청
+                        // getCSEbase - getremoteCSE - (updateremoteCSE) - (setcontainer) - setsubscript,
 
                         this.sendDataOut(commands["setcontainer"] + tBoxDeviceSN.Text);
                         tBoxActionState.Text = states.setcontainer.ToString();
@@ -1677,6 +1704,7 @@ namespace WindowsFormsApp2
 
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
@@ -1685,6 +1713,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
@@ -1693,6 +1722,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "LWEMG";
                         btSNConst.Text = "단말SN";
                         tBoxDeviceSN.Text = "123456";
@@ -1828,6 +1858,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
@@ -1836,6 +1867,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
@@ -1844,6 +1876,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "LWEMG";
                         btSNConst.Text = "단말SN";
                         tBoxDeviceSN.Text = "123456";

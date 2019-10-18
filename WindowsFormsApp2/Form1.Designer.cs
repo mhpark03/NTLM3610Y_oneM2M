@@ -326,7 +326,6 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(837, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
@@ -386,7 +385,6 @@
             // 
             // tSCBoxComPort
             // 
-            this.tSCBoxComPort.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tSCBoxComPort.Name = "tSCBoxComPort";
             this.tSCBoxComPort.Size = new System.Drawing.Size(121, 28);
             this.tSCBoxComPort.TextChanged += new System.EventHandler(this.TSCBoxComPort_TextChanged);
