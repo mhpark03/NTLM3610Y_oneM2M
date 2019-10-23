@@ -109,6 +109,16 @@ namespace WindowsFormsApp2
             catm1apn1,
             catm1apn2,
             catm1psmode,
+            rfoff,
+            rfon,
+
+            catm1imscheck,
+            catm1imsset,
+            catm1imsapn1,
+            catm1imsapn2,
+            catm1imsmode,
+            catm1imspco,
+
             nbcheck,
             nbset,
             nbapn1,
@@ -283,6 +293,16 @@ namespace WindowsFormsApp2
             commands.Add("catm1apn1", "AT+CGDCONT=1,\"IPV4V6\",\"m2m-catm1.default.lguplus.co.kr\"");
             commands.Add("catm1apn2", "AT+CGDCONT=2");
             commands.Add("catm1psmode", "AT+QCFG=\"servicedomain\",1");
+            commands.Add("rfoff", "AT+CFUN=0");
+            commands.Add("rfon", "AT+CFUN=1");
+
+            commands.Add("catm1imscheck", "AT+QCFG=\"iotopmode\"");
+            commands.Add("catm1imsset", "AT+QCFG=\"iotopmode\",0");
+            commands.Add("catm1imsapn1", "AT+CGDCONT=1,\"IPV4V6\",\"m2m-catm1.default.lguplus.co.kr\"");
+            commands.Add("catm1imsapn2", "AT+CGDCONT=2,\"IPV4V6\",\"imsv6-m2m.lguplus.co.kr\"");
+            commands.Add("catm1imsmode", "AT+QCFG=\"servicedomain\",2");
+            commands.Add("catm1imspco", "AT$QCPDPIMSCFGE=2,1,0,1");
+
             commands.Add("nbcheck", "AT+QCFG=\"iotopmode\"");
             commands.Add("nbset", "AT+QCFG=\"iotopmode\",1");
             commands.Add("nbapn1", "AT+CGDCONT=1,\"IPV4V6\",\"\",\"0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0\",0,0,0,0");
@@ -839,6 +859,8 @@ namespace WindowsFormsApp2
 
                 "$OM_DEV_FWDL_START=",
                 "$BIN_DATA=",
+
+                "+QCFG: ",
         };
 
 
@@ -994,7 +1016,7 @@ namespace WindowsFormsApp2
                         tSStatusLblLTE.Text = "disconnect";
                         tSProgressLTE.Value = 0;
 
-                        network_chkcnt = 3;             // LTE attach disable을 경우 enable하고 getcereg 3회 확인
+                        network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
                         if (tBoxModel.Text == "TPB23")
                         {
                             nextcommand = states.setceregtpb23.ToString();
@@ -1011,7 +1033,23 @@ namespace WindowsFormsApp2
                         {
                             string lteregi = str2.Substring(2, 1);
 
-                            if ((lteregi == "1") || (lteregi == "5"))
+                            if (lteregi == "0")
+                            {
+                                tSStatusLblLTE.Text = "disconnect";
+                                tSProgressLTE.Value = 0;
+
+                                network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
+                                if (tBoxModel.Text == "TPB23")
+                                {
+                                    nextcommand = states.setceregtpb23.ToString();
+                                }
+                                else
+                                {
+                                    nextcommand = states.setcereg.ToString();
+                                }
+                                logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
+                            }
+                            else if ((lteregi == "1") || (lteregi == "5"))
                             {
                                 tSStatusLblLTE.Text = "registered";
                                 tSProgressLTE.Value = 100;
@@ -1495,6 +1533,20 @@ namespace WindowsFormsApp2
                         nextcommand = "setonem2mmode";
                     }
                     break;
+                case "+QCFG: ":
+                    string[] qcfgs = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    if (qcfgs[0] == "iotopmode")       // 현재 접속한 LTE망 확인
+                    {
+                        if(qcfgs[1] == "0")
+                        {
+                            logPrintInTextBox("LTE Cat M1망에 접속되어 있습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("LTE NB망에 접속되어 있습니다.", "");
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1679,6 +1731,51 @@ namespace WindowsFormsApp2
                     break;
                 case states.setonem2mmode:
                     nextcommand = states.getonem2mmode.ToString();
+                    break;
+                case states.catm1set:
+                    nextcommand = states.catm1apn1.ToString();
+                    break;
+                case states.catm1apn1:
+                    nextcommand = states.catm1apn2.ToString();
+                    break;
+                case states.catm1apn2:
+                    nextcommand = states.catm1psmode.ToString();
+                    break;
+                case states.catm1psmode:
+                    nextcommand = states.rfoff.ToString();
+                    break;
+                case states.rfoff:
+                    nextcommand = states.rfon.ToString();
+                    break;
+                case states.rfon:
+                    nextcommand = states.getcereg.ToString();
+                    break;
+                case states.catm1imsset:
+                    nextcommand = states.catm1imsapn1.ToString();
+                    break;
+                case states.catm1imsapn1:
+                    nextcommand = states.catm1imsapn2.ToString();
+                    break;
+                case states.catm1imsapn2:
+                    nextcommand = states.catm1imsmode.ToString();
+                    break;
+                case states.catm1imsmode:
+                    nextcommand = states.catm1imspco.ToString();
+                    break;
+                case states.catm1imspco:
+                    nextcommand = states.rfoff.ToString();
+                    break;
+                case states.nbset:
+                    nextcommand = states.nbapn1.ToString();
+                    break;
+                case states.nbapn1:
+                    nextcommand = states.nbapn2.ToString();
+                    break;
+                case states.nbapn2:
+                    nextcommand = states.nbpsmode.ToString();
+                    break;
+                case states.nbpsmode:
+                    nextcommand = states.rfoff.ToString();
                     break;
                 default:
                     break;
@@ -2624,6 +2721,30 @@ namespace WindowsFormsApp2
         private void tSMenuTxVersion_Click(object sender, EventArgs e)
         {
             DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
+        private void catM1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["catm1set"]);
+            tBoxActionState.Text = states.catm1set.ToString();
+
+            timer1.Start();
+        }
+
+        private void catM1IMSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["catm1imsset"]);
+            tBoxActionState.Text = states.catm1imsset.ToString();
+
+            timer1.Start();
+        }
+
+        private void nBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["nbset"]);
+            tBoxActionState.Text = states.nbset.ToString();
+
+            timer1.Start();
         }
     }
 }
