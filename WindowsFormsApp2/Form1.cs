@@ -103,6 +103,17 @@ namespace WindowsFormsApp2
             setdeviceSvrVer,
             deviceFWUPfinish,
             deviceFWUPstart,
+
+            catm1check,
+            catm1set,
+            catm1apn1,
+            catm1apn2,
+            catm1psmode,
+            nbcheck,
+            nbset,
+            nbapn1,
+            nbapn2,
+            nbpsmode,
         }
 
         string sendWith;
@@ -266,6 +277,17 @@ namespace WindowsFormsApp2
             commands.Add("setdeviceSrvver", "AT$OM_C_DEV_FWUP_REQ");
             commands.Add("deviceFWUPfinish", "AT$OM_DEV_FWUP_FINISH");
             commands.Add("deviceFWUPstart", "AT$OM_DEV_FWUP_START");
+
+            commands.Add("catm1check","AT+QCFG=\"iotopmode\"");
+            commands.Add("catm1set", "AT+QCFG=\"iotopmode\",0");
+            commands.Add("catm1apn1", "AT+CGDCONT=1,\"IPV4V6\",\"m2m-catm1.default.lguplus.co.kr\"");
+            commands.Add("catm1apn2", "AT+CGDCONT=2");
+            commands.Add("catm1psmode", "AT+QCFG=\"servicedomain\",1");
+            commands.Add("nbcheck", "AT+QCFG=\"iotopmode\"");
+            commands.Add("nbset", "AT+QCFG=\"iotopmode\",1");
+            commands.Add("nbapn1", "AT+CGDCONT=1,\"IPV4V6\",\"\",\"0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0\",0,0,0,0");
+            commands.Add("nbapn2", "AT+CGDCONT=2");
+            commands.Add("nbpsmode", "AT+QCFG=\"servicedomain\",1");
         }
 
         private void setWindowLayOut()
@@ -1704,6 +1726,7 @@ namespace WindowsFormsApp2
 
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        lTEToolStripMenuItem.Visible = false;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
@@ -1713,20 +1736,40 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        lTEToolStripMenuItem.Visible = false;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
                     }
-                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
+                    else if (str1 == "BG96")                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        lTEToolStripMenuItem.Visible = true;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "LWEMG";
                         btSNConst.Text = "단말SN";
                         tBoxDeviceSN.Text = "123456";
                         if(str1=="TPB23")
+                        {
+                            cBoxFOTASize.Checked = false;
+                        }
+                        else
+                        {
+                            cBoxFOTASize.Checked = true;
+                        }
+                    }
+                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = false;
+                        tSMenuLwM2M.Visible = true;
+                        lTEToolStripMenuItem.Visible = false;
+                        tBoxSVCCD.Text = "FOTA";
+                        tBoxDeviceModel.Text = "LWEMG";
+                        btSNConst.Text = "단말SN";
+                        tBoxDeviceSN.Text = "123456";
+                        if (str1 == "TPB23")
                         {
                             cBoxFOTASize.Checked = false;
                         }
@@ -1858,6 +1901,7 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        lTEToolStripMenuItem.Visible = false;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
@@ -1867,15 +1911,35 @@ namespace WindowsFormsApp2
                     {
                         tSMenuOneM2M.Visible = true;
                         tSMenuLwM2M.Visible = false;
+                        lTEToolStripMenuItem.Visible = false;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "NTM_Simulator";
                         btSNConst.Text = "폴더명";
                         tBoxDeviceSN.Text = "TEST";
                     }
+                    else if (str1 == "BG96")                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
+                    {
+                        tSMenuOneM2M.Visible = false;
+                        tSMenuLwM2M.Visible = true;
+                        lTEToolStripMenuItem.Visible = true;
+                        tBoxSVCCD.Text = "FOTA";
+                        tBoxDeviceModel.Text = "LWEMG";
+                        btSNConst.Text = "단말SN";
+                        tBoxDeviceSN.Text = "123456";
+                        if (str1 == "TPB23")
+                        {
+                            cBoxFOTASize.Checked = false;
+                        }
+                        else
+                        {
+                            cBoxFOTASize.Checked = true;
+                        }
+                    }
                     else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
                     {
                         tSMenuOneM2M.Visible = false;
                         tSMenuLwM2M.Visible = true;
+                        lTEToolStripMenuItem.Visible = false;
                         tBoxSVCCD.Text = "FOTA";
                         tBoxDeviceModel.Text = "LWEMG";
                         btSNConst.Text = "단말SN";
