@@ -55,6 +55,7 @@ namespace WindowsFormsApp2
             getonem2mmode,
             setonem2mmode,
             setmefauthnt,
+            fotamefauthnt,
             getCSEbase,
             getremoteCSE,
             setremoteCSE,
@@ -97,6 +98,7 @@ namespace WindowsFormsApp2
             getmodemSvrVer,
             setmodemSvrVer,
             modemFWUPfinish,
+            modemFWUPfinishLTE,
             modemFWUPstart,
 
             getdeviceSvrVer,
@@ -255,6 +257,7 @@ namespace WindowsFormsApp2
             commands.Add("getonem2mmode", "AT$LGTMPF?");
             commands.Add("setonem2mmode", "AT$LGTMPF=5");
             commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
+            commands.Add("fotamefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
@@ -281,6 +284,7 @@ namespace WindowsFormsApp2
             commands.Add("getmodemSvrVer", "AT$OM_MODEM_FWUP_REQ");
             commands.Add("setmodemver", "AT$OM_C_MODEM_FWUP_REQ");
             commands.Add("modemFWUPfinish", "AT$OM_MODEM_FWUP_FINISH");
+            commands.Add("modemFWUPfinishLTE", "AT$OM_MOD_FWUP_FINISH");
             commands.Add("modemFWUPstart", "AT$OM_MODEM_FWUP_START");
 
             commands.Add("getdeviceSvrVer", "AT$OM_DEV_FWUP_REQ");
@@ -1096,7 +1100,7 @@ namespace WindowsFormsApp2
                     timer1.Stop();
                     break;
                 case "$OM_AUTH_RSP=":
-                    // oneM2M CSEBase 조회 결과
+                    // oneM2M 인증 결과
                     if (str2 == "2000")
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
@@ -1110,6 +1114,11 @@ namespace WindowsFormsApp2
                         if (tBoxModel.Text == "알 수 없음")
                         {
                             getDeviveInfo();
+                        }
+                        else if(tBoxActionState.Text == "fotamefauthnt")
+                        {
+                            this.sendDataOut(commands["deviceFWUPfinish"]);
+                            tBoxActionState.Text = states.deviceFWUPfinish.ToString();
                         }
                     }
                     else
@@ -1293,8 +1302,16 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case "$OM_MODEM_UPDATE_FINISH":
-                    this.sendDataOut(commands["modemFWUPfinish"]);
-                    tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                    if (tBoxModel.Text == "NTLM3410Y")
+                    {
+                        this.sendDataOut(commands["modemFWUPfinishLTE"]);
+                        tBoxActionState.Text = states.modemFWUPfinishLTE.ToString();
+                    }
+                    else
+                    {
+                        this.sendDataOut(commands["modemFWUPfinish"]);
+                        tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                    }
                     break;
                 case "$OM_DEV_FWUP_RSP=":
                 case "$OM_PUSH_DEV_FWUP_RSP=":
@@ -1583,7 +1600,8 @@ namespace WindowsFormsApp2
                         device_fota_state = "1";        // fota receive sucess
                         tBoxFOTAIndex.Text = device_fota_index;
 
-                        DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+                        // 메뉴에서 선택시 버전 정보 보고하도록 함
+                        // DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
                     }
                 }
             }
@@ -1813,68 +1831,7 @@ namespace WindowsFormsApp2
                     nextcommand = states.autogetmanufac.ToString();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
-                    if(str1.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
-                    {
-                        this.sendDataOut(commands["autogetmanufac"]);
-                        tBoxActionState.Text = states.autogetmanufac.ToString();
-
-                        timer1.Start();
-                        nextcommand = "skip";
-
-                        tSMenuOneM2M.Visible = true;
-                        tSMenuLwM2M.Visible = false;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "NTM_Simulator";
-                        btSNConst.Text = "폴더명";
-                        tBoxDeviceSN.Text = "TEST";
-                    }
-                    else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = true;
-                        tSMenuLwM2M.Visible = false;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "NTM_Simulator";
-                        btSNConst.Text = "폴더명";
-                        tBoxDeviceSN.Text = "TEST";
-                    }
-                    else if (str1 == "BG96")                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = false;
-                        tSMenuLwM2M.Visible = true;
-                        lTEToolStripMenuItem.Visible = true;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "LWEMG";
-                        btSNConst.Text = "단말SN";
-                        tBoxDeviceSN.Text = "123456";
-                        if(str1=="TPB23")
-                        {
-                            cBoxFOTASize.Checked = false;
-                        }
-                        else
-                        {
-                            cBoxFOTASize.Checked = true;
-                        }
-                    }
-                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = false;
-                        tSMenuLwM2M.Visible = true;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "LWEMG";
-                        btSNConst.Text = "단말SN";
-                        tBoxDeviceSN.Text = "123456";
-                        if (str1 == "TPB23")
-                        {
-                            cBoxFOTASize.Checked = false;
-                        }
-                        else
-                        {
-                            cBoxFOTASize.Checked = true;
-                        }
-                    }
+                    setModelConfig(str1);
                     break;
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - (autogetmanufac) - (autogetimsi) - autogetimei - geticcid
@@ -1902,7 +1859,8 @@ namespace WindowsFormsApp2
 
                         tBoxIMSI.Text = ctn;
                         tBoxActionState.Text = states.idle.ToString();
-                        if (tBoxModel.Text == "BG96" || tBoxModel.Text == "NTLM3610Y" || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+                        if (tBoxModel.Text == "BG96" || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase)
+                                || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -1994,62 +1952,7 @@ namespace WindowsFormsApp2
                     timer1.Stop();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
-                    if (str1.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 oneM2M메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = true;
-                        tSMenuLwM2M.Visible = false;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "NTM_Simulator";
-                        btSNConst.Text = "폴더명";
-                        tBoxDeviceSN.Text = "TEST";
-                    }
-                    else if (str1 == "NTLM3610Y")                  //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = true;
-                        tSMenuLwM2M.Visible = false;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "NTM_Simulator";
-                        btSNConst.Text = "폴더명";
-                        tBoxDeviceSN.Text = "TEST";
-                    }
-                    else if (str1 == "BG96")                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = false;
-                        tSMenuLwM2M.Visible = true;
-                        lTEToolStripMenuItem.Visible = true;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "LWEMG";
-                        btSNConst.Text = "단말SN";
-                        tBoxDeviceSN.Text = "123456";
-                        if (str1 == "TPB23")
-                        {
-                            cBoxFOTASize.Checked = false;
-                        }
-                        else
-                        {
-                            cBoxFOTASize.Checked = true;
-                        }
-                    }
-                    else                                            //oneM2M 모듈아닌 경우, LwM2M 메뉴 활성화
-                    {
-                        tSMenuOneM2M.Visible = false;
-                        tSMenuLwM2M.Visible = true;
-                        lTEToolStripMenuItem.Visible = false;
-                        tBoxSVCCD.Text = "FOTA";
-                        tBoxDeviceModel.Text = "LWEMG";
-                        btSNConst.Text = "단말SN";
-                        tBoxDeviceSN.Text = "123456";
-                        if (str1 == "TPB23")
-                        {
-                            cBoxFOTASize.Checked = false;
-                        }
-                        else
-                        {
-                            cBoxFOTASize.Checked = true;
-                        }
-                    }
+                    setModelConfig(str1);
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
@@ -2059,6 +1962,69 @@ namespace WindowsFormsApp2
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void setModelConfig(string model)
+        {
+            if (model.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL/oneM2M 모듈
+            {
+                this.sendDataOut(commands["autogetmanufac"]);
+                tBoxActionState.Text = states.autogetmanufac.ToString();
+
+                timer1.Start();
+                nextcommand = "skip";
+
+                tSMenuOneM2M.Visible = true;
+                tSMenuLwM2M.Visible = false;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "FOTA";
+                tBoxDeviceModel.Text = "NTM_Simulator";
+                btSNConst.Text = "폴더명";
+                tBoxDeviceSN.Text = "TEST";
+            }
+            else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
+            {
+                tSMenuOneM2M.Visible = true;
+                tSMenuLwM2M.Visible = false;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "FOTA";
+                tBoxDeviceModel.Text = "NTM_Simulator";
+                btSNConst.Text = "폴더명";
+                tBoxDeviceSN.Text = "TEST";
+            }
+            else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
+            {
+                tSMenuOneM2M.Visible = false;
+                tSMenuLwM2M.Visible = true;
+                lTEToolStripMenuItem.Visible = true;
+                tBoxSVCCD.Text = "FOTA";
+                tBoxDeviceModel.Text = "LWEMG";
+                btSNConst.Text = "단말SN";
+                tBoxDeviceSN.Text = "123456";
+                cBoxFOTASize.Checked = true;
+            }
+            else if (model == "TPB23")                                                                   //화웨이/LwM2M 모듈
+            {
+                tSMenuOneM2M.Visible = false;
+                tSMenuLwM2M.Visible = true;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "TPB23";
+                btSNConst.Text = "단말SN";
+                tBoxDeviceSN.Text = "123456";
+                cBoxFOTASize.Checked = false;
+            }
+            else                                                                                        //default/LwM2M 메뉴 활성화
+            {
+                tSMenuOneM2M.Visible = false;
+                tSMenuLwM2M.Visible = true;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "FOTA";
+                tBoxDeviceModel.Text = "LWEMG";
+                btSNConst.Text = "단말SN";
+                tBoxDeviceSN.Text = "123456";
+                cBoxFOTASize.Checked = true;
             }
         }
 
@@ -2100,7 +2066,7 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["geticcid"]);
             }
-            else if (tBoxModel.Text == "NTLM3610Y")
+            else if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))           //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
             {
                 this.sendDataOut(commands["geticcid"]);
             }
@@ -2157,7 +2123,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
                 {
                     // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
                     this.sendDataOut(commands["getonem2mmode"]);
@@ -2334,7 +2300,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))   //oneM2M : remoteCSE 요청
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))   //oneM2M : remoteCSE 요청
                 {
                     // 플랫폼 서버 remoteCSE, container 등록 요청
                     // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
@@ -2611,87 +2577,91 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void 단말버전전송ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
-        }
-
         private void Button6_Click(object sender, EventArgs e)
         {
+            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+            else
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
+        private void DeviceFWVerSendOne(string ver, string state, string result)
+        {
+            if (isDeviceInfo())
+            {
+                // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                this.sendDataOut(commands["fotamefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                tBoxActionState.Text = states.fotamefauthnt.ToString();
+                timer1.Start();
+            }
+        }
+
+        private void FWUPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
         }
 
         private void DeviceFWVerSend(string ver, string state, string result)
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                // Device firmware 버전 등록 전문 예 : fwVr=1.0|fwSt=1|fwRt=0
+                // fwVr ={ VERSION}| fwSt ={ STATUS}| fwRt ={ RESULT_CODE}(|fwIn={index})(|szx={buffersize})
+                // fwVr: 현재 Device Firmware 버전
+                // fwSt: Firmware Status
+                //      1: Success
+                //      2: Progress
+                //      3: Failure
+                // fwRt : Firmware Update 결과(OMA Spec 과 같은 값 사용)
+                //      0: Initial value.
+                //      1: Firmware updated successfully
+                //      2: Not enough flash memory
+                //      3: Out of RAM during downloading process.
+                //      4: Connection lost during downloading process.
+                //      5: Integrity check failure
+                //      6: Unsupported package type.
+                //      8: Firmware update failed
+                //  fwIn : 단말에서 문제가 발생 하여 특정 Index부터 다시 받고 싶을 때 사용
+                //      만약 fwSt 가 2(Progress)이면서 fwIn 에 특정 Index 를 보내면
+                //      기존에 upload Process 는 중지 하고 해당 Index 부터 다시 Upload 시작 함
+                //      fwSt 가 2 가 아닐 경우, fwIn 값이 없거나 0 보다 작을 경우 이어 받기 동작하지 않음
+                //      fwIn 의 값이 전체 Index 보다 클 경우 이전 내려받기는 취소 되고 에러 처리 됨
+                // szx : FOTA buffer size (1:32, 2:64, 3:128, 4:256, 5:512(default), 6:1024 
+
+                string text = "fwVr=" + ver + "|fwSt=" + state + "|fwRt=" + result;
+
+                if (state == "2")
                 {
-                    // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
-                    this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
-                    tBoxActionState.Text = states.setmefauthnt.ToString();
+                    text += "|fwIn=" + device_fota_index;
+                }
+
+                if (cBoxFOTASize.Checked == true)
+                {
+                    text += "|szx=6";       // FOTA buffer size set 1024bytes.
+                }
+
+                logPrintInTextBox(text + " 로 FOTA응답하였습니다.", "");
+
+                if (tBoxModel.Text == "BG96")
+                {
+                    // Data send to SERVER (string to BCD convert)
+                    //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
+
+                    this.sendDataOut(commands["sendmsgver"] + text.Length + ",\"" + text + "\"");
+                    tBoxActionState.Text = states.sendmsgver.ToString();
+
                     timer1.Start();
                 }
-                else            //oneM2M 모델이 아님
+                else
                 {
-                    // Device firmware 버전 등록 전문 예 : fwVr=1.0|fwSt=1|fwRt=0
-                    // fwVr ={ VERSION}| fwSt ={ STATUS}| fwRt ={ RESULT_CODE}(|fwIn={index})(|szx={buffersize})
-                    // fwVr: 현재 Device Firmware 버전
-                    // fwSt: Firmware Status
-                    //      1: Success
-                    //      2: Progress
-                    //      3: Failure
-                    // fwRt : Firmware Update 결과(OMA Spec 과 같은 값 사용)
-                    //      0: Initial value.
-                    //      1: Firmware updated successfully
-                    //      2: Not enough flash memory
-                    //      3: Out of RAM during downloading process.
-                    //      4: Connection lost during downloading process.
-                    //      5: Integrity check failure
-                    //      6: Unsupported package type.
-                    //      8: Firmware update failed
-                    //  fwIn : 단말에서 문제가 발생 하여 특정 Index부터 다시 받고 싶을 때 사용
-                    //      만약 fwSt 가 2(Progress)이면서 fwIn 에 특정 Index 를 보내면
-                    //      기존에 upload Process 는 중지 하고 해당 Index 부터 다시 Upload 시작 함
-                    //      fwSt 가 2 가 아닐 경우, fwIn 값이 없거나 0 보다 작을 경우 이어 받기 동작하지 않음
-                    //      fwIn 의 값이 전체 Index 보다 클 경우 이전 내려받기는 취소 되고 에러 처리 됨
-                    // szx : FOTA buffer size (1:32, 2:64, 3:128, 4:256, 5:512(default), 6:1024 
+                    // Data send to SERVER (string original)
+                    //AT+MLWULDATA=<length>,<data>
+                    string hexOutput = StringToBCD(text.ToCharArray());
 
-                    string text = "fwVr=" + ver + "|fwSt=" + state + "|fwRt=" + result;
+                    this.sendDataOut(commands["sendmsgvertpb23"] + hexOutput.Length / 2 + "," + hexOutput);
+                    tBoxActionState.Text = states.sendmsgvertpb23.ToString();
 
-                    if (state == "2")
-                    {
-                        text += "|fwIn=" + device_fota_index;
-                    }
-
-                    if (cBoxFOTASize.Checked == true)
-                    {
-                        text += "|szx=6";       // FOTA buffer size set 1024bytes.
-                    }
-
-                    logPrintInTextBox(text + " 로 FOTA응답하였습니다.", "");
-
-                    if (tBoxModel.Text == "BG96")
-                    {
-                        // Data send to SERVER (string to BCD convert)
-                        //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
-
-                        this.sendDataOut(commands["sendmsgver"] + text.Length + ",\"" + text + "\"");
-                        tBoxActionState.Text = states.sendmsgver.ToString();
-
-                        timer1.Start();
-                    }
-                    else
-                    {
-                        // Data send to SERVER (string original)
-                        //AT+MLWULDATA=<length>,<data>
-                        string hexOutput = StringToBCD(text.ToCharArray());
-
-                        this.sendDataOut(commands["sendmsgvertpb23"] + hexOutput.Length / 2 + "," + hexOutput);
-                        tBoxActionState.Text = states.sendmsgvertpb23.ToString();
-
-                        timer1.Start();
-                    }
+                    timer1.Start();
                 }
             }
         }
@@ -2699,7 +2669,10 @@ namespace WindowsFormsApp2
         private void BtnFOTAConti_Click(object sender, EventArgs e)
         {
             device_fota_index = tBoxFOTAIndex.Text;
-            DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
+            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                DeviceFWVerSendOne(tBoxDeviceVer.Text, "2", device_fota_reseult);
+            else
+                DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
         }
 
         private void TSMenuModemVer_Click(object sender, EventArgs e)
@@ -2720,7 +2693,7 @@ namespace WindowsFormsApp2
 
         private void tSMenuTxVersion_Click(object sender, EventArgs e)
         {
-            DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+            DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
         }
 
         private void catM1ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2746,5 +2719,6 @@ namespace WindowsFormsApp2
 
             timer1.Start();
         }
+
     }
 }

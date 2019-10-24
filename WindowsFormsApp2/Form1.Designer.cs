@@ -89,13 +89,11 @@
             this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deregisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverTSMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.devserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cvsserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.opserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.단말버전전송ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuOneM2M = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuAuth = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,6 +108,7 @@
             this.tSMenuTxVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.lTEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.catM1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.catM1IMSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -159,7 +158,7 @@
             this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.catM1IMSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FWUPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -325,13 +324,13 @@
             this.fileToolStripMenuItem,
             this.COMCTRLToolStripMenuItem,
             this.TRXToolStripMenuItem,
-            this.tSMenuLwM2M,
             this.tSMenuOneM2M,
+            this.tSMenuLwM2M,
             this.lTEToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(837, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(837, 28);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -674,9 +673,8 @@
             this.provisionToolStripMenuItem,
             this.registerToolStripMenuItem,
             this.deregisterToolStripMenuItem,
-            this.resetToolStripMenuItem,
             this.serverTSMenu,
-            this.단말버전전송ToolStripMenuItem});
+            this.FWUPToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
             this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 24);
             this.tSMenuLwM2M.Text = "LwM2M";
@@ -709,13 +707,6 @@
             this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
             this.deregisterToolStripMenuItem.Text = "서버해제(DEREGISTER)";
             this.deregisterToolStripMenuItem.Click += new System.EventHandler(this.DeregisterToolStripMenuItem_Click);
-            // 
-            // resetToolStripMenuItem
-            // 
-            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.resetToolStripMenuItem.Text = "서버정보초기화";
-            this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItem_Click);
             // 
             // serverTSMenu
             // 
@@ -753,13 +744,6 @@
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 26);
-            // 
-            // 단말버전전송ToolStripMenuItem
-            // 
-            this.단말버전전송ToolStripMenuItem.Name = "단말버전전송ToolStripMenuItem";
-            this.단말버전전송ToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.단말버전전송ToolStripMenuItem.Text = "단말버전전송";
-            this.단말버전전송ToolStripMenuItem.Click += new System.EventHandler(this.단말버전전송ToolStripMenuItem_Click);
             // 
             // tSMenuOneM2M
             // 
@@ -848,7 +832,7 @@
             // 
             this.tSMenuTxVersion.Name = "tSMenuTxVersion";
             this.tSMenuTxVersion.Size = new System.Drawing.Size(270, 26);
-            this.tSMenuTxVersion.Text = "단말버전전송";
+            this.tSMenuTxVersion.Text = "디바이스FW완료보고";
             this.tSMenuTxVersion.Click += new System.EventHandler(this.tSMenuTxVersion_Click);
             // 
             // lTEToolStripMenuItem
@@ -865,14 +849,21 @@
             // catM1ToolStripMenuItem
             // 
             this.catM1ToolStripMenuItem.Name = "catM1ToolStripMenuItem";
-            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.catM1ToolStripMenuItem.Text = "Cat M1";
             this.catM1ToolStripMenuItem.Click += new System.EventHandler(this.catM1ToolStripMenuItem_Click);
+            // 
+            // catM1IMSToolStripMenuItem
+            // 
+            this.catM1IMSToolStripMenuItem.Name = "catM1IMSToolStripMenuItem";
+            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+            this.catM1IMSToolStripMenuItem.Text = "Cat M1 (IMS)";
+            this.catM1IMSToolStripMenuItem.Click += new System.EventHandler(this.catM1IMSToolStripMenuItem_Click);
             // 
             // nBToolStripMenuItem
             // 
             this.nBToolStripMenuItem.Name = "nBToolStripMenuItem";
-            this.nBToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.nBToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.nBToolStripMenuItem.Text = "NB";
             this.nBToolStripMenuItem.Click += new System.EventHandler(this.nBToolStripMenuItem_Click);
             // 
@@ -913,10 +904,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 25);
+            this.panel1.Location = new System.Drawing.Point(0, 28);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 539);
+            this.panel1.Size = new System.Drawing.Size(837, 536);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -1262,7 +1253,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 470);
+            this.panel2.Location = new System.Drawing.Point(0, 467);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -1400,12 +1391,12 @@
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
-            // catM1IMSToolStripMenuItem
+            // FWUPToolStripMenuItem
             // 
-            this.catM1IMSToolStripMenuItem.Name = "catM1IMSToolStripMenuItem";
-            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.catM1IMSToolStripMenuItem.Text = "Cat M1 (IMS)";
-            this.catM1IMSToolStripMenuItem.Click += new System.EventHandler(this.catM1IMSToolStripMenuItem_Click);
+            this.FWUPToolStripMenuItem.Name = "FWUPToolStripMenuItem";
+            this.FWUPToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.FWUPToolStripMenuItem.Text = "단말FWUP완료보고";
+            this.FWUPToolStripMenuItem.Click += new System.EventHandler(this.FWUPToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1533,7 +1524,6 @@
         private System.Windows.Forms.ToolStripMenuItem devserverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cvsserverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opserverToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
         private System.Windows.Forms.TextBox tBoxDeviceModel;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -1558,7 +1548,6 @@
         private System.Windows.Forms.ToolStripMenuItem 수신창표시방향ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 위로ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 아래로ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 단말버전전송ToolStripMenuItem;
         private System.Windows.Forms.CheckBox cBoxFOTASize;
         private System.Windows.Forms.TextBox tBoxFOTAIndex;
         private System.Windows.Forms.Button btnFOTAConti;
@@ -1579,6 +1568,7 @@
         private System.Windows.Forms.ToolStripMenuItem catM1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem catM1IMSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem FWUPToolStripMenuItem;
     }
 }
 
