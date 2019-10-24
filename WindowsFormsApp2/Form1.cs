@@ -1978,8 +1978,8 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "FOTA";
-                tBoxDeviceModel.Text = "NTM_Simulator";
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "AMM5400LG";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
             }
@@ -1988,7 +1988,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "FOTA";
+                tBoxSVCCD.Text = "CATM";
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
@@ -1998,7 +1998,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = true;
-                tBoxSVCCD.Text = "FOTA";
+                tBoxSVCCD.Text = "CATM";
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -2020,7 +2020,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "FOTA";
+                tBoxSVCCD.Text = "CATM";
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
