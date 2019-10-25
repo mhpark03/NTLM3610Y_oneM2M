@@ -375,10 +375,10 @@ namespace WindowsFormsApp2
 
         private void doCloseComPort()
         {
-            serialPort1.Close();
             progressBar1.Value = 0;
             groupBox1.Enabled = false;
             groupBox4.Enabled = false;
+            serialPort1.Close();
             logPrintInTextBox("COM PORT가 해제 되었습니다.","");
 
         }
@@ -2720,5 +2720,26 @@ namespace WindowsFormsApp2
             timer1.Start();
         }
 
+        private void cOMReloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                this.doCloseComPort();
+            }
+
+            cBoxCOMPORT.Items.Clear();
+
+            string[] ports = SerialPort.GetPortNames();
+            if (ports.Length == 0)
+            {
+                logPrintInTextBox("연결 가능한 COM PORT가 없습니다.", "");
+            }
+            else
+            {
+                cBoxCOMPORT.Items.AddRange(ports);
+                tSCBoxComPort.Items.AddRange(ports);
+                cBoxCOMPORT.SelectedIndex = 0;
+            }
+        }
     }
 }
