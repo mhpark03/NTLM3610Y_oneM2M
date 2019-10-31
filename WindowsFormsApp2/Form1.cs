@@ -50,6 +50,10 @@ namespace WindowsFormsApp2
             sendmsghex,
             sendmsgver,
 
+            disable_bg96,
+            enable_bg96,
+            setcdp_bg96,
+
             sendonemsgstr,
 
             getonem2mmode,
@@ -126,6 +130,9 @@ namespace WindowsFormsApp2
             nbapn1,
             nbapn2,
             nbpsmode,
+
+            getmodemver_q,
+            autogetmodemver_q,
         }
 
         string sendWith;
@@ -252,6 +259,10 @@ namespace WindowsFormsApp2
             commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
             commands.Add("sendmsgver", "AT+QLWM2M=\"uldata\",26241,");
 
+            commands.Add("disable_bg96", "AT+QLWM2M=\"enable\",0");
+            commands.Add("enable_bg96", "AT+QLWM2M=\"enable\",1");
+            commands.Add("setcdp_bg96", "AT+QLWM2M=\"cdp\",");
+
             commands.Add("sendonemsgstr", "AT$OM_C_INS_REQ=");
 
             commands.Add("getonem2mmode", "AT$LGTMPF?");
@@ -312,6 +323,9 @@ namespace WindowsFormsApp2
             commands.Add("nbapn1", "AT+CGDCONT=1,\"IPV4V6\",\"\",\"0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0\",0,0,0,0");
             commands.Add("nbapn2", "AT+CGDCONT=2");
             commands.Add("nbpsmode", "AT+QCFG=\"servicedomain\",1");
+
+            commands.Add("getmodemver_q", "AT+GMR");
+            commands.Add("autogetmodemver_q", "AT+GMR");
         }
 
         private void setWindowLayOut()
@@ -939,7 +953,14 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        if (tBoxModel.Text == "BG96")
+                        {
+                            nextcommand = states.autogetmodemver_q.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        }
+                        else
+                        {
+                            nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        }
                     }
                     break;
                 case "ICCID:":
@@ -1628,9 +1649,31 @@ namespace WindowsFormsApp2
 
                     nextcommand = "";           // 서버 설정 완료
                     break;
+                case states.disable_bg96:
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // (disable) - (setcdp) - servertype - endpointpame - mbsps - enable
+                    // 플랫폼 서버 타입 설정
+                    //AT+QLWM2M="cdp",<ip>,<port>
+                    this.sendDataOut(commands["setcdp_bg96"] + "\"" + serverip + "\"," + serverport);
+                    tBoxActionState.Text = states.setcdp_bg96.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.setcdp_bg96:
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // disable - (setcdp) - (servertype) - endpointpame - mbsps - enable
+                    // 플랫폼 서버 타입 설정
+                    //AT+QLWM2M="select",2
+                    this.sendDataOut(commands["setservertype"]);
+                    tBoxActionState.Text = states.setservertype.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
                 case states.setservertype:
-                    // LWM2M bootstrap 자동 요청 순서
-                    // (servertype) - (endpointpame) - mbsps - bootstrap
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // disable - setcdp - (servertype) - (endpointpame) - mbsps - enable
                     // EndPointName 플랫폼 device ID 설정
                     //AT+QLWM2M="enps",0,<service code>
                     //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
@@ -1653,8 +1696,8 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case states.setepns:
-                    // LWM2M bootstrap 자동 요청 순서
-                    // servertype - (endpointpame) - (mbsps) - bootstrap
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // disable - setcdp - servertype - (endpointpame) - (mbsps) - enable
                     // PLMN 정보 확인 후 진행
                     string ctn = tBoxIMSI.Text;
                     if (ctn != "알 수 없음")
@@ -1682,11 +1725,26 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case states.setmbsps:
-                    // LWM2M bootstrap 자동 요청 순서
-                    // servertype - endpointpame - (mbsps) - (bootstrap) 마지막
-                    // Bootstrap 요청
-                    //AT+QLWM2M="bootstrap",1
-                    nextcommand = states.bootstrap.ToString();
+                    if (tBoxModel.Text == "BG96")
+                    {
+                        // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                        // disable - setcdp - servertype - endpointpame - (mbsps) - (enable)
+                        // enable 요청
+                        //AT+QLWM2M="enable",1
+                        nextcommand = states.enable_bg96.ToString();
+                    } 
+                    else
+                    {
+                        // LWM2M bootstrap 자동 요청 순서
+                        // servertype - endpointpame - (mbsps) - (bootstrap) 마지막
+                        // Bootstrap 요청
+                        //AT+QLWM2M="bootstrap",1
+                        nextcommand = states.bootstrap.ToString();
+                    }
+                    break;
+                case states.autogetmodemver_q:
+                    // 모듈 정보 자동 확인 후 , LTE network attach 요청하면 정상적으로 attach 성공했는지 확인
+                    nextcommand = states.getcereg.ToString();
                     break;
                 case states.setcereg:
                     // LTE network attach 요청하면 정상적으로 attach 성공했는지 확인 필요
@@ -1745,7 +1803,7 @@ namespace WindowsFormsApp2
                     // setncdp - setepnstpb23 - setmbspstpb23 - (bootstrapmodetpb23) - (bootstraptpb23)
                     // LWM2M서버에 Bootstarp 요청
                     //  AT+MLWGOBOOTSTRAP=1
-                    nextcommand = states.bootstraptpb23.ToString();
+                     nextcommand = states.bootstraptpb23.ToString();
                     break;
                 case states.setonem2mmode:
                     nextcommand = states.getonem2mmode.ToString();
@@ -1922,7 +1980,7 @@ namespace WindowsFormsApp2
                 case states.setmbsps:
                     // Bootstrap 요청
                     //AT+QLWM2M="bootstrap",1
-                    nextcommand = states.bootstrap.ToString();
+                    //nextcommand = states.bootstrap.ToString();
                     break;
 
                 case states.getimsi:
@@ -1959,6 +2017,16 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
+                    break;
+                case states.getmodemver_q:
+                    tBoxModemVer.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                    this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
+                    break;
+                case states.autogetmodemver_q:
+                    tBoxModemVer.Text = str1;
+                    this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
                     break;
                 default:
                     break;
@@ -2135,12 +2203,15 @@ namespace WindowsFormsApp2
                 }
                 else if (tBoxModel.Text == "BG96")       //쿼텔
                 {
-                    // LWM2M bootstrap 자동 요청 순서
-                    // (servertype) - endpointpame - mbsps - bootstrap
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // (disable) - setcdp - servertype - endpointpame - mbsps - enable
                     // 플랫폼 서버 타입 설정
                     //AT+QLWM2M="select",2
-                    this.sendDataOut(commands["setservertype"]);
-                    tBoxActionState.Text = states.setservertype.ToString();
+                    //this.sendDataOut(commands["setservertype"]);
+                    //tBoxActionState.Text = states.setservertype.ToString();
+                    //AT+QLWM2M="enable",0
+                    this.sendDataOut(commands["disable_bg96"]);
+                    tBoxActionState.Text = states.disable_bg96.ToString();
                 }
                 else if (tBoxModel.Text == "TPB23")
                 {
@@ -2740,6 +2811,14 @@ namespace WindowsFormsApp2
                 tSCBoxComPort.Items.AddRange(ports);
                 cBoxCOMPORT.SelectedIndex = 0;
             }
+        }
+
+        private void btnModemVer_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmodemver_q"]);
+            tBoxActionState.Text = states.getmodemver_q.ToString();
+
+            timer1.Start();
         }
     }
 }
