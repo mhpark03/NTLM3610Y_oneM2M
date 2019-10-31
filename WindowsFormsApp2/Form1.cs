@@ -133,6 +133,8 @@ namespace WindowsFormsApp2
 
             getmodemver_q,
             autogetmodemver_q,
+            getmodemvertpb23,
+            autogetmodemvertpb23,
         }
 
         string sendWith;
@@ -326,6 +328,8 @@ namespace WindowsFormsApp2
 
             commands.Add("getmodemver_q", "AT+GMR");
             commands.Add("autogetmodemver_q", "AT+GMR");
+            commands.Add("getmodemvertpb23", "AT+CGMR");
+            commands.Add("autogetmodemvertpb23", "AT+CGMR");
         }
 
         private void setWindowLayOut()
@@ -879,6 +883,7 @@ namespace WindowsFormsApp2
                 "$BIN_DATA=",
 
                 "+QCFG: ",
+                "FW_VER: ",
         };
 
 
@@ -957,6 +962,10 @@ namespace WindowsFormsApp2
                         {
                             nextcommand = states.autogetmodemver_q.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
+                        else if (tBoxModel.Text == "TPB23")
+                        {
+                            nextcommand = states.autogetmodemvertpb23.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        }
                         else
                         {
                             nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
@@ -988,19 +997,14 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcidtpb23.ToString())
                     {
-                        if (tSStatusLblLTE.Text != "registered")
-                            nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        nextcommand = states.autogetmodemvertpb23.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                     }
                     else if (tBoxActionState.Text == states.autogeticcidlg.ToString())
                     {
-                        if (tSStatusLblLTE.Text != "registered")       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
-                        {
-                            this.sendDataOut(commands["getcereg"]);
-                            tBoxActionState.Text = states.getcereg.ToString();
+                        this.sendDataOut(commands["autogetmodemver_q"]);
+                        tBoxActionState.Text = states.autogetmodemver_q.ToString();
 
-                            timer1.Start();
-                            logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
-                        }
+                        timer1.Start();
                     }
                     break;
                 case "@ICCID:":
@@ -1585,6 +1589,10 @@ namespace WindowsFormsApp2
                         }
                     }
                     break;
+                case "FW_VER: ":
+                    tBoxModemVer.Text = str2;
+                    logPrintInTextBox("모뎀 버전이 저장되었습니다.", "");
+                    break;
                 default:
                     break;
             }
@@ -1743,6 +1751,7 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case states.autogetmodemver_q:
+                case states.autogetmodemvertpb23:
                     // 모듈 정보 자동 확인 후 , LTE network attach 요청하면 정상적으로 attach 성공했는지 확인
                     nextcommand = states.getcereg.ToString();
                     break;
@@ -2019,12 +2028,14 @@ namespace WindowsFormsApp2
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
                     break;
                 case states.getmodemver_q:
+                case states.getmodemvertpb23:
                     tBoxModemVer.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
                     break;
                 case states.autogetmodemver_q:
+                case states.autogetmodemvertpb23:
                     tBoxModemVer.Text = str1;
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
                     break;
@@ -2815,10 +2826,20 @@ namespace WindowsFormsApp2
 
         private void btnModemVer_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["getmodemver_q"]);
-            tBoxActionState.Text = states.getmodemver_q.ToString();
+            if(tBoxModel.Text == "BG96" || tBoxModel.Text == "GDM7243R1")
+            {
+                this.sendDataOut(commands["getmodemver_q"]);
+                tBoxActionState.Text = states.getmodemver_q.ToString();
 
-            timer1.Start();
+                timer1.Start();
+            }
+            else if (tBoxModel.Text == "TPB23")
+            {
+                this.sendDataOut(commands["getmodemvertpb23"]);
+                tBoxActionState.Text = states.getmodemvertpb23.ToString();
+
+                timer1.Start();
+            }
         }
     }
 }

@@ -333,7 +333,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(837, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(837, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -922,10 +922,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 28);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(837, 570);
+            this.panel1.Size = new System.Drawing.Size(837, 573);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -1294,7 +1294,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 501);
+            this.panel2.Location = new System.Drawing.Point(0, 504);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
