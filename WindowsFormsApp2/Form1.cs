@@ -100,7 +100,6 @@ namespace WindowsFormsApp2
             autogeticcidlg,
 
             getmodemSvrVer,
-            setmodemSvrVer,
             modemFWUPfinish,
             modemFWUPfinishLTE,
             modemFWUPstart,
@@ -135,6 +134,8 @@ namespace WindowsFormsApp2
             autogetmodemver_q,
             getmodemvertpb23,
             autogetmodemvertpb23,
+            getmodemvernt,
+            autogetmodemvernt,
         }
 
         string sendWith;
@@ -159,10 +160,6 @@ namespace WindowsFormsApp2
         string oneM2MMEFPort = "80";
         string oneM2MBRKIP = "106.103.234.117";
         string oneM2MBRKPort = "80";
-
-        string modemVer = "";
-        string modemSvrVer = "";
-        string deviceSvrVer = "";
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -330,6 +327,8 @@ namespace WindowsFormsApp2
             commands.Add("autogetmodemver_q", "AT+GMR");
             commands.Add("getmodemvertpb23", "AT+CGMR");
             commands.Add("autogetmodemvertpb23", "AT+CGMR");
+            commands.Add("getmodemvernt", "AT*ST*INFO?");
+            commands.Add("autogetmodemvernt", "AT*ST*INFO?");
         }
 
         private void setWindowLayOut()
@@ -983,7 +982,7 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        nextcommand = states.autogetmodemvernt.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                     }
                     break;
                 case "+MUICCID:":
@@ -1283,10 +1282,8 @@ namespace WindowsFormsApp2
                     break;
                 case "*ST*INFO:":
                     string[] modeminfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                    modemVer = modeminfos[1].Substring(1,modeminfos[1].Length-1);
-                    logPrintInTextBox("MODEM의 버전은 " + modemVer + "입니다.", "");
-
-                    nextcommand = "getmodemSvrVer";
+                    tBoxModemVer.Text = modeminfos[1];
+                    logPrintInTextBox("MODEM의 버전을 저장하였습니다.", "");
                     break;
                 case "$OM_DEV_FWDL_START=":
                     oneM2Mtotalsize = Convert.ToUInt32(str2);
@@ -1311,8 +1308,7 @@ namespace WindowsFormsApp2
                     string[] modemverinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                     if(modemverinfos[0] == "2000")
                     {
-                        modemSvrVer = modemverinfos[1];
-                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemSvrVer + "입니다. 업데이트를 시도합니다.", "");
+                        logPrintInTextBox("수신한 MODEM의 버전은 " + modemverinfos[1] + "입니다. 업데이트를 시도합니다.", "");
 
                         this.sendDataOut(commands["modemFWUPstart"]);
                         tBoxActionState.Text = states.modemFWUPstart.ToString();
@@ -1343,8 +1339,7 @@ namespace WindowsFormsApp2
                     string[] deviceverinfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                     if (deviceverinfos[0] == "2000")
                     {
-                        deviceSvrVer = deviceverinfos[1];
-                        logPrintInTextBox("수신한 DEVICE의 버전은 " + deviceSvrVer + "입니다. 업데이트를 시도합니다.", "");
+                        logPrintInTextBox("수신한 DEVICE의 버전은 " + deviceverinfos[1] + "입니다. 업데이트를 시도합니다.", "");
 
                         this.sendDataOut(commands["deviceFWUPstart"]);
                         tBoxActionState.Text = states.deviceFWUPstart.ToString();
@@ -1752,6 +1747,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetmodemver_q:
                 case states.autogetmodemvertpb23:
+                case states.autogetmodemvernt:
                     // 모듈 정보 자동 확인 후 , LTE network attach 요청하면 정상적으로 attach 성공했는지 확인
                     nextcommand = states.getcereg.ToString();
                     break;
@@ -2349,7 +2345,8 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // 플랫폼 서버의 IP/port 설정
-                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                    || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
@@ -2503,7 +2500,8 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if ((tBoxModel.Text == "NTLM3610Y") || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                    || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M
                 {
                     // 플랫폼 서버 data 전송
                     if (cBoxSendHex.Checked == false)
@@ -2837,6 +2835,13 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["getmodemvertpb23"]);
                 tBoxActionState.Text = states.getmodemvertpb23.ToString();
+
+                timer1.Start();
+            }
+            else if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))
+            {
+                this.sendDataOut(commands["getmodemvernt"]);
+                tBoxActionState.Text = states.getmodemvernt.ToString();
 
                 timer1.Start();
             }

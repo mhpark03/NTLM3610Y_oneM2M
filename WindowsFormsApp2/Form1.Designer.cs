@@ -342,7 +342,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -366,7 +366,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
             this.COMCTRLToolStripMenuItem.Text = "COM설정";
             // 
             // cOMReloadToolStripMenuItem
@@ -598,7 +598,7 @@
             this.writeToolStripMenuItem,
             this.수신창표시방향ToolStripMenuItem});
             this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
-            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 21);
             this.TRXToolStripMenuItem.Text = "송수신창";
             // 
             // ClearToolStripMenuItem
@@ -688,7 +688,7 @@
             this.toolStripMenuItem8,
             this.tSMenuTxVersion});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
-            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 24);
+            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 21);
             this.tSMenuOneM2M.Text = "oneM2M";
             // 
             // toolStripMenuItem3
@@ -777,7 +777,7 @@
             this.serverTSMenu,
             this.FWUPToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
-            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 24);
+            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 21);
             this.tSMenuLwM2M.Text = "LwM2M";
             this.tSMenuLwM2M.Visible = false;
             // 
@@ -860,7 +860,7 @@
             this.catM1IMSToolStripMenuItem,
             this.nBToolStripMenuItem});
             this.lTEToolStripMenuItem.Name = "lTEToolStripMenuItem";
-            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
             this.lTEToolStripMenuItem.Text = "LTE망";
             this.lTEToolStripMenuItem.Visible = false;
             // 
@@ -888,7 +888,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -1373,7 +1373,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 10000;
+            this.timer1.Interval = 15000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // statusStrip1
@@ -1444,7 +1444,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximumSize = new System.Drawing.Size(2192, 1326);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(852, 546);
+            this.MinimumSize = new System.Drawing.Size(855, 645);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
