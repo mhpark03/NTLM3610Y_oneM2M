@@ -130,8 +130,8 @@ namespace WindowsFormsApp2
             nbapn2,
             nbpsmode,
 
-            getmodemver_q,
-            autogetmodemver_q,
+            getmodemver,
+            autogetmodemver,
             getmodemvertpb23,
             autogetmodemvertpb23,
             getmodemvernt,
@@ -323,8 +323,8 @@ namespace WindowsFormsApp2
             commands.Add("nbapn2", "AT+CGDCONT=2");
             commands.Add("nbpsmode", "AT+QCFG=\"servicedomain\",1");
 
-            commands.Add("getmodemver_q", "AT+GMR");
-            commands.Add("autogetmodemver_q", "AT+GMR");
+            commands.Add("getmodemver", "AT+GMR");
+            commands.Add("autogetmodemver", "AT+GMR");
             commands.Add("getmodemvertpb23", "AT+CGMR");
             commands.Add("autogetmodemvertpb23", "AT+CGMR");
             commands.Add("getmodemvernt", "AT*ST*INFO?");
@@ -959,7 +959,7 @@ namespace WindowsFormsApp2
                     {
                         if (tBoxModel.Text == "BG96")
                         {
-                            nextcommand = states.autogetmodemver_q.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                            nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
                         else if (tBoxModel.Text == "TPB23")
                         {
@@ -1000,8 +1000,8 @@ namespace WindowsFormsApp2
                     }
                     else if (tBoxActionState.Text == states.autogeticcidlg.ToString())
                     {
-                        this.sendDataOut(commands["autogetmodemver_q"]);
-                        tBoxActionState.Text = states.autogetmodemver_q.ToString();
+                        this.sendDataOut(commands["autogetmodemver"]);
+                        tBoxActionState.Text = states.autogetmodemver.ToString();
 
                         timer1.Start();
                     }
@@ -1017,7 +1017,7 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcidamtel.ToString())
                     {
-                        nextcommand = states.getcereg.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                     }
                     break;
                 case "+CGSN:":
@@ -1745,7 +1745,7 @@ namespace WindowsFormsApp2
                         nextcommand = states.bootstrap.ToString();
                     }
                     break;
-                case states.autogetmodemver_q:
+                case states.autogetmodemver:
                 case states.autogetmodemvertpb23:
                 case states.autogetmodemvernt:
                     // 모듈 정보 자동 확인 후 , LTE network attach 요청하면 정상적으로 attach 성공했는지 확인
@@ -2023,14 +2023,14 @@ namespace WindowsFormsApp2
                     timer1.Stop();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
                     break;
-                case states.getmodemver_q:
+                case states.getmodemver:
                 case states.getmodemvertpb23:
                     tBoxModemVer.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
                     break;
-                case states.autogetmodemver_q:
+                case states.autogetmodemver:
                 case states.autogetmodemvertpb23:
                     tBoxModemVer.Text = str1;
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
@@ -2824,10 +2824,11 @@ namespace WindowsFormsApp2
 
         private void btnModemVer_Click(object sender, EventArgs e)
         {
-            if(tBoxModel.Text == "BG96" || tBoxModel.Text == "GDM7243R1")
+            if(tBoxModel.Text == "BG96" || tBoxModel.Text == "GDM7243R1" 
+                || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
             {
-                this.sendDataOut(commands["getmodemver_q"]);
-                tBoxActionState.Text = states.getmodemver_q.ToString();
+                this.sendDataOut(commands["getmodemver"]);
+                tBoxActionState.Text = states.getmodemver.ToString();
 
                 timer1.Start();
             }
