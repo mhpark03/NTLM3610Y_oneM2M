@@ -116,6 +116,7 @@ namespace WindowsFormsApp2
             catm1psmode,
             rfoff,
             rfon,
+            rfreset,
 
             catm1imscheck,
             catm1imsset,
@@ -141,7 +142,7 @@ namespace WindowsFormsApp2
         string sendWith;
         string dataIN = "";
         string RxDispOrder;
-        string serverip = "106.103.233.155";
+        string serverip = "106.103.230.51";
         string serverport = "5783";
         int network_chkcnt = 3;
         string nextcommand = "";    //OK를 받은 후 전송할 명령어가 존재하는 경우
@@ -156,10 +157,10 @@ namespace WindowsFormsApp2
         UInt32 oneM2Mtotalsize = 0;
         UInt32 oneM2Mrcvsize = 0;
 
-        string oneM2MMEFIP = "106.103.234.198";
+        string oneM2MMEFIP = "106.103.230.209";
         string oneM2MMEFPort = "80";
-        string oneM2MBRKIP = "106.103.234.117";
-        string oneM2MBRKPort = "80";
+        string oneM2MBRKIP = "106.103.230.207";
+        string oneM2MBRKPort = "8080";
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -309,6 +310,7 @@ namespace WindowsFormsApp2
             commands.Add("catm1psmode", "AT+QCFG=\"servicedomain\",1");
             commands.Add("rfoff", "AT+CFUN=0");
             commands.Add("rfon", "AT+CFUN=1");
+            commands.Add("rfreset", "AT+CFUN=1,1");
 
             commands.Add("catm1imscheck", "AT+QCFG=\"iotopmode\"");
             commands.Add("catm1imsset", "AT+QCFG=\"iotopmode\",0");
@@ -1649,8 +1651,10 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.sethttpserverinfo:
-
                     nextcommand = "";           // 서버 설정 완료
+                    break;
+                case states.setserverinfo:
+                    nextcommand = "rfreset";           // 서버 변경후 망 재연결
                     break;
                 case states.disable_bg96:
                     // 쿼텔 LWM2M bootstrap 자동 요청 순서

@@ -1116,7 +1116,7 @@
             this.cBoxSERVER.Name = "cBoxSERVER";
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
             this.cBoxSERVER.TabIndex = 19;
-            this.cBoxSERVER.Text = "개발";
+            this.cBoxSERVER.Text = "검증";
             this.cBoxSERVER.TextChanged += new System.EventHandler(this.CBoxSERVER_TextChanged);
             // 
             // button2
