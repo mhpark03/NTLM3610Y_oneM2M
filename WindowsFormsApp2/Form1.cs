@@ -381,6 +381,8 @@ namespace WindowsFormsApp2
                 //groupBox4.Enabled = false;
                 logPrintInTextBox(err.Message, "");
 
+                this.doCloseComPort();
+
             }
         }
 
@@ -2298,49 +2300,28 @@ namespace WindowsFormsApp2
         private void DevserverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cBoxSERVER.Text = "개발";
+            setLwm2mServer();
         }
 
         private void CvsserverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cBoxSERVER.Text = "검증";
+            setLwm2mServer();
         }
 
         private void OpserverToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cBoxSERVER.Text = "상용";
+            setLwm2mServer();
         }
 
-        private void CBoxSERVER_TextChanged(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
-            if(cBoxSERVER.Text == "개발")
-            {
-                serverip = "106.103.233.155";
+            setLwm2mServer();
+        }
 
-                oneM2MMEFIP = "106.103.234.198";
-                oneM2MMEFPort = "80";
-                oneM2MBRKIP = "106.103.234.117";
-                oneM2MBRKPort = "80";
-            }
-            else if (cBoxSERVER.Text == "검증")
-            {
-                serverip = "106.103.230.51";
-
-                oneM2MMEFIP = "106.103.230.209";
-                oneM2MMEFPort = "80";
-                oneM2MBRKIP = "106.103.230.207";
-                oneM2MBRKPort = "8080";
-            }
-            else if (cBoxSERVER.Text == "상용")
-            {
-                serverip = "106.103.250.108";
-
-                oneM2MMEFIP = "106.103.210.126";
-                oneM2MMEFPort = "80";
-                oneM2MBRKIP = "106.103.210.104";
-                oneM2MBRKPort = "8080";
-            }
-            serverport = "5783";
-
+        private void CBoxSERVER_SelectedIndexChanged(object sender, EventArgs e)
+        {
             setLwm2mServer();
         }
 
@@ -2348,6 +2329,35 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                if (cBoxSERVER.Text == "개발")
+                {
+                    serverip = "106.103.233.155";
+
+                    oneM2MMEFIP = "106.103.234.198";
+                    oneM2MMEFPort = "80";
+                    oneM2MBRKIP = "106.103.234.117";
+                    oneM2MBRKPort = "80";
+                }
+                else if (cBoxSERVER.Text == "검증")
+                {
+                    serverip = "106.103.230.51";
+
+                    oneM2MMEFIP = "106.103.230.209";
+                    oneM2MMEFPort = "80";
+                    oneM2MBRKIP = "106.103.230.207";
+                    oneM2MBRKPort = "8080";
+                }
+                else if (cBoxSERVER.Text == "상용")
+                {
+                    serverip = "106.103.250.108";
+
+                    oneM2MMEFIP = "106.103.210.126";
+                    oneM2MMEFPort = "80";
+                    oneM2MBRKIP = "106.103.210.104";
+                    oneM2MBRKPort = "8080";
+                }
+                serverport = "5783";
+
                 // 플랫폼 서버의 IP/port 설정
                 if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
                     || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
@@ -2850,6 +2860,11 @@ namespace WindowsFormsApp2
 
                 timer1.Start();
             }
+        }
+
+        private void SerialPort1_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        {
+            logPrintInTextBox("COM PORT 오류가 발생하였습니다.", "");
         }
     }
 }

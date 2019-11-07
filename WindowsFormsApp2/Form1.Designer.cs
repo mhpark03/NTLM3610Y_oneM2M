@@ -281,6 +281,8 @@
             // 
             // serialPort1
             // 
+            this.serialPort1.BaudRate = 115200;
+            this.serialPort1.ErrorReceived += new System.IO.Ports.SerialErrorReceivedEventHandler(this.SerialPort1_ErrorReceived);
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort1_DataReceived);
             // 
             // tBoxDataIN
@@ -1117,7 +1119,7 @@
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
             this.cBoxSERVER.TabIndex = 19;
             this.cBoxSERVER.Text = "검증";
-            this.cBoxSERVER.TextChanged += new System.EventHandler(this.CBoxSERVER_TextChanged);
+            this.cBoxSERVER.SelectedIndexChanged += new System.EventHandler(this.CBoxSERVER_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -1128,6 +1130,7 @@
             this.button2.TabIndex = 18;
             this.button2.Text = "서버";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // tBoxSVCCD
             // 
