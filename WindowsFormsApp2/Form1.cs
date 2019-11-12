@@ -1464,6 +1464,11 @@ namespace WindowsFormsApp2
                         // 26241 FOTA DATA object RECEIVED!!!
                         receiveFotaData(rxdatas[1],rxdatas[2]);
                     }
+                    else if (rxdatas[0] == "2")
+                    {
+                        // 26241 FOTA DATA object RECEIVED!!!  (GCT 모듈)
+                        receiveFotaData(rxdatas[1], rxdatas[2]);
+                    }
                     else
                     {
                         logPrintInTextBox("data format이 맞지 않습니다.", "");
@@ -1656,7 +1661,10 @@ namespace WindowsFormsApp2
                     nextcommand = "";           // 서버 설정 완료
                     break;
                 case states.setserverinfo:
-                    nextcommand = "rfreset";           // 서버 변경후 망 재연결
+                    if(tBoxModel.Text == "BG96")
+                    {
+                        nextcommand = "rfreset";           // 서버 변경후 망 재연결
+                    }
                     break;
                 case states.disable_bg96:
                     // 쿼텔 LWM2M bootstrap 자동 요청 순서
@@ -2092,6 +2100,17 @@ namespace WindowsFormsApp2
                 lTEToolStripMenuItem.Visible = false;
                 tBoxSVCCD.Text = "CATM";
                 tBoxDeviceModel.Text = "TPB23";
+                btSNConst.Text = "단말SN";
+                tBoxDeviceSN.Text = "123456";
+                cBoxFOTASize.Checked = false;
+            }
+            else if (model == "GDM7243R1")                                                                   //바인테크/GCT/LwM2M 모듈
+            {
+                tSMenuOneM2M.Visible = false;
+                tSMenuLwM2M.Visible = true;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "VTLM-102G";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
@@ -2860,11 +2879,6 @@ namespace WindowsFormsApp2
 
                 timer1.Start();
             }
-        }
-
-        private void SerialPort1_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
-        {
-            logPrintInTextBox("COM PORT 오류가 발생하였습니다.", "");
         }
     }
 }
