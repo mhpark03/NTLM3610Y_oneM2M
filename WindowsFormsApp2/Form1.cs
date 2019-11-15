@@ -2745,7 +2745,8 @@ namespace WindowsFormsApp2
 
                 if (state == "2")
                 {
-                    text += "|fwIn=" + device_fota_index;
+                    Int32 index = Convert.ToInt32(device_fota_index, 16);
+                    text += "|fwIn=" + Convert.ToString(index);
                 }
 
                 if (cBoxFOTASize.Checked == true)
