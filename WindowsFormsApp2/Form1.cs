@@ -137,6 +137,18 @@ namespace WindowsFormsApp2
             autogetmodemvertpb23,
             getmodemvernt,
             autogetmodemvernt,
+            getNWmode,
+            autogetNWmode,
+
+            chksmsmode,
+            setsmscsmp,
+            setsmscscs,
+            setsmscmgf,
+            setsmscsdh,
+            setsmsurcport,
+            setsmscnmi,
+            sendSMS,
+            receivesmsdata,
         }
 
         string sendWith;
@@ -312,14 +324,15 @@ namespace WindowsFormsApp2
             commands.Add("rfon", "AT+CFUN=1");
             commands.Add("rfreset", "AT+CFUN=1,1");
 
-            commands.Add("catm1imscheck", "AT+QCFG=\"iotopmode\"");
             commands.Add("catm1imsset", "AT+QCFG=\"iotopmode\",0");
             commands.Add("catm1imsapn1", "AT+CGDCONT=1,\"IPV4V6\",\"m2m-catm1.default.lguplus.co.kr\"");
             commands.Add("catm1imsapn2", "AT+CGDCONT=2,\"IPV4V6\",\"imsv6-m2m.lguplus.co.kr\"");
             commands.Add("catm1imsmode", "AT+QCFG=\"servicedomain\",2");
             commands.Add("catm1imspco", "AT$QCPDPIMSCFGE=2,1,0,1");
 
-            commands.Add("nbcheck", "AT+QCFG=\"iotopmode\"");
+            commands.Add("getNWmode", "AT+QCFG=\"iotopmode\"");
+            commands.Add("autogetNWmode", "AT+QCFG=\"iotopmode\"");
+
             commands.Add("nbset", "AT+QCFG=\"iotopmode\",1");
             commands.Add("nbapn1", "AT+CGDCONT=1,\"IPV4V6\",\"\",\"0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0\",0,0,0,0");
             commands.Add("nbapn2", "AT+CGDCONT=2");
@@ -331,6 +344,15 @@ namespace WindowsFormsApp2
             commands.Add("autogetmodemvertpb23", "AT+CGMR");
             commands.Add("getmodemvernt", "AT*ST*INFO?");
             commands.Add("autogetmodemvernt", "AT*ST*INFO?");
+
+            commands.Add("chksmsmode", "AT+CMGF?");
+            commands.Add("setsmscsmp", "AT+CSMP=,,,0");
+            commands.Add("setsmscscs", "AT+CSCS=\"IRA\"");
+            commands.Add("setsmscmgf", "AT+CMGF=1");
+            commands.Add("setsmscsdh", "AT+CSDH=1");
+            commands.Add("setsmsurcport", "AT+QURCCFG=\"urcport\",\"usbat\"");
+            commands.Add("setsmscnmi", "AT+CNMI=2,2,0,0,0");
+            commands.Add("sendSMS", "AT+CMGS=\"");
         }
 
         private void setWindowLayOut()
@@ -338,9 +360,10 @@ namespace WindowsFormsApp2
             groupBox4.Width = panel1.Width - 230;
             groupBox4.Height = panel1.Height - 55;
             cBoxATCMD.Width = groupBox4.Width - 90;
+            tBoxSMS.Width = groupBox4.Width - 90;
 
             groupBox3.Width = groupBox4.Width - 230;
-            groupBox3.Height = groupBox4.Height - 35;
+            groupBox3.Height = groupBox4.Height - 67;
 
             tBoxDataIN.Height = groupBox3.Height - 54;
             tBoxDataOut.Width = groupBox3.Width - 90;
@@ -797,7 +820,7 @@ namespace WindowsFormsApp2
 
             if (charValues.Length >= 2)
             {
-                if (charValues[charValues.Length - 1] == '\n' || charValues[charValues.Length - 2] == '\n')
+                if (charValues[charValues.Length - 1] == '\n' || charValues[charValues.Length - 2] == '\n' || charValues[charValues.Length - 2] == '>')
                 {
                     string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
@@ -887,6 +910,8 @@ namespace WindowsFormsApp2
 
                 "+QCFG: ",
                 "FW_VER: ",
+                "+CMGF: ",
+                "+CMT: ",
         };
 
 
@@ -1581,21 +1606,47 @@ namespace WindowsFormsApp2
                     break;
                 case "+QCFG: ":
                     string[] qcfgs = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                    if (qcfgs[0] == "iotopmode")       // 현재 접속한 LTE망 확인
+                    if (qcfgs[0] == "\"iotopmode\"")       // 현재 접속한 LTE망 확인
                     {
                         if(qcfgs[1] == "0")
                         {
+                            tSStatusLblRF.Text = "Cat M1 NETWORK";
+                            tBoxSMS.Enabled = true;
+                            btnsendSMS.Enabled = true;
+
                             logPrintInTextBox("LTE Cat M1망에 접속되어 있습니다.", "");
                         }
                         else
                         {
-                            logPrintInTextBox("LTE NB망에 접속되어 있습니다.", "");
+                            tSStatusLblRF.Text = "NB_IOT NETWORK";
+                            tBoxSMS.Enabled = false;
+                            btnsendSMS.Enabled = false;
+
+                            logPrintInTextBox("NB_IOT망에 접속되어 있습니다.", "");
+                        }
+
+                        if (tBoxActionState.Text == "autogetNWmode")
+                        {
+                            nextcommand = "autogetmanufac";
                         }
                     }
                     break;
                 case "FW_VER: ":
                     tBoxModemVer.Text = str2;
                     logPrintInTextBox("모뎀 버전이 저장되었습니다.", "");
+                    break;
+                case "+CMGF: ":
+                    if(str2 == "1")
+                    {
+                        sendSMSdata();
+                    }
+                    else
+                    {
+                        nextcommand = "setsmscsmp";
+                    }
+                    break;
+                case "+CMT: ":
+                    tBoxActionState.Text = states.receivesmsdata.ToString();
                     break;
                 default:
                     break;
@@ -1872,6 +1923,24 @@ namespace WindowsFormsApp2
                 case states.nbpsmode:
                     nextcommand = states.rfoff.ToString();
                     break;
+                case states.setsmscsmp:
+                    nextcommand = states.setsmscscs.ToString();
+                    break;
+                case states.setsmscscs:
+                    nextcommand = states.setsmscmgf.ToString();
+                    break;
+                case states.setsmscmgf:
+                    nextcommand = states.setsmscsdh.ToString();
+                    break;
+                case states.setsmscsdh:
+                    nextcommand = states.setsmsurcport.ToString();
+                    break;
+                case states.setsmsurcport:
+                    nextcommand = states.setsmscnmi.ToString();
+                    break;
+                case states.setsmscnmi:
+                    sendSMSdata();
+                    break;
                 default:
                     break;
             }
@@ -1909,6 +1978,11 @@ namespace WindowsFormsApp2
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
                     setModelConfig(str1);
+
+                    if (str1 == "BG96")
+                    {
+                        nextcommand = "autogetNWmode";
+                    }
                     break;
                 // 단말 정보 자동 갱신 순서
                 // autogetmodel - (autogetmanufac) - (autogetimsi) - autogetimei - geticcid
@@ -1935,6 +2009,8 @@ namespace WindowsFormsApp2
                         string ctn = "0" + str1.Substring(5, str1.Length - 5);
 
                         tBoxIMSI.Text = ctn;
+                        tBoxSMSCTN.Text = ctn;
+
                         tBoxActionState.Text = states.idle.ToString();
                         if (tBoxModel.Text == "BG96" || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase)
                                 || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
@@ -2030,6 +2106,11 @@ namespace WindowsFormsApp2
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
                     setModelConfig(str1);
+
+                    if(str1 == "BG96")
+                    {
+                        nextcommand = "getNWmode";
+                    }
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
@@ -2048,6 +2129,9 @@ namespace WindowsFormsApp2
                 case states.autogetmodemvertpb23:
                     tBoxModemVer.Text = str1;
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
+                    break;
+                case states.receivesmsdata:
+                    this.logPrintInTextBox("SMS \"" + str1 + "\"를 수신하였습니다.", "");
                     break;
                 default:
                     break;
@@ -2880,6 +2964,40 @@ namespace WindowsFormsApp2
 
                 timer1.Start();
             }
+        }
+
+        private void btnsendSMS_Click(object sender, EventArgs e)
+        {
+            if(tBoxSMS.TextLength != 0)
+            {
+                this.sendDataOut(commands["chksmsmode"]);
+                tBoxActionState.Text = states.chksmsmode.ToString();
+
+                timer1.Start();
+            }
+        }
+
+        private void sendSMSdata()
+        {
+            this.sendDataOut(commands["sendSMS"] + tBoxSMSCTN.Text + "\"");
+            tBoxActionState.Text = states.sendSMS.ToString();
+
+            try
+            {
+                if (serialPort1.IsOpen)
+                {
+                    serialPort1.Write(tBoxSMS.Text + (Char)26);
+                    logPrintInTextBox(tBoxSMS.Text + "를 보냈습니다.", "tx");
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                this.doOpenComPort();     // Serial port가 끊어진 것으로 판단, 포트 재오픈
+            }
+
+            timer1.Start();
         }
     }
 }
