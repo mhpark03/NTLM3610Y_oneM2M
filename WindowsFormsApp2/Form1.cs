@@ -25,6 +25,7 @@ namespace WindowsFormsApp2
             getimei,
             geticcid,
             autogetmodel,
+            autogetmodelgmm,
             autogetmanufac,
             autogetimsi,
             autogetimei,
@@ -255,6 +256,7 @@ namespace WindowsFormsApp2
             commands.Add("autogeticcidlg", "AT+MUICCID=?");
             commands.Add("autogetimeitpb23", "AT+CGSN=1");
             commands.Add("autogetmodel", "AT+CGMM");
+            commands.Add("autogetmodelgmm", "AT+GMM");
             commands.Add("autogetmanufac", "AT+CGMI");
 
             commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",1");
@@ -376,37 +378,36 @@ namespace WindowsFormsApp2
 
         private void doOpenComPort()
         {
-            try
+            if (!serialPort1.IsOpen)
             {
-                if(!serialPort1.IsOpen)
+                try
                 {
                     serialPort1.PortName = cBoxCOMPORT.Text;
                     serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
                     serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
                     serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
                     serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+
+                    serialPort1.Open();
+                    progressBar1.Value = 100;
+                    groupBox1.Enabled = true;
+                    groupBox4.Enabled = true;
+                    logPrintInTextBox("COM PORT가 연결 되었습니다.", "");
+
+                    tBoxActionState.Text = states.booting.ToString();
+                    timer2.Interval = 1000;     //초기에는 1초 타이머로 동작 
+                    timer2.Start();
                 }
+                catch (Exception err)
+                {
+                    //groupBox1.Enabled = false;
+                    //groupBox4.Enabled = false;
+                    logPrintInTextBox(err.Message, "");
 
-                serialPort1.Open();
-                progressBar1.Value = 100;
-                groupBox1.Enabled = true;
-                groupBox4.Enabled = true;
-                logPrintInTextBox("COM PORT가 연결 되었습니다.","");
-
-                tBoxActionState.Text = states.booting.ToString();
-                timer2.Interval = 1000;     //초기에는 1초 타이머로 동작 
-                timer2.Start();                
+                    this.doCloseComPort();
+                }
             }
 
-            catch (Exception err)
-            {
-                //groupBox1.Enabled = false;
-                //groupBox4.Enabled = false;
-                logPrintInTextBox(err.Message, "");
-
-                this.doCloseComPort();
-
-            }
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -558,7 +559,7 @@ namespace WindowsFormsApp2
                         {
                             tBoxActionState.Text = states.getimei.ToString();
                         }
-                        else if (command == "AT+CGMM")
+                        else if (command == "AT+CGMM" || command == "AT+GMM")
                         {
                             tBoxActionState.Text = states.getmodel.ToString();
                         }
@@ -870,7 +871,7 @@ namespace WindowsFormsApp2
                 "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
                 "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
-                "AT+CGMM",
+                "AT+CGMI",
                 "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
                 //"AT+CIMI",
                 //"AT+GSN",
@@ -1095,6 +1096,7 @@ namespace WindowsFormsApp2
                                 tSStatusLblLTE.Text = "disconnect";
                                 tSProgressLTE.Value = 0;
 
+                                /*
                                 network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
                                 if (tBoxModel.Text == "TPB23")
                                 {
@@ -1104,7 +1106,8 @@ namespace WindowsFormsApp2
                                 {
                                     nextcommand = states.setcereg.ToString();
                                 }
-                                logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
+                                */
+                                logPrintInTextBox("LTE 상태 확인이 필요합니다.", "");
                             }
                             else if ((lteregi == "1") || (lteregi == "5"))
                             {
@@ -1319,7 +1322,7 @@ namespace WindowsFormsApp2
                     logPrintInTextBox("FOTA 이미지 크기는 " + str2 + "입니다.", "");
                     break;
                 case "$BIN_DATA=":
-                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
+                    if (tBoxManu.Text == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                     {
                         string[] oneM2Minfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                         oneM2Mrcvsize += Convert.ToUInt32(oneM2Minfos[0]);
@@ -1583,11 +1586,11 @@ namespace WindowsFormsApp2
                     getDeviveInfo();
                     timer2.Interval = 10000;        // 10초 타이머로 동작
                     break;
-                case "AT+CGMM":
-                    // AMTEL booting 시 모델명 재요청인 경우인지 확인
+                case "AT+CGMI":
+                    // AMTEL booting 시 제조사명 재요청인 경우인지 확인
                     if(tBoxActionState.Text == "idle" && tSStatusLblLTE.Text != "registered")
                     {
-                        tBoxActionState.Text = states.autogetmodel.ToString();
+                        tBoxActionState.Text = states.autogetmanufac.ToString();
                     }
                     break;
                 case "$LGTMPF=":
@@ -1627,7 +1630,7 @@ namespace WindowsFormsApp2
 
                         if (tBoxActionState.Text == "autogetNWmode")
                         {
-                            nextcommand = "autogetmanufac";
+                            nextcommand = "autogetimsi";
                         }
                     }
                     break;
@@ -1752,7 +1755,7 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 // 단말 정보 자동 갱신 순서
-                // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
+                // autogetmanufac - autogetmodel - autogetimsi - (autogetimei) - (geticcid) - 마지막
                 case states.autogetimeitpb23:
                     if (tBoxModel.Text == "TPB23")
                     {
@@ -1970,39 +1973,44 @@ namespace WindowsFormsApp2
             switch(state)
             {
                 // 단말 정보 자동 갱신 순서
-                // (autogetmodel) - (autogetmanufac) - autogetimsi - autogetimei - geticcid
+                // autogetmanufac - (autogetmodel) - (autogetimsi) - autogetimei - geticcid
                 case states.autogetmodel:
                     tBoxModel.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-                    nextcommand = states.autogetmanufac.ToString();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
                     setModelConfig(str1);
 
+                    tBoxActionState.Text = states.idle.ToString();
                     if (str1 == "BG96")
                     {
                         nextcommand = "autogetNWmode";
                     }
+                    else
+                    {
+                        nextcommand = states.autogetimsi.ToString();
+                    }
                     break;
                 // 단말 정보 자동 갱신 순서
-                // autogetmodel - (autogetmanufac) - (autogetimsi) - autogetimei - geticcid
+                // (autogetmanufac) - (autogetmodel) - autogetimsi - autogetimei - geticcid
                 case states.autogetmanufac:
                     tBoxManu.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-                    nextcommand = states.autogetimsi.ToString();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
-
-                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
+                    if (str1 == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                     {
-                        this.sendDataOut(commands["autogetimsi"]);
-                        tBoxActionState.Text = states.autogetimsi.ToString();
+                        this.sendDataOut(commands["autogetmodelgmm"]);
+                        tBoxActionState.Text = states.autogetmodel.ToString();
 
                         timer1.Start();
                         nextcommand = "skip";
                     }
+                    else
+                    {
+                        tBoxActionState.Text = states.idle.ToString();
+                        nextcommand = states.autogetmodel.ToString();
+                    }
                     break;
                 // 단말 정보 자동 갱신 순서
-                // autogetmodel - autogetmanufac - (autogetimsi) - (autogetimei) - geticcid
+                // autogetmanufac - autogetmodel - (autogetimsi) - (autogetimei) - geticcid
                 case states.autogetimsi:
                     if (str1.StartsWith("45006"))
                     {
@@ -2013,7 +2021,7 @@ namespace WindowsFormsApp2
 
                         tBoxActionState.Text = states.idle.ToString();
                         if (tBoxModel.Text == "BG96" || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase)
-                                || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+                                || tBoxManu.Text == "AM Telecom")
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -2023,10 +2031,10 @@ namespace WindowsFormsApp2
                         this.logPrintInTextBox("USIM 상태 확인이 필요합니다.", "");
                     break;
                 // 단말 정보 자동 갱신 순서
-                // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
+                // autogetmanufac - autogetmodel - autogetimsi - (autogetimei) - (geticcid)
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL 모듈은 OK가 오지 않음
+                    if (tBoxManu.Text == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                     {
                         tBoxActionState.Text = states.autogeticcidamtel.ToString();
                         nextcommand = states.autogeticcidamtel.ToString();
@@ -2140,14 +2148,8 @@ namespace WindowsFormsApp2
 
         private void setModelConfig(string model)
         {
-            if (model.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))        //AMTEL/oneM2M 모듈
+            if (tBoxManu.Text == "AM Telecom")        //AMTEL/oneM2M 모듈
             {
-                this.sendDataOut(commands["autogetmanufac"]);
-                tBoxActionState.Text = states.autogetmanufac.ToString();
-
-                timer1.Start();
-                nextcommand = "skip";
-
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
@@ -2187,6 +2189,7 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
+                tSStatusLblRF.Text = "NB_IOT NETWORK";
             }
             else if (model == "GDM7243R1")                                                                   //바인테크/GCT/LwM2M 모듈
             {
@@ -2222,9 +2225,9 @@ namespace WindowsFormsApp2
             this.logPrintInTextBox("DEVICE 정보 전체를 요청합니다.","");
 
             // 단말 정보 자동 갱신 순서
-            // (autogetmodel) - autogetmanufac - autogetimsi - autogetimei - geticcid - bootstrap
-            this.sendDataOut(commands["getmodel"]);
-            tBoxActionState.Text = states.autogetmodel.ToString();
+            // (autogetmanufac) - autogetmodel - autogetimsi - autogetimei - geticcid
+            this.sendDataOut(commands["autogetmanufac"]);
+            tBoxActionState.Text = states.autogetmanufac.ToString();
 
             timer1.Start();
         }
@@ -2238,7 +2241,7 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            if (tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+            if (tBoxManu.Text == "AM Telecom")
             {
                 this.sendDataOut(commands["geticcidamtel"]);
             }
@@ -2307,7 +2310,8 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                    || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
                 {
                     // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
                     this.sendDataOut(commands["getonem2mmode"]);
@@ -2463,7 +2467,7 @@ namespace WindowsFormsApp2
 
                 // 플랫폼 서버의 IP/port 설정
                 if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+                    || tBoxManu.Text == "AM Telecom")
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
@@ -2496,7 +2500,8 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))   //oneM2M : remoteCSE 요청
+                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                    || tBoxManu.Text == "AM Telecom")   //oneM2M : remoteCSE 요청
                 {
                     // 플랫폼 서버 remoteCSE, container 등록 요청
                     // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
@@ -2618,7 +2623,7 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M
+                    || tBoxManu.Text == "AM Telecom")      // oneM2M
                 {
                     // 플랫폼 서버 data 전송
                     if (cBoxSendHex.Checked == false)
@@ -2776,7 +2781,8 @@ namespace WindowsFormsApp2
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
@@ -2867,7 +2873,8 @@ namespace WindowsFormsApp2
         private void BtnFOTAConti_Click(object sender, EventArgs e)
         {
             device_fota_index = tBoxFOTAIndex.Text;
-            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))      // oneM2M : MEF Auth인증 요청
+            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
+                || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, "2", device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
@@ -2943,7 +2950,7 @@ namespace WindowsFormsApp2
         private void btnModemVer_Click(object sender, EventArgs e)
         {
             if(tBoxModel.Text == "BG96" || tBoxModel.Text == "GDM7243R1" 
-                || tBoxModel.Text.StartsWith("AMM5400LG", System.StringComparison.CurrentCultureIgnoreCase))
+                || tBoxManu.Text == "AM Telecom")
             {
                 this.sendDataOut(commands["getmodemver"]);
                 tBoxActionState.Text = states.getmodemver.ToString();
