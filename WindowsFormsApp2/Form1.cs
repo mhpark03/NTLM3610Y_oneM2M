@@ -349,7 +349,7 @@ namespace WindowsFormsApp2
 
             commands.Add("chksmsmode", "AT+CMGF?");
             commands.Add("setsmscsmp", "AT+CSMP=,,,0");
-            commands.Add("setsmscscs", "AT+CSCS=\"IRA\"");
+            commands.Add("setsmscscs", "AT+CSCS=\"GSM\"");
             commands.Add("setsmscmgf", "AT+CMGF=1");
             commands.Add("setsmscsdh", "AT+CSDH=1");
             commands.Add("setsmsurcport", "AT+QURCCFG=\"urcport\",\"usbat\"");
@@ -1936,7 +1936,14 @@ namespace WindowsFormsApp2
                     nextcommand = states.setsmscsdh.ToString();
                     break;
                 case states.setsmscsdh:
-                    nextcommand = states.setsmsurcport.ToString();
+                    if (tBoxManu.Text == "AM Telecom")
+                    {
+                        sendSMSdata();
+                    }
+                    else
+                    {
+                        nextcommand = states.setsmsurcport.ToString();
+                    }
                     break;
                 case states.setsmsurcport:
                     nextcommand = states.setsmscnmi.ToString();
@@ -2157,6 +2164,9 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "AMM5400LG";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
+                tBoxSMS.Enabled = true;
+                btnsendSMS.Enabled = true;
+                tSStatusLblRF.Text = "Cat M1 NETWORK";
             }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
             {
@@ -2167,6 +2177,9 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
+                tBoxSMS.Enabled = false;
+                btnsendSMS.Enabled = false;
+                tSStatusLblRF.Text = "Cat M1 NETWORK";
             }
             else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
             {
@@ -2177,6 +2190,8 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
+                tBoxSMS.Enabled = false;
+                btnsendSMS.Enabled = false;
                 cBoxFOTASize.Checked = true;
             }
             else if (model == "TPB23")                                                                   //화웨이/LwM2M 모듈
@@ -2189,6 +2204,8 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
+                tBoxSMS.Enabled = false;
+                btnsendSMS.Enabled = false;
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
             }
             else if (model == "GDM7243R1")                                                                   //바인테크/GCT/LwM2M 모듈
@@ -2201,6 +2218,9 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
+                tBoxSMS.Enabled = false;
+                btnsendSMS.Enabled = false;
+                tSStatusLblRF.Text = "NB_IOT NETWORK";
             }
             else                                                                                        //default/LwM2M 메뉴 활성화
             {
@@ -2212,6 +2232,9 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = true;
+                tBoxSMS.Enabled = false;
+                btnsendSMS.Enabled = false;
+                tSStatusLblRF.Text = "LTE NETWORK";
             }
         }
 
@@ -3005,6 +3028,22 @@ namespace WindowsFormsApp2
             }
 
             timer1.Start();
+        }
+
+        private void tBoxSMS_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (tBoxSMS.TextLength != 0)
+                {
+                    this.sendDataOut(commands["chksmsmode"]);
+                    tBoxActionState.Text = states.chksmsmode.ToString();
+
+                    timer1.Start();
+                }
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }

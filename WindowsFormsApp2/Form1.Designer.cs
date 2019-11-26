@@ -117,10 +117,14 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btnsendSMS = new System.Windows.Forms.Button();
+            this.tBoxSMS = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tBoxSMSCTN = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.tBoxModemVer = new System.Windows.Forms.TextBox();
             this.btnModemVer = new System.Windows.Forms.Button();
             this.tBoxFOTAIndex = new System.Windows.Forms.TextBox();
@@ -162,10 +166,6 @@
             this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.btnsendSMS = new System.Windows.Forms.Button();
-            this.tBoxSMS = new System.Windows.Forms.TextBox();
-            this.tBoxSMSCTN = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -338,7 +338,6 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(839, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
@@ -873,21 +872,21 @@
             // catM1ToolStripMenuItem
             // 
             this.catM1ToolStripMenuItem.Name = "catM1ToolStripMenuItem";
-            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.catM1ToolStripMenuItem.Text = "Cat M1";
             this.catM1ToolStripMenuItem.Click += new System.EventHandler(this.catM1ToolStripMenuItem_Click);
             // 
             // catM1IMSToolStripMenuItem
             // 
             this.catM1IMSToolStripMenuItem.Name = "catM1IMSToolStripMenuItem";
-            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.catM1IMSToolStripMenuItem.Text = "Cat M1 (IMS)";
             this.catM1IMSToolStripMenuItem.Click += new System.EventHandler(this.catM1IMSToolStripMenuItem_Click);
             // 
             // nBToolStripMenuItem
             // 
             this.nBToolStripMenuItem.Name = "nBToolStripMenuItem";
-            this.nBToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.nBToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.nBToolStripMenuItem.Text = "NB";
             this.nBToolStripMenuItem.Click += new System.EventHandler(this.nBToolStripMenuItem_Click);
             // 
@@ -947,6 +946,30 @@
             this.groupBox4.Size = new System.Drawing.Size(539, 510);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
+            // 
+            // btnsendSMS
+            // 
+            this.btnsendSMS.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnsendSMS.Enabled = false;
+            this.btnsendSMS.Location = new System.Drawing.Point(442, 50);
+            this.btnsendSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.btnsendSMS.Name = "btnsendSMS";
+            this.btnsendSMS.Size = new System.Drawing.Size(94, 32);
+            this.btnsendSMS.TabIndex = 13;
+            this.btnsendSMS.Text = "SMS전송";
+            this.btnsendSMS.UseVisualStyleBackColor = true;
+            this.btnsendSMS.Click += new System.EventHandler(this.btnsendSMS_Click);
+            // 
+            // tBoxSMS
+            // 
+            this.tBoxSMS.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tBoxSMS.Enabled = false;
+            this.tBoxSMS.Location = new System.Drawing.Point(3, 50);
+            this.tBoxSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.tBoxSMS.Name = "tBoxSMS";
+            this.tBoxSMS.Size = new System.Drawing.Size(431, 25);
+            this.tBoxSMS.TabIndex = 14;
+            this.tBoxSMS.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tBoxSMS_KeyDown);
             // 
             // panel4
             // 
@@ -1022,6 +1045,25 @@
             this.groupBox1.Size = new System.Drawing.Size(239, 511);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
+            // 
+            // tBoxSMSCTN
+            // 
+            this.tBoxSMSCTN.Location = new System.Drawing.Point(88, 477);
+            this.tBoxSMSCTN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxSMSCTN.Name = "tBoxSMSCTN";
+            this.tBoxSMSCTN.Size = new System.Drawing.Size(143, 25);
+            this.tBoxSMSCTN.TabIndex = 31;
+            this.tBoxSMSCTN.Text = "01222990103";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(7, 477);
+            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 30);
+            this.button5.TabIndex = 30;
+            this.button5.Text = "전화번호";
+            this.button5.UseVisualStyleBackColor = true;
             // 
             // tBoxModemVer
             // 
@@ -1442,48 +1484,6 @@
             // 
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
-            // 
-            // btnsendSMS
-            // 
-            this.btnsendSMS.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnsendSMS.Enabled = false;
-            this.btnsendSMS.Location = new System.Drawing.Point(442, 50);
-            this.btnsendSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.btnsendSMS.Name = "btnsendSMS";
-            this.btnsendSMS.Size = new System.Drawing.Size(94, 32);
-            this.btnsendSMS.TabIndex = 13;
-            this.btnsendSMS.Text = "SMS전송";
-            this.btnsendSMS.UseVisualStyleBackColor = true;
-            this.btnsendSMS.Click += new System.EventHandler(this.btnsendSMS_Click);
-            // 
-            // tBoxSMS
-            // 
-            this.tBoxSMS.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tBoxSMS.Enabled = false;
-            this.tBoxSMS.Location = new System.Drawing.Point(3, 50);
-            this.tBoxSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.tBoxSMS.Name = "tBoxSMS";
-            this.tBoxSMS.Size = new System.Drawing.Size(431, 25);
-            this.tBoxSMS.TabIndex = 14;
-            // 
-            // tBoxSMSCTN
-            // 
-            this.tBoxSMSCTN.Location = new System.Drawing.Point(88, 477);
-            this.tBoxSMSCTN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tBoxSMSCTN.Name = "tBoxSMSCTN";
-            this.tBoxSMSCTN.Size = new System.Drawing.Size(143, 25);
-            this.tBoxSMSCTN.TabIndex = 31;
-            this.tBoxSMSCTN.Text = "01222990103";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(7, 477);
-            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 30);
-            this.button5.TabIndex = 30;
-            this.button5.Text = "전화번호";
-            this.button5.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
