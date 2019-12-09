@@ -149,6 +149,7 @@ namespace WindowsFormsApp2
             setsmsurcport,
             setsmscnmi,
             sendSMS,
+            getSMS,
             receivesmsdata,
         }
 
@@ -355,6 +356,7 @@ namespace WindowsFormsApp2
             commands.Add("setsmsurcport", "AT+QURCCFG=\"urcport\",\"usbat\"");
             commands.Add("setsmscnmi", "AT+CNMI=2,2,0,0,0");
             commands.Add("sendSMS", "AT+CMGS=\"");
+            commands.Add("getSMS", "AT+CMGR=");
         }
 
         private void setWindowLayOut()
@@ -913,6 +915,8 @@ namespace WindowsFormsApp2
                 "FW_VER: ",
                 "+CMGF: ",
                 "+CMT: ",
+                "+CMGR: ",
+                "+CMTI: ",
         };
 
 
@@ -1012,7 +1016,14 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        nextcommand = states.autogetmodemvernt.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        if (tBoxManu.Text == "QUALCOMM INCORPORATED")
+                        {
+                            nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        }
+                        else
+                        {
+                            nextcommand = states.autogetmodemvernt.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                        }
                     }
                     break;
                 case "+MUICCID:":
@@ -1649,7 +1660,13 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case "+CMT: ":
+                case "+CMGR: ":
                     tBoxActionState.Text = states.receivesmsdata.ToString();
+                    break;
+                case "+CMTI: ":
+                    string[] smsnoti = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    this.sendDataOut(commands["getSMS"] + smsnoti[1]);
+                    tBoxActionState.Text = states.getSMS.ToString();
                     break;
                 default:
                     break;
@@ -2002,7 +2019,7 @@ namespace WindowsFormsApp2
                 case states.autogetmanufac:
                     tBoxManu.Text = str1;
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
-                    if (str1 == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
+                    if (str1 == "AM Telecom" || str1 == "QUALCOMM INCORPORATED")        //AMTEL 모듈은 OK가 오지 않음
                     {
                         this.sendDataOut(commands["autogetmodelgmm"]);
                         tBoxActionState.Text = states.autogetmodel.ToString();
@@ -2028,7 +2045,7 @@ namespace WindowsFormsApp2
 
                         tBoxActionState.Text = states.idle.ToString();
                         if (tBoxModel.Text == "BG96" || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase)
-                                || tBoxManu.Text == "AM Telecom")
+                                || tBoxManu.Text == "AM Telecom" || tBoxManu.Text == "QUALCOMM INCORPORATED")
                             nextcommand = states.autogetimei.ToString();
                         else
                             nextcommand = states.autogetimeitpb23.ToString();
@@ -2168,6 +2185,19 @@ namespace WindowsFormsApp2
                 btnsendSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
             }
+            else if (tBoxManu.Text == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+            {
+                tSMenuOneM2M.Visible = true;
+                tSMenuLwM2M.Visible = false;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "AMM5400LG";
+                btSNConst.Text = "폴더명";
+                tBoxDeviceSN.Text = "TEST";
+                tBoxSMS.Enabled = true;
+                btnsendSMS.Enabled = true;
+                tSStatusLblRF.Text = "Cat M1 NETWORK";
+            }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
             {
                 tSMenuOneM2M.Visible = true;
@@ -2272,7 +2302,7 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["geticcidtpb23"]);
             }
-            else if(tBoxModel.Text == "BG96")
+            else if(tBoxModel.Text == "BG96" || tBoxManu.Text == "QUALCOMM INCORPORATED")
             {
                 this.sendDataOut(commands["geticcid"]);
             }
