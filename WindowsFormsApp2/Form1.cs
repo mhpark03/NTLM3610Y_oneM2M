@@ -991,7 +991,7 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (tBoxModel.Text == "BG96")
+                        if (tBoxModel.Text == "BG96" || tBoxManu.Text == "LIME-I Co., Ltd")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -1016,7 +1016,7 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (tBoxManu.Text == "QUALCOMM INCORPORATED")
+                        if (tBoxManu.Text == "QUALCOMM INCORPORATED" || tBoxManu.Text == "LIME-I Co., Ltd")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -2019,7 +2019,8 @@ namespace WindowsFormsApp2
                 case states.autogetmanufac:
                     tBoxManu.Text = str1;
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
-                    if (str1 == "AM Telecom" || str1 == "QUALCOMM INCORPORATED")        //AMTEL 모듈은 OK가 오지 않음
+                    if (str1 == "AM Telecom" || str1 == "QUALCOMM INCORPORATED"
+                        || str1 == "LIME-I Co., Ltd")        //AMTEL 모듈은 OK가 오지 않음
                     {
                         this.sendDataOut(commands["autogetmodelgmm"]);
                         tBoxActionState.Text = states.autogetmodel.ToString();
@@ -2044,12 +2045,10 @@ namespace WindowsFormsApp2
                         tBoxSMSCTN.Text = ctn;
 
                         tBoxActionState.Text = states.idle.ToString();
-                        if (tBoxModel.Text == "BG96" || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase)
-                                || tBoxManu.Text == "AM Telecom" || tBoxManu.Text == "QUALCOMM INCORPORATED")
-                            nextcommand = states.autogetimei.ToString();
-                        else
+                        if (tBoxModel.Text == "TPB23")
                             nextcommand = states.autogetimeitpb23.ToString();
-                        this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
+                        else
+                            nextcommand = states.autogetimei.ToString();
                     }
                     else
                         this.logPrintInTextBox("USIM 상태 확인이 필요합니다.", "");
@@ -2198,6 +2197,19 @@ namespace WindowsFormsApp2
                 btnsendSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
             }
+            else if (tBoxManu.Text == "LIME-I Co., Ltd")        //라임아이/oneM2M 모듈
+            {
+                tSMenuOneM2M.Visible = true;
+                tSMenuLwM2M.Visible = false;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "AMM5400LG";
+                btSNConst.Text = "폴더명";
+                tBoxDeviceSN.Text = "TEST";
+                tBoxSMS.Enabled = true;
+                btnsendSMS.Enabled = true;
+                tSStatusLblRF.Text = "LTE Cat.4 NETWORK";
+            }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
             {
                 tSMenuOneM2M.Visible = true;
@@ -2306,7 +2318,8 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["geticcid"]);
             }
-            else if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))           //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
+            else if (tBoxManu.Text == "LIME-I Co., Ltd"
+                || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))           //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
             {
                 this.sendDataOut(commands["geticcid"]);
             }
@@ -3002,15 +3015,7 @@ namespace WindowsFormsApp2
 
         private void btnModemVer_Click(object sender, EventArgs e)
         {
-            if(tBoxModel.Text == "BG96" || tBoxModel.Text == "GDM7243R1" 
-                || tBoxManu.Text == "AM Telecom")
-            {
-                this.sendDataOut(commands["getmodemver"]);
-                tBoxActionState.Text = states.getmodemver.ToString();
-
-                timer1.Start();
-            }
-            else if (tBoxModel.Text == "TPB23")
+            if (tBoxModel.Text == "TPB23")
             {
                 this.sendDataOut(commands["getmodemvertpb23"]);
                 tBoxActionState.Text = states.getmodemvertpb23.ToString();
@@ -3021,6 +3026,13 @@ namespace WindowsFormsApp2
             {
                 this.sendDataOut(commands["getmodemvernt"]);
                 tBoxActionState.Text = states.getmodemvernt.ToString();
+
+                timer1.Start();
+            }
+            else
+            {
+                this.sendDataOut(commands["getmodemver"]);
+                tBoxActionState.Text = states.getmodemver.ToString();
 
                 timer1.Start();
             }
