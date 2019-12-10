@@ -175,6 +175,7 @@ namespace WindowsFormsApp2
         string oneM2MMEFPort = "80";
         string oneM2MBRKIP = "106.103.230.207";
         string oneM2MBRKPort = "8080";
+        int oneM2Mmode = 0;
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -2183,6 +2184,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = true;
                 btnsendSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
+                oneM2Mmode = 0;
             }
             else if (tBoxManu.Text == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
             {
@@ -2196,6 +2198,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = true;
                 btnsendSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
+                oneM2Mmode = 0;
             }
             else if (tBoxManu.Text == "LIME-I Co., Ltd")        //라임아이/oneM2M 모듈
             {
@@ -2209,6 +2212,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = true;
                 btnsendSMS.Enabled = true;
                 tSStatusLblRF.Text = "LTE Cat.4 NETWORK";
+                oneM2Mmode = 0;
             }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
             {
@@ -2222,6 +2226,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = false;
                 btnsendSMS.Enabled = false;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
+                oneM2Mmode = 0;
             }
             else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
             {
@@ -2235,6 +2240,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = false;
                 btnsendSMS.Enabled = false;
                 cBoxFOTASize.Checked = true;
+                oneM2Mmode = 1;
             }
             else if (model == "TPB23")                                                                   //화웨이/LwM2M 모듈
             {
@@ -2249,6 +2255,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = false;
                 btnsendSMS.Enabled = false;
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
+                oneM2Mmode = 1;
             }
             else if (model == "GDM7243R1")                                                                   //바인테크/GCT/LwM2M 모듈
             {
@@ -2263,6 +2270,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = false;
                 btnsendSMS.Enabled = false;
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
+                oneM2Mmode = 1;
             }
             else                                                                                        //default/LwM2M 메뉴 활성화
             {
@@ -2277,6 +2285,7 @@ namespace WindowsFormsApp2
                 tBoxSMS.Enabled = false;
                 btnsendSMS.Enabled = false;
                 tSStatusLblRF.Text = "LTE NETWORK";
+                oneM2Mmode = 1;
             }
         }
 
@@ -2376,8 +2385,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
+                if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
                 {
                     // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
                     this.sendDataOut(commands["getonem2mmode"]);
@@ -2532,8 +2540,7 @@ namespace WindowsFormsApp2
                 serverport = "5783";
 
                 // 플랫폼 서버의 IP/port 설정
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxManu.Text == "AM Telecom")
+                if (oneM2Mmode == 0)
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
@@ -2566,8 +2573,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxManu.Text == "AM Telecom")   //oneM2M : remoteCSE 요청
+                if (oneM2Mmode == 0)   //oneM2M : remoteCSE 요청
                 {
                     // 플랫폼 서버 remoteCSE, container 등록 요청
                     // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
@@ -2688,8 +2694,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                    || tBoxManu.Text == "AM Telecom")      // oneM2M
+                if (oneM2Mmode == 0)      // oneM2M
                 {
                     // 플랫폼 서버 data 전송
                     if (cBoxSendHex.Checked == false)
@@ -2847,8 +2852,7 @@ namespace WindowsFormsApp2
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
+            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
@@ -2939,8 +2943,7 @@ namespace WindowsFormsApp2
         private void BtnFOTAConti_Click(object sender, EventArgs e)
         {
             device_fota_index = tBoxFOTAIndex.Text;
-            if (tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase) 
-                || tBoxManu.Text == "AM Telecom")      // oneM2M : MEF Auth인증 요청
+            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, "2", device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
