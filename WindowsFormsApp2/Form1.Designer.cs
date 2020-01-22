@@ -166,6 +166,7 @@
             this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -338,7 +339,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(839, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(839, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -347,7 +348,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -371,7 +372,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 24);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
             this.COMCTRLToolStripMenuItem.Text = "COM설정";
             // 
             // cOMReloadToolStripMenuItem
@@ -603,7 +604,7 @@
             this.writeToolStripMenuItem,
             this.수신창표시방향ToolStripMenuItem});
             this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
-            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 24);
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 21);
             this.TRXToolStripMenuItem.Text = "송수신창";
             // 
             // ClearToolStripMenuItem
@@ -693,7 +694,7 @@
             this.toolStripMenuItem8,
             this.tSMenuTxVersion});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
-            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 24);
+            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 21);
             this.tSMenuOneM2M.Text = "oneM2M";
             // 
             // toolStripMenuItem3
@@ -782,7 +783,7 @@
             this.serverTSMenu,
             this.FWUPToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
-            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 24);
+            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 21);
             this.tSMenuLwM2M.Text = "LwM2M";
             this.tSMenuLwM2M.Visible = false;
             // 
@@ -865,7 +866,7 @@
             this.catM1IMSToolStripMenuItem,
             this.nBToolStripMenuItem});
             this.lTEToolStripMenuItem.Name = "lTEToolStripMenuItem";
-            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(67, 24);
+            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
             this.lTEToolStripMenuItem.Text = "LTE망";
             this.lTEToolStripMenuItem.Visible = false;
             // 
@@ -893,7 +894,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -927,10 +928,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 28);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(839, 580);
+            this.panel1.Size = new System.Drawing.Size(839, 583);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -1347,7 +1348,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 511);
+            this.panel2.Location = new System.Drawing.Point(0, 514);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -1484,6 +1485,11 @@
             // 
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
+            // 
+            // timer3
+            // 
+            this.timer3.Enabled = true;
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // Form1
             // 
@@ -1664,6 +1670,7 @@
         private System.Windows.Forms.TextBox tBoxSMS;
         private System.Windows.Forms.TextBox tBoxSMSCTN;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Timer timer3;
     }
 }
 

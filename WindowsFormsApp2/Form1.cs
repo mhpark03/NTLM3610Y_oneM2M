@@ -149,6 +149,7 @@ namespace WindowsFormsApp2
             setsmsurcport,
             setsmscnmi,
             sendSMS,
+            sendSMSLG,
             getSMS,
             receivesmsdata,
         }
@@ -357,6 +358,7 @@ namespace WindowsFormsApp2
             commands.Add("setsmsurcport", "AT+QURCCFG=\"urcport\",\"usbat\"");
             commands.Add("setsmscnmi", "AT+CNMI=2,2,0,0,0");
             commands.Add("sendSMS", "AT+CMGS=\"");
+            commands.Add("sendSMSLG", "AT$LGTSNDSM=");
             commands.Add("getSMS", "AT+CMGR=");
         }
 
@@ -2206,12 +2208,12 @@ namespace WindowsFormsApp2
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
                 tBoxSVCCD.Text = "CATM";
-                tBoxDeviceModel.Text = "AMM5400LG";
+                tBoxDeviceModel.Text = "LML-D";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
                 tBoxSMS.Enabled = true;
                 btnsendSMS.Enabled = true;
-                tSStatusLblRF.Text = "LTE Cat.4 NETWORK";
+                tSStatusLblRF.Text = "LTE Cat.1 NETWORK";
                 oneM2Mmode = 0;
             }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
@@ -3045,11 +3047,26 @@ namespace WindowsFormsApp2
         {
             if(tBoxSMS.TextLength != 0)
             {
-                this.sendDataOut(commands["chksmsmode"]);
-                tBoxActionState.Text = states.chksmsmode.ToString();
+                if(tBoxManu.Text == "LIME-I Co., Ltd")
+                {
+                    sendSMSLGT();
+                }
+                else
+                {
+                    this.sendDataOut(commands["chksmsmode"]);
+                    tBoxActionState.Text = states.chksmsmode.ToString();
 
-                timer1.Start();
+                    timer1.Start();
+                }
             }
+        }
+
+        private void sendSMSLGT()
+        {
+            this.sendDataOut(commands["sendSMSLG"] + tBoxSMSCTN.Text + ",0,1,\""+tBoxSMS.Text+"\"");
+            tBoxActionState.Text = states.sendSMSLG.ToString();
+
+            timer1.Start();
         }
 
         private void sendSMSdata()
@@ -3081,13 +3098,28 @@ namespace WindowsFormsApp2
             {
                 if (tBoxSMS.TextLength != 0)
                 {
-                    this.sendDataOut(commands["chksmsmode"]);
-                    tBoxActionState.Text = states.chksmsmode.ToString();
+                    if (tBoxManu.Text == "LIME-I Co., Ltd")
+                    {
+                        sendSMSLGT();
+                    }
+                    else
+                    {
+                        this.sendDataOut(commands["chksmsmode"]);
+                        tBoxActionState.Text = states.chksmsmode.ToString();
 
-                    timer1.Start();
+                        timer1.Start();
+                    }
                 }
                 e.Handled = true;
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            if(serialPort1.IsOpen && serialPort1.BytesToRead != 0)
+            {
+                logPrintInTextBox("100ms Timer","");
             }
         }
     }
