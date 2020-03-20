@@ -850,7 +850,7 @@ namespace WindowsFormsApp2
                         }
                     }
 
-                    if (charValues[charValues.Length - 2] == '\n')
+                    if (charValues[charValues.Length - 1] != '\n')
                     {
                         dataIN = charValues[charValues.Length - 1].ToString();    // \r\n를 제외하고 나머지 한글자 저장
                     }
