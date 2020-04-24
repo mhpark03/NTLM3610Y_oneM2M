@@ -167,6 +167,9 @@
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.tSMenuTxModemVersion = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneM2M데이터읽기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMenuoneM2MDataRetreive = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -183,10 +186,10 @@
             // 
             this.chBoxRTSEnable.AutoSize = true;
             this.chBoxRTSEnable.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chBoxRTSEnable.Location = new System.Drawing.Point(469, 15);
-            this.chBoxRTSEnable.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.chBoxRTSEnable.Location = new System.Drawing.Point(410, 12);
+            this.chBoxRTSEnable.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.chBoxRTSEnable.Name = "chBoxRTSEnable";
-            this.chBoxRTSEnable.Size = new System.Drawing.Size(53, 19);
+            this.chBoxRTSEnable.Size = new System.Drawing.Size(45, 17);
             this.chBoxRTSEnable.TabIndex = 13;
             this.chBoxRTSEnable.Text = "RTS";
             this.chBoxRTSEnable.UseVisualStyleBackColor = true;
@@ -196,10 +199,10 @@
             // 
             this.chBoxDtrEnable.AutoSize = true;
             this.chBoxDtrEnable.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chBoxDtrEnable.Location = new System.Drawing.Point(414, 15);
-            this.chBoxDtrEnable.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.chBoxDtrEnable.Location = new System.Drawing.Point(362, 12);
+            this.chBoxDtrEnable.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.chBoxDtrEnable.Name = "chBoxDtrEnable";
-            this.chBoxDtrEnable.Size = new System.Drawing.Size(54, 19);
+            this.chBoxDtrEnable.Size = new System.Drawing.Size(46, 17);
             this.chBoxDtrEnable.TabIndex = 12;
             this.chBoxDtrEnable.Text = "DTR";
             this.chBoxDtrEnable.UseVisualStyleBackColor = true;
@@ -212,10 +215,10 @@
             "None",
             "Odd",
             "Even"});
-            this.cBoxParityBits.Location = new System.Drawing.Point(342, 12);
+            this.cBoxParityBits.Location = new System.Drawing.Point(299, 10);
             this.cBoxParityBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxParityBits.Name = "cBoxParityBits";
-            this.cBoxParityBits.Size = new System.Drawing.Size(65, 23);
+            this.cBoxParityBits.Size = new System.Drawing.Size(57, 20);
             this.cBoxParityBits.TabIndex = 5;
             this.cBoxParityBits.Text = "None";
             // 
@@ -225,10 +228,10 @@
             this.cBoxStopBits.Items.AddRange(new object[] {
             "One",
             "Two"});
-            this.cBoxStopBits.Location = new System.Drawing.Point(269, 12);
+            this.cBoxStopBits.Location = new System.Drawing.Point(235, 10);
             this.cBoxStopBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxStopBits.Name = "cBoxStopBits";
-            this.cBoxStopBits.Size = new System.Drawing.Size(65, 23);
+            this.cBoxStopBits.Size = new System.Drawing.Size(57, 20);
             this.cBoxStopBits.TabIndex = 4;
             this.cBoxStopBits.Text = "One";
             // 
@@ -239,10 +242,10 @@
             "6",
             "7",
             "8"});
-            this.cBoxDataBits.Location = new System.Drawing.Point(223, 11);
+            this.cBoxDataBits.Location = new System.Drawing.Point(195, 9);
             this.cBoxDataBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxDataBits.Name = "cBoxDataBits";
-            this.cBoxDataBits.Size = new System.Drawing.Size(37, 23);
+            this.cBoxDataBits.Size = new System.Drawing.Size(33, 20);
             this.cBoxDataBits.TabIndex = 3;
             this.cBoxDataBits.Text = "8";
             // 
@@ -256,20 +259,20 @@
             "38400",
             "76800",
             "115200"});
-            this.cBoxBaudRate.Location = new System.Drawing.Point(135, 12);
+            this.cBoxBaudRate.Location = new System.Drawing.Point(118, 10);
             this.cBoxBaudRate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxBaudRate.Name = "cBoxBaudRate";
-            this.cBoxBaudRate.Size = new System.Drawing.Size(79, 23);
+            this.cBoxBaudRate.Size = new System.Drawing.Size(70, 20);
             this.cBoxBaudRate.TabIndex = 2;
             this.cBoxBaudRate.Text = "115200";
             // 
             // cBoxCOMPORT
             // 
             this.cBoxCOMPORT.FormattingEnabled = true;
-            this.cBoxCOMPORT.Location = new System.Drawing.Point(45, 12);
+            this.cBoxCOMPORT.Location = new System.Drawing.Point(39, 10);
             this.cBoxCOMPORT.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxCOMPORT.Name = "cBoxCOMPORT";
-            this.cBoxCOMPORT.Size = new System.Drawing.Size(83, 23);
+            this.cBoxCOMPORT.Size = new System.Drawing.Size(73, 20);
             this.cBoxCOMPORT.TabIndex = 1;
             this.cBoxCOMPORT.TextChanged += new System.EventHandler(this.CBoxCOMPORT_TextChanged);
             // 
@@ -277,10 +280,10 @@
             // 
             this.progressBar1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.progressBar1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.progressBar1.Location = new System.Drawing.Point(11, 12);
+            this.progressBar1.Location = new System.Drawing.Point(10, 10);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(25, 22);
+            this.progressBar1.Size = new System.Drawing.Size(22, 18);
             this.progressBar1.TabIndex = 2;
             this.progressBar1.Click += new System.EventHandler(this.ProgressBar1_Click);
             // 
@@ -293,23 +296,23 @@
             // 
             this.tBoxDataIN.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBoxDataIN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tBoxDataIN.Location = new System.Drawing.Point(3, 52);
-            this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.tBoxDataIN.Location = new System.Drawing.Point(3, 40);
+            this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataIN.Multiline = true;
             this.tBoxDataIN.Name = "tBoxDataIN";
             this.tBoxDataIN.ReadOnly = true;
             this.tBoxDataIN.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tBoxDataIN.Size = new System.Drawing.Size(527, 370);
+            this.tBoxDataIN.Size = new System.Drawing.Size(460, 297);
             this.tBoxDataIN.TabIndex = 6;
             this.tBoxDataIN.TextChanged += new System.EventHandler(this.TBoxDataIN_TextChanged);
             // 
             // btnSendData
             // 
             this.btnSendData.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnSendData.Location = new System.Drawing.Point(433, 0);
-            this.btnSendData.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.btnSendData.Location = new System.Drawing.Point(378, 0);
+            this.btnSendData.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnSendData.Name = "btnSendData";
-            this.btnSendData.Size = new System.Drawing.Size(94, 28);
+            this.btnSendData.Size = new System.Drawing.Size(82, 22);
             this.btnSendData.TabIndex = 2;
             this.btnSendData.Text = "서버전송";
             this.btnSendData.UseVisualStyleBackColor = true;
@@ -319,9 +322,9 @@
             // 
             this.tBoxDataOut.Dock = System.Windows.Forms.DockStyle.Left;
             this.tBoxDataOut.Location = new System.Drawing.Point(0, 0);
-            this.tBoxDataOut.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.tBoxDataOut.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataOut.Name = "tBoxDataOut";
-            this.tBoxDataOut.Size = new System.Drawing.Size(431, 25);
+            this.tBoxDataOut.Size = new System.Drawing.Size(378, 21);
             this.tBoxDataOut.TabIndex = 3;
             this.tBoxDataOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TBoxDataOut_KeyDown);
             // 
@@ -339,7 +342,8 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(839, 25);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(734, 24);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -348,13 +352,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.ExitToolStripMenuItem.Text = "끝내기";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -372,27 +376,27 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.COMCTRLToolStripMenuItem.Text = "COM설정";
             // 
             // cOMReloadToolStripMenuItem
             // 
             this.cOMReloadToolStripMenuItem.Name = "cOMReloadToolStripMenuItem";
-            this.cOMReloadToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.cOMReloadToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.cOMReloadToolStripMenuItem.Text = "COM 재설정";
             this.cOMReloadToolStripMenuItem.Click += new System.EventHandler(this.cOMReloadToolStripMenuItem_Click);
             // 
             // OpenToolStripMenuItem
             // 
             this.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.OpenToolStripMenuItem.Text = "COM 연결";
             this.OpenToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
             // 
             // CloseToolStripMenuItem
             // 
             this.CloseToolStripMenuItem.Name = "CloseToolStripMenuItem";
-            this.CloseToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.CloseToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.CloseToolStripMenuItem.Text = "COM 해제";
             this.CloseToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
@@ -401,13 +405,13 @@
             this.comportTSMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tSCBoxComPort});
             this.comportTSMenu.Name = "comportTSMenu";
-            this.comportTSMenu.Size = new System.Drawing.Size(198, 26);
+            this.comportTSMenu.Size = new System.Drawing.Size(158, 22);
             this.comportTSMenu.Text = "COM PORT";
             // 
             // tSCBoxComPort
             // 
             this.tSCBoxComPort.Name = "tSCBoxComPort";
-            this.tSCBoxComPort.Size = new System.Drawing.Size(121, 28);
+            this.tSCBoxComPort.Size = new System.Drawing.Size(121, 23);
             this.tSCBoxComPort.TextChanged += new System.EventHandler(this.TSCBoxComPort_TextChanged);
             // 
             // bAUDRATEToolStripMenuItem
@@ -420,48 +424,48 @@
             this.tSMenuBaudRate768,
             this.tSMenuBaudRate1152});
             this.bAUDRATEToolStripMenuItem.Name = "bAUDRATEToolStripMenuItem";
-            this.bAUDRATEToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.bAUDRATEToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.bAUDRATEToolStripMenuItem.Text = "BAUD RATE";
             // 
             // tSMenuBaudRate24
             // 
             this.tSMenuBaudRate24.Name = "tSMenuBaudRate24";
-            this.tSMenuBaudRate24.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate24.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate24.Text = "2400bps";
             this.tSMenuBaudRate24.Click += new System.EventHandler(this.TSMenuBaudRate24_Click);
             // 
             // tSMenuBaudRate48
             // 
             this.tSMenuBaudRate48.Name = "tSMenuBaudRate48";
-            this.tSMenuBaudRate48.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate48.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate48.Text = "4800bps";
             this.tSMenuBaudRate48.Click += new System.EventHandler(this.TSMenuBaudRate48_Click);
             // 
             // tSMenuBaudRate96
             // 
             this.tSMenuBaudRate96.Name = "tSMenuBaudRate96";
-            this.tSMenuBaudRate96.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate96.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate96.Text = "9600bps";
             this.tSMenuBaudRate96.Click += new System.EventHandler(this.TSMenuBaudRate96_Click);
             // 
             // tSMenuBaudRate384
             // 
             this.tSMenuBaudRate384.Name = "tSMenuBaudRate384";
-            this.tSMenuBaudRate384.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate384.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate384.Text = "38400bps";
             this.tSMenuBaudRate384.Click += new System.EventHandler(this.TSMenuBaudRate384_Click);
             // 
             // tSMenuBaudRate768
             // 
             this.tSMenuBaudRate768.Name = "tSMenuBaudRate768";
-            this.tSMenuBaudRate768.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate768.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate768.Text = "76800bps";
             this.tSMenuBaudRate768.Click += new System.EventHandler(this.TSMenuBaudRate768_Click);
             // 
             // tSMenuBaudRate1152
             // 
             this.tSMenuBaudRate1152.Name = "tSMenuBaudRate1152";
-            this.tSMenuBaudRate1152.Size = new System.Drawing.Size(180, 26);
+            this.tSMenuBaudRate1152.Size = new System.Drawing.Size(144, 22);
             this.tSMenuBaudRate1152.Text = "115200bps";
             this.tSMenuBaudRate1152.Click += new System.EventHandler(this.TSMenuBaudRate1152_Click);
             // 
@@ -472,27 +476,27 @@
             this.tSMenu7bits,
             this.tSMenu8bits});
             this.dATABITSToolStripMenuItem.Name = "dATABITSToolStripMenuItem";
-            this.dATABITSToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.dATABITSToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.dATABITSToolStripMenuItem.Text = "DATA bits";
             // 
             // tSMenu6bits
             // 
             this.tSMenu6bits.Name = "tSMenu6bits";
-            this.tSMenu6bits.Size = new System.Drawing.Size(153, 26);
+            this.tSMenu6bits.Size = new System.Drawing.Size(123, 22);
             this.tSMenu6bits.Text = "6 bits";
             this.tSMenu6bits.Click += new System.EventHandler(this.TSMenu6bits_Click);
             // 
             // tSMenu7bits
             // 
             this.tSMenu7bits.Name = "tSMenu7bits";
-            this.tSMenu7bits.Size = new System.Drawing.Size(153, 26);
+            this.tSMenu7bits.Size = new System.Drawing.Size(123, 22);
             this.tSMenu7bits.Text = "7 bits";
             this.tSMenu7bits.Click += new System.EventHandler(this.TSMenu7bits_Click);
             // 
             // tSMenu8bits
             // 
             this.tSMenu8bits.Name = "tSMenu8bits";
-            this.tSMenu8bits.Size = new System.Drawing.Size(153, 26);
+            this.tSMenu8bits.Size = new System.Drawing.Size(123, 22);
             this.tSMenu8bits.Text = "8 bits";
             this.tSMenu8bits.Click += new System.EventHandler(this.TSMenu8bits_Click);
             // 
@@ -502,20 +506,20 @@
             this.tSMenuStopOne,
             this.tSMenuStopTwo});
             this.sTOPBITSToolStripMenuItem.Name = "sTOPBITSToolStripMenuItem";
-            this.sTOPBITSToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.sTOPBITSToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.sTOPBITSToolStripMenuItem.Text = "STOP bits";
             // 
             // tSMenuStopOne
             // 
             this.tSMenuStopOne.Name = "tSMenuStopOne";
-            this.tSMenuStopOne.Size = new System.Drawing.Size(126, 26);
+            this.tSMenuStopOne.Size = new System.Drawing.Size(102, 22);
             this.tSMenuStopOne.Text = "One";
             this.tSMenuStopOne.Click += new System.EventHandler(this.TSMenuStopOne_Click);
             // 
             // tSMenuStopTwo
             // 
             this.tSMenuStopTwo.Name = "tSMenuStopTwo";
-            this.tSMenuStopTwo.Size = new System.Drawing.Size(126, 26);
+            this.tSMenuStopTwo.Size = new System.Drawing.Size(102, 22);
             this.tSMenuStopTwo.Text = "Two";
             this.tSMenuStopTwo.Click += new System.EventHandler(this.TSMenuStopTwo_Click);
             // 
@@ -526,27 +530,27 @@
             this.tSMenuParityOdd,
             this.tSMenuParityEven});
             this.pARITYBitsToolStripMenuItem.Name = "pARITYBitsToolStripMenuItem";
-            this.pARITYBitsToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.pARITYBitsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.pARITYBitsToolStripMenuItem.Text = "PARITY bits";
             // 
             // tSMenuParityNone
             // 
             this.tSMenuParityNone.Name = "tSMenuParityNone";
-            this.tSMenuParityNone.Size = new System.Drawing.Size(135, 26);
+            this.tSMenuParityNone.Size = new System.Drawing.Size(109, 22);
             this.tSMenuParityNone.Text = "None";
             this.tSMenuParityNone.Click += new System.EventHandler(this.TSMenuParityNone_Click);
             // 
             // tSMenuParityOdd
             // 
             this.tSMenuParityOdd.Name = "tSMenuParityOdd";
-            this.tSMenuParityOdd.Size = new System.Drawing.Size(135, 26);
+            this.tSMenuParityOdd.Size = new System.Drawing.Size(109, 22);
             this.tSMenuParityOdd.Text = "Odd";
             this.tSMenuParityOdd.Click += new System.EventHandler(this.TSMenuParityOdd_Click);
             // 
             // tSMenuParityEven
             // 
             this.tSMenuParityEven.Name = "tSMenuParityEven";
-            this.tSMenuParityEven.Size = new System.Drawing.Size(135, 26);
+            this.tSMenuParityEven.Size = new System.Drawing.Size(109, 22);
             this.tSMenuParityEven.Text = "Even";
             this.tSMenuParityEven.Click += new System.EventHandler(this.TSMenuParityEven_Click);
             // 
@@ -556,20 +560,20 @@
             this.tSMenuDTRDisable,
             this.tSMenuDTREnable});
             this.dTREnableToolStripMenuItem.Name = "dTREnableToolStripMenuItem";
-            this.dTREnableToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.dTREnableToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.dTREnableToolStripMenuItem.Text = "DTR control";
             // 
             // tSMenuDTRDisable
             // 
             this.tSMenuDTRDisable.Name = "tSMenuDTRDisable";
-            this.tSMenuDTRDisable.Size = new System.Drawing.Size(162, 26);
+            this.tSMenuDTRDisable.Size = new System.Drawing.Size(130, 22);
             this.tSMenuDTRDisable.Text = "Disable";
             this.tSMenuDTRDisable.Click += new System.EventHandler(this.TSMenuDTRDisable_Click);
             // 
             // tSMenuDTREnable
             // 
             this.tSMenuDTREnable.Name = "tSMenuDTREnable";
-            this.tSMenuDTREnable.Size = new System.Drawing.Size(162, 26);
+            this.tSMenuDTREnable.Size = new System.Drawing.Size(130, 22);
             this.tSMenuDTREnable.Text = "Enable";
             this.tSMenuDTREnable.Click += new System.EventHandler(this.TSMenuDTREnable_Click);
             // 
@@ -579,20 +583,20 @@
             this.tSMenuRTSDisable,
             this.tSMenuRTSEnable});
             this.rTPControlToolStripMenuItem.Name = "rTPControlToolStripMenuItem";
-            this.rTPControlToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.rTPControlToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.rTPControlToolStripMenuItem.Text = "RTS control";
             // 
             // tSMenuRTSDisable
             // 
             this.tSMenuRTSDisable.Name = "tSMenuRTSDisable";
-            this.tSMenuRTSDisable.Size = new System.Drawing.Size(162, 26);
+            this.tSMenuRTSDisable.Size = new System.Drawing.Size(130, 22);
             this.tSMenuRTSDisable.Text = "Disable";
             this.tSMenuRTSDisable.Click += new System.EventHandler(this.TSMenuRTSDisable_Click);
             // 
             // tSMenuRTSEnable
             // 
             this.tSMenuRTSEnable.Name = "tSMenuRTSEnable";
-            this.tSMenuRTSEnable.Size = new System.Drawing.Size(162, 26);
+            this.tSMenuRTSEnable.Size = new System.Drawing.Size(130, 22);
             this.tSMenuRTSEnable.Text = "Enable";
             this.tSMenuRTSEnable.Click += new System.EventHandler(this.TSMenuRTSEnable_Click);
             // 
@@ -604,20 +608,20 @@
             this.writeToolStripMenuItem,
             this.수신창표시방향ToolStripMenuItem});
             this.TRXToolStripMenuItem.Name = "TRXToolStripMenuItem";
-            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(94, 21);
+            this.TRXToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
             this.TRXToolStripMenuItem.Text = "송수신창";
             // 
             // ClearToolStripMenuItem
             // 
             this.ClearToolStripMenuItem.Name = "ClearToolStripMenuItem";
-            this.ClearToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.ClearToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.ClearToolStripMenuItem.Text = "송신창 내용 지우기";
             this.ClearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
             // 
             // 수신창내용지우기ToolStripMenuItem
             // 
             this.수신창내용지우기ToolStripMenuItem.Name = "수신창내용지우기ToolStripMenuItem";
-            this.수신창내용지우기ToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.수신창내용지우기ToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.수신창내용지우기ToolStripMenuItem.Text = "수신창 내용 지우기";
             this.수신창내용지우기ToolStripMenuItem.Click += new System.EventHandler(this.ClearRXToolStripMenuItem_Click);
             // 
@@ -629,34 +633,34 @@
             this.tSMenuEndLineLF,
             this.tSMenuEndLineCR});
             this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
-            this.writeToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.writeToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.writeToolStripMenuItem.Text = "자동 전송 문자(LF/CR)";
             // 
             // tSMenuEndLineNone
             // 
             this.tSMenuEndLineNone.Name = "tSMenuEndLineNone";
-            this.tSMenuEndLineNone.Size = new System.Drawing.Size(198, 26);
+            this.tSMenuEndLineNone.Size = new System.Drawing.Size(158, 22);
             this.tSMenuEndLineNone.Text = "없음";
             this.tSMenuEndLineNone.Click += new System.EventHandler(this.TSMenuEndLineNone_Click);
             // 
             // tSMenuEndLineBoth
             // 
             this.tSMenuEndLineBoth.Name = "tSMenuEndLineBoth";
-            this.tSMenuEndLineBoth.Size = new System.Drawing.Size(198, 26);
+            this.tSMenuEndLineBoth.Size = new System.Drawing.Size(158, 22);
             this.tSMenuEndLineBoth.Text = "모두(LF+CR)";
             this.tSMenuEndLineBoth.Click += new System.EventHandler(this.TSMenuEndLineBoth_Click);
             // 
             // tSMenuEndLineLF
             // 
             this.tSMenuEndLineLF.Name = "tSMenuEndLineLF";
-            this.tSMenuEndLineLF.Size = new System.Drawing.Size(198, 26);
+            this.tSMenuEndLineLF.Size = new System.Drawing.Size(158, 22);
             this.tSMenuEndLineLF.Text = "줄바꿈(LF)";
             this.tSMenuEndLineLF.Click += new System.EventHandler(this.TSMenuEndLineLF_Click);
             // 
             // tSMenuEndLineCR
             // 
             this.tSMenuEndLineCR.Name = "tSMenuEndLineCR";
-            this.tSMenuEndLineCR.Size = new System.Drawing.Size(198, 26);
+            this.tSMenuEndLineCR.Size = new System.Drawing.Size(158, 22);
             this.tSMenuEndLineCR.Text = "맨앞줄(CR)";
             this.tSMenuEndLineCR.Click += new System.EventHandler(this.TSMenuEndLineCR_Click);
             // 
@@ -666,20 +670,20 @@
             this.위로ToolStripMenuItem,
             this.아래로ToolStripMenuItem});
             this.수신창표시방향ToolStripMenuItem.Name = "수신창표시방향ToolStripMenuItem";
-            this.수신창표시방향ToolStripMenuItem.Size = new System.Drawing.Size(288, 26);
+            this.수신창표시방향ToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.수신창표시방향ToolStripMenuItem.Text = "수신창 표시 방향";
             // 
             // 위로ToolStripMenuItem
             // 
             this.위로ToolStripMenuItem.Name = "위로ToolStripMenuItem";
-            this.위로ToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
+            this.위로ToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.위로ToolStripMenuItem.Text = "위로";
             this.위로ToolStripMenuItem.Click += new System.EventHandler(this.TSMenuTop_Click);
             // 
             // 아래로ToolStripMenuItem
             // 
             this.아래로ToolStripMenuItem.Name = "아래로ToolStripMenuItem";
-            this.아래로ToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
+            this.아래로ToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
             this.아래로ToolStripMenuItem.Text = "아래로";
             this.아래로ToolStripMenuItem.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
@@ -689,46 +693,49 @@
             this.toolStripMenuItem3,
             this.tSMenuAuth,
             this.tSMenuRemteCSE,
+            this.tsMenuoneM2MDataRetreive,
             this.tSMenuModemVer,
             this.tSMenuDeviceVer,
             this.toolStripMenuItem8,
-            this.tSMenuTxVersion});
+            this.tSMenuTxVersion,
+            this.tSMenuTxModemVersion,
+            this.oneM2M데이터읽기ToolStripMenuItem});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
-            this.tSMenuOneM2M.Size = new System.Drawing.Size(76, 21);
+            this.tSMenuOneM2M.Size = new System.Drawing.Size(61, 20);
             this.tSMenuOneM2M.Text = "oneM2M";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(270, 26);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(214, 22);
             this.toolStripMenuItem3.Text = "단말정보 ";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
             // tSMenuAuth
             // 
             this.tSMenuAuth.Name = "tSMenuAuth";
-            this.tSMenuAuth.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuAuth.Size = new System.Drawing.Size(214, 22);
             this.tSMenuAuth.Text = "서버설정(MEF_AUTH)";
             this.tSMenuAuth.Click += new System.EventHandler(this.ProvisionToolStripMenuItem_Click);
             // 
             // tSMenuRemteCSE
             // 
             this.tSMenuRemteCSE.Name = "tSMenuRemteCSE";
-            this.tSMenuRemteCSE.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuRemteCSE.Size = new System.Drawing.Size(214, 22);
             this.tSMenuRemteCSE.Text = "서버등록(remoteCSE)";
             this.tSMenuRemteCSE.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
             // 
             // tSMenuModemVer
             // 
             this.tSMenuModemVer.Name = "tSMenuModemVer";
-            this.tSMenuModemVer.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuModemVer.Size = new System.Drawing.Size(214, 22);
             this.tSMenuModemVer.Text = "모뎀펌웨어버전";
             this.tSMenuModemVer.Click += new System.EventHandler(this.TSMenuModemVer_Click);
             // 
             // tSMenuDeviceVer
             // 
             this.tSMenuDeviceVer.Name = "tSMenuDeviceVer";
-            this.tSMenuDeviceVer.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuDeviceVer.Size = new System.Drawing.Size(214, 22);
             this.tSMenuDeviceVer.Text = "디바이스펌웨어버전";
             this.tSMenuDeviceVer.Click += new System.EventHandler(this.TSMenuDeviceVer_Click);
             // 
@@ -740,36 +747,36 @@
             this.toolStripMenuItem11,
             this.toolStripMenuItem12});
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(270, 26);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(214, 22);
             this.toolStripMenuItem8.Text = "대상서버설정";
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(180, 26);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(144, 22);
             this.toolStripMenuItem9.Text = "개발 서버";
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(180, 26);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(144, 22);
             this.toolStripMenuItem10.Text = "검증 서버";
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(180, 26);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(144, 22);
             this.toolStripMenuItem11.Text = "상용서버";
             // 
             // toolStripMenuItem12
             // 
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(180, 26);
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(144, 22);
             // 
             // tSMenuTxVersion
             // 
             this.tSMenuTxVersion.Name = "tSMenuTxVersion";
-            this.tSMenuTxVersion.Size = new System.Drawing.Size(270, 26);
+            this.tSMenuTxVersion.Size = new System.Drawing.Size(214, 22);
             this.tSMenuTxVersion.Text = "디바이스FW완료보고";
             this.tSMenuTxVersion.Click += new System.EventHandler(this.tSMenuTxVersion_Click);
             // 
@@ -783,35 +790,35 @@
             this.serverTSMenu,
             this.FWUPToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
-            this.tSMenuLwM2M.Size = new System.Drawing.Size(67, 21);
+            this.tSMenuLwM2M.Size = new System.Drawing.Size(54, 20);
             this.tSMenuLwM2M.Text = "LwM2M";
             this.tSMenuLwM2M.Visible = false;
             // 
             // initinfoToolStripMenuItem
             // 
             this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
-            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.initinfoToolStripMenuItem.Text = "단말정보 ";
             this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
             // provisionToolStripMenuItem
             // 
             this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
-            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.provisionToolStripMenuItem.Text = "서버설정(BOOTSTRAP)";
             this.provisionToolStripMenuItem.Click += new System.EventHandler(this.ProvisionToolStripMenuItem_Click);
             // 
             // registerToolStripMenuItem
             // 
             this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
-            this.registerToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.registerToolStripMenuItem.Text = "서버등록(REGISTER)";
             this.registerToolStripMenuItem.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
             // 
             // deregisterToolStripMenuItem
             // 
             this.deregisterToolStripMenuItem.Name = "deregisterToolStripMenuItem";
-            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.deregisterToolStripMenuItem.Text = "서버해제(DEREGISTER)";
             this.deregisterToolStripMenuItem.Click += new System.EventHandler(this.DeregisterToolStripMenuItem_Click);
             // 
@@ -823,39 +830,39 @@
             this.opserverToolStripMenuItem,
             this.toolStripMenuItem1});
             this.serverTSMenu.Name = "serverTSMenu";
-            this.serverTSMenu.Size = new System.Drawing.Size(279, 26);
+            this.serverTSMenu.Size = new System.Drawing.Size(221, 22);
             this.serverTSMenu.Text = "대상서버설정";
             // 
             // devserverToolStripMenuItem
             // 
             this.devserverToolStripMenuItem.Name = "devserverToolStripMenuItem";
-            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.devserverToolStripMenuItem.Text = "개발 서버";
             this.devserverToolStripMenuItem.Click += new System.EventHandler(this.DevserverToolStripMenuItem_Click);
             // 
             // cvsserverToolStripMenuItem
             // 
             this.cvsserverToolStripMenuItem.Name = "cvsserverToolStripMenuItem";
-            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.cvsserverToolStripMenuItem.Text = "검증 서버";
             this.cvsserverToolStripMenuItem.Click += new System.EventHandler(this.CvsserverToolStripMenuItem_Click);
             // 
             // opserverToolStripMenuItem
             // 
             this.opserverToolStripMenuItem.Name = "opserverToolStripMenuItem";
-            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.opserverToolStripMenuItem.Text = "상용서버";
             this.opserverToolStripMenuItem.Click += new System.EventHandler(this.OpserverToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 26);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
             // 
             // FWUPToolStripMenuItem
             // 
             this.FWUPToolStripMenuItem.Name = "FWUPToolStripMenuItem";
-            this.FWUPToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.FWUPToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.FWUPToolStripMenuItem.Text = "단말FWUP완료보고";
             this.FWUPToolStripMenuItem.Click += new System.EventHandler(this.FWUPToolStripMenuItem_Click);
             // 
@@ -866,35 +873,35 @@
             this.catM1IMSToolStripMenuItem,
             this.nBToolStripMenuItem});
             this.lTEToolStripMenuItem.Name = "lTEToolStripMenuItem";
-            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(67, 21);
+            this.lTEToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.lTEToolStripMenuItem.Text = "LTE망";
             this.lTEToolStripMenuItem.Visible = false;
             // 
             // catM1ToolStripMenuItem
             // 
             this.catM1ToolStripMenuItem.Name = "catM1ToolStripMenuItem";
-            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+            this.catM1ToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.catM1ToolStripMenuItem.Text = "Cat M1";
             this.catM1ToolStripMenuItem.Click += new System.EventHandler(this.catM1ToolStripMenuItem_Click);
             // 
             // catM1IMSToolStripMenuItem
             // 
             this.catM1IMSToolStripMenuItem.Name = "catM1IMSToolStripMenuItem";
-            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+            this.catM1IMSToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.catM1IMSToolStripMenuItem.Text = "Cat M1 (IMS)";
             this.catM1IMSToolStripMenuItem.Click += new System.EventHandler(this.catM1IMSToolStripMenuItem_Click);
             // 
             // nBToolStripMenuItem
             // 
             this.nBToolStripMenuItem.Name = "nBToolStripMenuItem";
-            this.nBToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+            this.nBToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.nBToolStripMenuItem.Text = "NB";
             this.nBToolStripMenuItem.Click += new System.EventHandler(this.nBToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -903,11 +910,11 @@
             this.groupBox3.Controls.Add(this.panel3);
             this.groupBox3.Controls.Add(this.tBoxDataIN);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox3.Location = new System.Drawing.Point(3, 82);
+            this.groupBox3.Location = new System.Drawing.Point(3, 66);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(533, 424);
+            this.groupBox3.Size = new System.Drawing.Size(466, 339);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             // 
@@ -916,10 +923,10 @@
             this.panel3.Controls.Add(this.btnSendData);
             this.panel3.Controls.Add(this.tBoxDataOut);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 20);
+            this.panel3.Location = new System.Drawing.Point(3, 16);
             this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(527, 28);
+            this.panel3.Size = new System.Drawing.Size(460, 22);
             this.panel3.TabIndex = 11;
             // 
             // panel1
@@ -928,10 +935,10 @@
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 25);
+            this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(839, 583);
+            this.panel1.Size = new System.Drawing.Size(734, 462);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -940,11 +947,9 @@
             this.groupBox4.Controls.Add(this.tBoxSMS);
             this.groupBox4.Controls.Add(this.panel4);
             this.groupBox4.Controls.Add(this.groupBox3);
-            this.groupBox4.Location = new System.Drawing.Point(257, -2);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox4.Location = new System.Drawing.Point(225, -2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox4.Size = new System.Drawing.Size(539, 510);
+            this.groupBox4.Size = new System.Drawing.Size(472, 408);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
             // 
@@ -952,10 +957,10 @@
             // 
             this.btnsendSMS.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnsendSMS.Enabled = false;
-            this.btnsendSMS.Location = new System.Drawing.Point(442, 50);
-            this.btnsendSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.btnsendSMS.Location = new System.Drawing.Point(387, 39);
+            this.btnsendSMS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnsendSMS.Name = "btnsendSMS";
-            this.btnsendSMS.Size = new System.Drawing.Size(94, 32);
+            this.btnsendSMS.Size = new System.Drawing.Size(82, 27);
             this.btnsendSMS.TabIndex = 13;
             this.btnsendSMS.Text = "SMS전송";
             this.btnsendSMS.UseVisualStyleBackColor = true;
@@ -965,10 +970,10 @@
             // 
             this.tBoxSMS.Dock = System.Windows.Forms.DockStyle.Left;
             this.tBoxSMS.Enabled = false;
-            this.tBoxSMS.Location = new System.Drawing.Point(3, 50);
-            this.tBoxSMS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.tBoxSMS.Location = new System.Drawing.Point(3, 39);
+            this.tBoxSMS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxSMS.Name = "tBoxSMS";
-            this.tBoxSMS.Size = new System.Drawing.Size(431, 25);
+            this.tBoxSMS.Size = new System.Drawing.Size(378, 21);
             this.tBoxSMS.TabIndex = 14;
             this.tBoxSMS.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tBoxSMS_KeyDown);
             // 
@@ -977,10 +982,10 @@
             this.panel4.Controls.Add(this.cBoxATCMD);
             this.panel4.Controls.Add(this.btnATCMD);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(3, 22);
+            this.panel4.Location = new System.Drawing.Point(3, 17);
             this.panel4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(533, 28);
+            this.panel4.Size = new System.Drawing.Size(466, 22);
             this.panel4.TabIndex = 12;
             // 
             // cBoxATCMD
@@ -990,9 +995,8 @@
             this.cBoxATCMD.Items.AddRange(new object[] {
             "AT"});
             this.cBoxATCMD.Location = new System.Drawing.Point(0, 0);
-            this.cBoxATCMD.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cBoxATCMD.Name = "cBoxATCMD";
-            this.cBoxATCMD.Size = new System.Drawing.Size(435, 23);
+            this.cBoxATCMD.Size = new System.Drawing.Size(381, 20);
             this.cBoxATCMD.Sorted = true;
             this.cBoxATCMD.TabIndex = 3;
             this.cBoxATCMD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CBoxATCMD_KeyDown);
@@ -1000,10 +1004,10 @@
             // btnATCMD
             // 
             this.btnATCMD.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnATCMD.Location = new System.Drawing.Point(436, 0);
-            this.btnATCMD.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.btnATCMD.Location = new System.Drawing.Point(381, 0);
+            this.btnATCMD.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnATCMD.Name = "btnATCMD";
-            this.btnATCMD.Size = new System.Drawing.Size(97, 28);
+            this.btnATCMD.Size = new System.Drawing.Size(85, 22);
             this.btnATCMD.TabIndex = 2;
             this.btnATCMD.Text = "AT명령";
             this.btnATCMD.UseVisualStyleBackColor = true;
@@ -1039,49 +1043,47 @@
             this.groupBox1.Controls.Add(this.btnManufac);
             this.groupBox1.Controls.Add(this.tBoxModel);
             this.groupBox1.Controls.Add(this.btnModel);
-            this.groupBox1.Location = new System.Drawing.Point(11, -1);
+            this.groupBox1.Location = new System.Drawing.Point(10, -1);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(239, 511);
+            this.groupBox1.Size = new System.Drawing.Size(209, 409);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             // 
             // tBoxSMSCTN
             // 
-            this.tBoxSMSCTN.Location = new System.Drawing.Point(88, 477);
-            this.tBoxSMSCTN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxSMSCTN.Location = new System.Drawing.Point(77, 382);
             this.tBoxSMSCTN.Name = "tBoxSMSCTN";
-            this.tBoxSMSCTN.Size = new System.Drawing.Size(143, 25);
+            this.tBoxSMSCTN.Size = new System.Drawing.Size(126, 21);
             this.tBoxSMSCTN.TabIndex = 31;
             this.tBoxSMSCTN.Text = "01222990103";
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(7, 477);
+            this.button5.Location = new System.Drawing.Point(6, 382);
             this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 30);
+            this.button5.Size = new System.Drawing.Size(66, 24);
             this.button5.TabIndex = 30;
             this.button5.Text = "전화번호";
             this.button5.UseVisualStyleBackColor = true;
             // 
             // tBoxModemVer
             // 
-            this.tBoxModemVer.Location = new System.Drawing.Point(88, 190);
-            this.tBoxModemVer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxModemVer.Location = new System.Drawing.Point(77, 152);
             this.tBoxModemVer.Name = "tBoxModemVer";
             this.tBoxModemVer.ReadOnly = true;
-            this.tBoxModemVer.Size = new System.Drawing.Size(143, 25);
+            this.tBoxModemVer.Size = new System.Drawing.Size(126, 21);
             this.tBoxModemVer.TabIndex = 29;
             this.tBoxModemVer.Text = "알 수 없음";
             // 
             // btnModemVer
             // 
-            this.btnModemVer.Location = new System.Drawing.Point(7, 186);
+            this.btnModemVer.Location = new System.Drawing.Point(6, 149);
             this.btnModemVer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnModemVer.Name = "btnModemVer";
-            this.btnModemVer.Size = new System.Drawing.Size(75, 30);
+            this.btnModemVer.Size = new System.Drawing.Size(66, 24);
             this.btnModemVer.TabIndex = 28;
             this.btnModemVer.Text = "모뎀버전";
             this.btnModemVer.UseVisualStyleBackColor = true;
@@ -1089,19 +1091,18 @@
             // 
             // tBoxFOTAIndex
             // 
-            this.tBoxFOTAIndex.Location = new System.Drawing.Point(88, 409);
-            this.tBoxFOTAIndex.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxFOTAIndex.Location = new System.Drawing.Point(77, 327);
             this.tBoxFOTAIndex.Name = "tBoxFOTAIndex";
-            this.tBoxFOTAIndex.Size = new System.Drawing.Size(143, 25);
+            this.tBoxFOTAIndex.Size = new System.Drawing.Size(126, 21);
             this.tBoxFOTAIndex.TabIndex = 27;
             this.tBoxFOTAIndex.Text = "2";
             // 
             // btnFOTAConti
             // 
-            this.btnFOTAConti.Location = new System.Drawing.Point(7, 409);
+            this.btnFOTAConti.Location = new System.Drawing.Point(6, 327);
             this.btnFOTAConti.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFOTAConti.Name = "btnFOTAConti";
-            this.btnFOTAConti.Size = new System.Drawing.Size(75, 30);
+            this.btnFOTAConti.Size = new System.Drawing.Size(66, 24);
             this.btnFOTAConti.TabIndex = 26;
             this.btnFOTAConti.Text = "이어받기";
             this.btnFOTAConti.UseVisualStyleBackColor = true;
@@ -1109,19 +1110,18 @@
             // 
             // tBoxDeviceVer
             // 
-            this.tBoxDeviceVer.Location = new System.Drawing.Point(88, 374);
-            this.tBoxDeviceVer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxDeviceVer.Location = new System.Drawing.Point(77, 299);
             this.tBoxDeviceVer.Name = "tBoxDeviceVer";
-            this.tBoxDeviceVer.Size = new System.Drawing.Size(143, 25);
+            this.tBoxDeviceVer.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceVer.TabIndex = 25;
             this.tBoxDeviceVer.Text = "1.0.0";
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(7, 374);
+            this.button6.Location = new System.Drawing.Point(6, 299);
             this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 30);
+            this.button6.Size = new System.Drawing.Size(66, 24);
             this.button6.TabIndex = 24;
             this.button6.Text = "단말버전";
             this.button6.UseVisualStyleBackColor = true;
@@ -1129,38 +1129,36 @@
             // 
             // tBoxDeviceSN
             // 
-            this.tBoxDeviceSN.Location = new System.Drawing.Point(88, 338);
-            this.tBoxDeviceSN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 270);
             this.tBoxDeviceSN.Name = "tBoxDeviceSN";
-            this.tBoxDeviceSN.Size = new System.Drawing.Size(143, 25);
+            this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceSN.TabIndex = 23;
             this.tBoxDeviceSN.Text = "123456";
             // 
             // btSNConst
             // 
-            this.btSNConst.Location = new System.Drawing.Point(7, 338);
+            this.btSNConst.Location = new System.Drawing.Point(6, 270);
             this.btSNConst.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btSNConst.Name = "btSNConst";
-            this.btSNConst.Size = new System.Drawing.Size(75, 30);
+            this.btSNConst.Size = new System.Drawing.Size(66, 24);
             this.btSNConst.TabIndex = 22;
             this.btSNConst.Text = "폴더명/SN";
             this.btSNConst.UseVisualStyleBackColor = true;
             // 
             // tBoxDeviceModel
             // 
-            this.tBoxDeviceModel.Location = new System.Drawing.Point(88, 302);
-            this.tBoxDeviceModel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxDeviceModel.Location = new System.Drawing.Point(77, 242);
             this.tBoxDeviceModel.Name = "tBoxDeviceModel";
-            this.tBoxDeviceModel.Size = new System.Drawing.Size(143, 25);
+            this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceModel.TabIndex = 21;
             this.tBoxDeviceModel.Text = "NTM_Simulator";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(7, 302);
+            this.button3.Location = new System.Drawing.Point(6, 242);
             this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 30);
+            this.button3.Size = new System.Drawing.Size(66, 24);
             this.button3.TabIndex = 20;
             this.button3.Text = "단말모델";
             this.button3.UseVisualStyleBackColor = true;
@@ -1172,20 +1170,19 @@
             "개발",
             "검증",
             "상용"});
-            this.cBoxSERVER.Location = new System.Drawing.Point(88, 444);
-            this.cBoxSERVER.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cBoxSERVER.Location = new System.Drawing.Point(77, 355);
             this.cBoxSERVER.Name = "cBoxSERVER";
-            this.cBoxSERVER.Size = new System.Drawing.Size(143, 23);
+            this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
             this.cBoxSERVER.TabIndex = 19;
             this.cBoxSERVER.Text = "개발";
             this.cBoxSERVER.SelectedIndexChanged += new System.EventHandler(this.CBoxSERVER_SelectedIndexChanged);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(7, 442);
+            this.button2.Location = new System.Drawing.Point(6, 354);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 30);
+            this.button2.Size = new System.Drawing.Size(66, 24);
             this.button2.TabIndex = 18;
             this.button2.Text = "서버";
             this.button2.UseVisualStyleBackColor = true;
@@ -1193,39 +1190,37 @@
             // 
             // tBoxSVCCD
             // 
-            this.tBoxSVCCD.Location = new System.Drawing.Point(88, 266);
-            this.tBoxSVCCD.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxSVCCD.Location = new System.Drawing.Point(77, 213);
             this.tBoxSVCCD.Name = "tBoxSVCCD";
-            this.tBoxSVCCD.Size = new System.Drawing.Size(143, 25);
+            this.tBoxSVCCD.Size = new System.Drawing.Size(126, 21);
             this.tBoxSVCCD.TabIndex = 17;
             this.tBoxSVCCD.Text = "CATM";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(7, 266);
+            this.button1.Location = new System.Drawing.Point(6, 213);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 30);
+            this.button1.Size = new System.Drawing.Size(66, 24);
             this.button1.TabIndex = 16;
             this.button1.Text = "서비스코드";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // tBoxIccid
             // 
-            this.tBoxIccid.Location = new System.Drawing.Point(88, 121);
-            this.tBoxIccid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxIccid.Location = new System.Drawing.Point(77, 97);
             this.tBoxIccid.Name = "tBoxIccid";
             this.tBoxIccid.ReadOnly = true;
-            this.tBoxIccid.Size = new System.Drawing.Size(143, 25);
+            this.tBoxIccid.Size = new System.Drawing.Size(126, 21);
             this.tBoxIccid.TabIndex = 15;
             this.tBoxIccid.Text = "알 수 없음";
             // 
             // btnICCID
             // 
-            this.btnICCID.Location = new System.Drawing.Point(7, 119);
+            this.btnICCID.Location = new System.Drawing.Point(6, 95);
             this.btnICCID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnICCID.Name = "btnICCID";
-            this.btnICCID.Size = new System.Drawing.Size(75, 30);
+            this.btnICCID.Size = new System.Drawing.Size(66, 24);
             this.btnICCID.TabIndex = 14;
             this.btnICCID.Text = "ICCID";
             this.btnICCID.UseVisualStyleBackColor = true;
@@ -1233,41 +1228,39 @@
             // 
             // tBoxActionState
             // 
-            this.tBoxActionState.Location = new System.Drawing.Point(88, 226);
-            this.tBoxActionState.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxActionState.Location = new System.Drawing.Point(77, 181);
             this.tBoxActionState.Name = "tBoxActionState";
             this.tBoxActionState.ReadOnly = true;
-            this.tBoxActionState.Size = new System.Drawing.Size(143, 25);
+            this.tBoxActionState.Size = new System.Drawing.Size(126, 21);
             this.tBoxActionState.TabIndex = 13;
             this.tBoxActionState.Text = "idle";
             // 
             // button4
             // 
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(7, 226);
+            this.button4.Location = new System.Drawing.Point(6, 181);
             this.button4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 30);
+            this.button4.Size = new System.Drawing.Size(66, 24);
             this.button4.TabIndex = 12;
             this.button4.Text = "동작상태";
             this.button4.UseVisualStyleBackColor = true;
             // 
             // tBoxIMEI
             // 
-            this.tBoxIMEI.Location = new System.Drawing.Point(88, 158);
-            this.tBoxIMEI.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxIMEI.Location = new System.Drawing.Point(77, 126);
             this.tBoxIMEI.Name = "tBoxIMEI";
             this.tBoxIMEI.ReadOnly = true;
-            this.tBoxIMEI.Size = new System.Drawing.Size(143, 25);
+            this.tBoxIMEI.Size = new System.Drawing.Size(126, 21);
             this.tBoxIMEI.TabIndex = 11;
             this.tBoxIMEI.Text = "알 수 없음";
             // 
             // btnIMEI
             // 
-            this.btnIMEI.Location = new System.Drawing.Point(7, 154);
+            this.btnIMEI.Location = new System.Drawing.Point(6, 123);
             this.btnIMEI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnIMEI.Name = "btnIMEI";
-            this.btnIMEI.Size = new System.Drawing.Size(75, 30);
+            this.btnIMEI.Size = new System.Drawing.Size(66, 24);
             this.btnIMEI.TabIndex = 10;
             this.btnIMEI.Text = "IMEI";
             this.btnIMEI.UseVisualStyleBackColor = true;
@@ -1275,20 +1268,19 @@
             // 
             // tBoxIMSI
             // 
-            this.tBoxIMSI.Location = new System.Drawing.Point(88, 89);
-            this.tBoxIMSI.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxIMSI.Location = new System.Drawing.Point(77, 71);
             this.tBoxIMSI.Name = "tBoxIMSI";
             this.tBoxIMSI.ReadOnly = true;
-            this.tBoxIMSI.Size = new System.Drawing.Size(143, 25);
+            this.tBoxIMSI.Size = new System.Drawing.Size(126, 21);
             this.tBoxIMSI.TabIndex = 9;
             this.tBoxIMSI.Text = "알 수 없음";
             // 
             // btnIMSI
             // 
-            this.btnIMSI.Location = new System.Drawing.Point(7, 86);
+            this.btnIMSI.Location = new System.Drawing.Point(6, 69);
             this.btnIMSI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnIMSI.Name = "btnIMSI";
-            this.btnIMSI.Size = new System.Drawing.Size(75, 30);
+            this.btnIMSI.Size = new System.Drawing.Size(66, 24);
             this.btnIMSI.TabIndex = 8;
             this.btnIMSI.Text = "CTN";
             this.btnIMSI.UseVisualStyleBackColor = true;
@@ -1296,20 +1288,19 @@
             // 
             // tBoxManu
             // 
-            this.tBoxManu.Location = new System.Drawing.Point(88, 52);
-            this.tBoxManu.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxManu.Location = new System.Drawing.Point(77, 42);
             this.tBoxManu.Name = "tBoxManu";
             this.tBoxManu.ReadOnly = true;
-            this.tBoxManu.Size = new System.Drawing.Size(143, 25);
+            this.tBoxManu.Size = new System.Drawing.Size(126, 21);
             this.tBoxManu.TabIndex = 7;
             this.tBoxManu.Text = "알 수 없음";
             // 
             // btnManufac
             // 
-            this.btnManufac.Location = new System.Drawing.Point(7, 50);
+            this.btnManufac.Location = new System.Drawing.Point(6, 40);
             this.btnManufac.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnManufac.Name = "btnManufac";
-            this.btnManufac.Size = new System.Drawing.Size(75, 30);
+            this.btnManufac.Size = new System.Drawing.Size(66, 24);
             this.btnManufac.TabIndex = 6;
             this.btnManufac.Text = "제조사";
             this.btnManufac.UseVisualStyleBackColor = true;
@@ -1317,20 +1308,19 @@
             // 
             // tBoxModel
             // 
-            this.tBoxModel.Location = new System.Drawing.Point(88, 15);
-            this.tBoxModel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tBoxModel.Location = new System.Drawing.Point(77, 12);
             this.tBoxModel.Name = "tBoxModel";
             this.tBoxModel.ReadOnly = true;
-            this.tBoxModel.Size = new System.Drawing.Size(143, 25);
+            this.tBoxModel.Size = new System.Drawing.Size(126, 21);
             this.tBoxModel.TabIndex = 2;
             this.tBoxModel.Text = "알 수 없음";
             // 
             // btnModel
             // 
-            this.btnModel.Location = new System.Drawing.Point(7, 15);
+            this.btnModel.Location = new System.Drawing.Point(6, 12);
             this.btnModel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnModel.Name = "btnModel";
-            this.btnModel.Size = new System.Drawing.Size(75, 30);
+            this.btnModel.Size = new System.Drawing.Size(66, 24);
             this.btnModel.TabIndex = 0;
             this.btnModel.Text = "모듈모델";
             this.btnModel.UseVisualStyleBackColor = true;
@@ -1348,11 +1338,11 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 514);
+            this.panel2.Location = new System.Drawing.Point(0, 407);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
-            this.panel2.Size = new System.Drawing.Size(839, 69);
+            this.panel2.Size = new System.Drawing.Size(734, 55);
             this.panel2.TabIndex = 10;
             // 
             // groupBox2
@@ -1362,11 +1352,11 @@
             this.groupBox2.Controls.Add(this.cBoxLogSave);
             this.groupBox2.Controls.Add(this.cBoxSendHex);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(517, 0);
+            this.groupBox2.Location = new System.Drawing.Point(452, 0);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(322, 67);
+            this.groupBox2.Size = new System.Drawing.Size(282, 53);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             // 
@@ -1376,10 +1366,10 @@
             this.cBoxFOTASize.Checked = true;
             this.cBoxFOTASize.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxFOTASize.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxFOTASize.Location = new System.Drawing.Point(235, 15);
-            this.cBoxFOTASize.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxFOTASize.Location = new System.Drawing.Point(206, 12);
+            this.cBoxFOTASize.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxFOTASize.Name = "cBoxFOTASize";
-            this.cBoxFOTASize.Size = new System.Drawing.Size(88, 19);
+            this.cBoxFOTASize.Size = new System.Drawing.Size(78, 17);
             this.cBoxFOTASize.TabIndex = 23;
             this.cBoxFOTASize.Text = "FOTA SIZE";
             this.cBoxFOTASize.UseVisualStyleBackColor = true;
@@ -1388,10 +1378,10 @@
             // 
             this.cBoxAutoBS.AutoSize = true;
             this.cBoxAutoBS.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxAutoBS.Location = new System.Drawing.Point(64, 15);
-            this.cBoxAutoBS.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxAutoBS.Location = new System.Drawing.Point(56, 12);
+            this.cBoxAutoBS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxAutoBS.Name = "cBoxAutoBS";
-            this.cBoxAutoBS.Size = new System.Drawing.Size(80, 19);
+            this.cBoxAutoBS.Size = new System.Drawing.Size(70, 17);
             this.cBoxAutoBS.TabIndex = 14;
             this.cBoxAutoBS.Text = "AUTO BS";
             this.cBoxAutoBS.UseVisualStyleBackColor = true;
@@ -1403,10 +1393,10 @@
             this.cBoxLogSave.Checked = true;
             this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxLogSave.Location = new System.Drawing.Point(146, 15);
-            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxLogSave.Location = new System.Drawing.Point(128, 12);
+            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxLogSave.Name = "cBoxLogSave";
-            this.cBoxLogSave.Size = new System.Drawing.Size(87, 19);
+            this.cBoxLogSave.Size = new System.Drawing.Size(79, 17);
             this.cBoxLogSave.TabIndex = 22;
             this.cBoxLogSave.Text = "LOG SAVE";
             this.cBoxLogSave.UseVisualStyleBackColor = true;
@@ -1417,10 +1407,10 @@
             this.cBoxSendHex.Checked = true;
             this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxSendHex.Location = new System.Drawing.Point(8, 15);
-            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
+            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxSendHex.Name = "cBoxSendHex";
-            this.cBoxSendHex.Size = new System.Drawing.Size(54, 19);
+            this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
             this.cBoxSendHex.TabIndex = 15;
             this.cBoxSendHex.Text = "HEX";
             this.cBoxSendHex.UseVisualStyleBackColor = true;
@@ -1440,46 +1430,45 @@
             this.tSStatusLblLWM2M1,
             this.tSStatusLblLWM2M,
             this.tSProgressLwm2m});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 582);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 464);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(839, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(734, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // tSStatusLblRF
             // 
             this.tSStatusLblRF.Name = "tSStatusLblRF";
-            this.tSStatusLblRF.Size = new System.Drawing.Size(121, 20);
+            this.tSStatusLblRF.Size = new System.Drawing.Size(95, 17);
             this.tSStatusLblRF.Text = "LTE NETWORK : ";
             // 
             // tSStatusLblLTE
             // 
             this.tSStatusLblLTE.Name = "tSStatusLblLTE";
-            this.tSStatusLblLTE.Size = new System.Drawing.Size(82, 20);
+            this.tSStatusLblLTE.Size = new System.Drawing.Size(65, 17);
             this.tSStatusLblLTE.Text = "disconnect";
             // 
             // tSProgressLTE
             // 
             this.tSProgressLTE.Name = "tSProgressLTE";
-            this.tSProgressLTE.Size = new System.Drawing.Size(171, 18);
+            this.tSProgressLTE.Size = new System.Drawing.Size(150, 16);
             // 
             // tSStatusLblLWM2M1
             // 
             this.tSStatusLblLWM2M1.Name = "tSStatusLblLWM2M1";
-            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(156, 20);
+            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(124, 17);
             this.tSStatusLblLWM2M1.Text = "     LGU플랫폼 통신 : ";
             // 
             // tSStatusLblLWM2M
             // 
             this.tSStatusLblLWM2M.Name = "tSStatusLblLWM2M";
-            this.tSStatusLblLWM2M.Size = new System.Drawing.Size(82, 20);
+            this.tSStatusLblLWM2M.Size = new System.Drawing.Size(65, 17);
             this.tSStatusLblLWM2M.Text = "disconnect";
             // 
             // tSProgressLwm2m
             // 
             this.tSProgressLwm2m.Name = "tSProgressLwm2m";
-            this.tSProgressLwm2m.Size = new System.Drawing.Size(171, 18);
+            this.tSProgressLwm2m.Size = new System.Drawing.Size(150, 16);
             // 
             // timer2
             // 
@@ -1491,19 +1480,39 @@
             this.timer3.Enabled = true;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // tSMenuTxModemVersion
+            // 
+            this.tSMenuTxModemVersion.Name = "tSMenuTxModemVersion";
+            this.tSMenuTxModemVersion.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTxModemVersion.Text = "모듈FW완료보고";
+            this.tSMenuTxModemVersion.Click += new System.EventHandler(this.tSMenuTxModemVersion_Click);
+            // 
+            // oneM2M데이터읽기ToolStripMenuItem
+            // 
+            this.oneM2M데이터읽기ToolStripMenuItem.Name = "oneM2M데이터읽기ToolStripMenuItem";
+            this.oneM2M데이터읽기ToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.oneM2M데이터읽기ToolStripMenuItem.Text = "oneM2M데이터읽기";
+            // 
+            // tsMenuoneM2MDataRetreive
+            // 
+            this.tsMenuoneM2MDataRetreive.Name = "tsMenuoneM2MDataRetreive";
+            this.tsMenuoneM2MDataRetreive.Size = new System.Drawing.Size(214, 22);
+            this.tsMenuoneM2MDataRetreive.Text = "oneM2M데이터읽기";
+            this.tsMenuoneM2MDataRetreive.Click += new System.EventHandler(this.tsMenuoneM2MDataRetreive_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(839, 608);
+            this.ClientSize = new System.Drawing.Size(734, 486);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MaximumSize = new System.Drawing.Size(2192, 1323);
+            this.MaximumSize = new System.Drawing.Size(1920, 1066);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(855, 643);
+            this.MinimumSize = new System.Drawing.Size(750, 522);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -1671,6 +1680,9 @@
         private System.Windows.Forms.TextBox tBoxSMSCTN;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.ToolStripMenuItem tsMenuoneM2MDataRetreive;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuTxModemVersion;
+        private System.Windows.Forms.ToolStripMenuItem oneM2M데이터읽기ToolStripMenuItem;
     }
 }
 

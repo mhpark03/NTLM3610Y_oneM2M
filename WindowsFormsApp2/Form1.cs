@@ -61,6 +61,7 @@ namespace WindowsFormsApp2
             setonem2mmode,
             setmefauthnt,
             fotamefauthnt,
+            mfotamefauth,
             getCSEbase,
             getremoteCSE,
             setremoteCSE,
@@ -286,6 +287,7 @@ namespace WindowsFormsApp2
             commands.Add("setonem2mmode", "AT$LGTMPF=5");
             commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("fotamefauthnt", "AT$OM_AUTH_REQ=");
+            commands.Add("mfotamefauth", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
@@ -1189,6 +1191,19 @@ namespace WindowsFormsApp2
                         {
                             this.sendDataOut(commands["deviceFWUPfinish"]);
                             tBoxActionState.Text = states.deviceFWUPfinish.ToString();
+                        }
+                        else if (tBoxActionState.Text == "mfotamefauth")
+                        {
+                            if (tBoxModel.Text == "NTLM3410Y")
+                            {
+                                this.sendDataOut(commands["modemFWUPfinishLTE"]);
+                                tBoxActionState.Text = states.modemFWUPfinishLTE.ToString();
+                            }
+                            else
+                            {
+                                this.sendDataOut(commands["modemFWUPfinish"]);
+                                tBoxActionState.Text = states.modemFWUPfinish.ToString();
+                            }
                         }
                     }
                     else
@@ -2193,8 +2208,8 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
-                tBoxDeviceModel.Text = "AMM5400LG";
+                tBoxSVCCD.Text = "SMCL";
+                tBoxDeviceModel.Text = "TM800L";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
                 tBoxSMS.Enabled = true;
@@ -2867,6 +2882,7 @@ namespace WindowsFormsApp2
                 // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
                 this.sendDataOut(commands["fotamefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
                 tBoxActionState.Text = states.fotamefauthnt.ToString();
+                nextcommand = "skip";
                 timer1.Start();
             }
         }
@@ -3120,6 +3136,25 @@ namespace WindowsFormsApp2
             if(serialPort1.IsOpen && serialPort1.BytesToRead != 0)
             {
                 logPrintInTextBox("100ms Timer","");
+            }
+        }
+
+        private void tsMenuoneM2MDataRetreive_Click(object sender, EventArgs e)
+        {
+            // 플랫폼 서버에 data 수신 요청
+            this.sendDataOut(commands["getonem2mdata"] + tBoxDeviceSN.Text);
+            tBoxActionState.Text = states.getonem2mdata.ToString();
+        }
+
+        private void tSMenuTxModemVersion_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                // 모듈 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                this.sendDataOut(commands["mfotamefauth"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                tBoxActionState.Text = states.mfotamefauth.ToString();
+                nextcommand = "skip";
+                timer1.Start();
             }
         }
     }
