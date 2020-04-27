@@ -158,7 +158,15 @@ namespace WindowsFormsApp2
             settcpmode,
             tcpsocketopen,
             sendtcpdata,
-            tcpsocketclose
+            tcpsocketclose,
+
+            tcpsocketopenamtel,
+            sendtcpdataamtel,
+            tcpsocketcloseamtel,
+
+            tcpsocketopenbg96,
+            sendtcpdatabg96,
+            tcpsocketclosebg96,
         }
 
         string sendWith;
@@ -370,11 +378,19 @@ namespace WindowsFormsApp2
             commands.Add("getSMS", "AT+CMGR=");
 
             commands.Add("settcpip", "AT$$TCP_ADDR=0,");
-            //commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=0");         // Bypass mode
-            commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=1");       // AT command mode
+            commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=0");         // Bypass mode
+            //commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=1");       // AT command mode
             commands.Add("tcpsocketopen", "AT$$TCP_SCOP");
             commands.Add("sendtcpdata", "AT$$TCP_SENDBIN=");
             commands.Add("tcpsocketclose", "AT$$TCP_SCCL");
+
+            commands.Add("tcpsocketopenamtel", "AT@SOCKOPEN=0,0,0,");
+            commands.Add("sendtcpdataamtel", "AT@SOCKSND=0,0,\"");
+            commands.Add("tcpsocketcloseamtel", "AT@SOCKCLOSE=0");
+
+            commands.Add("tcpsocketopenbg96", "AT+QIOPEN=1,0,\"TCP\",\"");
+            commands.Add("sendtcpdatabg96", "AT+QISEND=0,");
+            commands.Add("tcpsocketclosebg96", "AT+QICLOSE=0");
         }
 
         private void setWindowLayOut()
@@ -3219,10 +3235,37 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                // TCP/IP data 전송를 위한 서버 IP/port 설정
-                this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".",",") +  "," + tBoxTCPPort.Text);
-                tBoxActionState.Text = states.settcpip.ToString();
-                timer1.Start();
+                if (tBoxManu.Text == "AM Telecom")        //AMTEL 
+                {
+                    this.sendDataOut(commands["sendtcpdataamtel"] + tBoxTCPData.Text + "\"");
+                    tBoxActionState.Text = states.sendtcpdataamtel.ToString();
+                }
+                else if (tBoxModel.Text == "BG96")        //쿼텔 BG96 
+                {
+                    this.sendDataOut(commands["sendtcpdatabg96"] + tBoxTCPData.TextLength.ToString());
+                    tBoxActionState.Text = states.sendtcpdatabg96.ToString();
+
+                    try
+                    {
+                        if (serialPort1.IsOpen)
+                        {
+                            serialPort1.Write(tBoxTCPData.Text + (Char)26);
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        this.doOpenComPort();     // Serial port가 끊어진 것으로 판단, 포트 재오픈
+                    }
+                }
+                else        // 텔라딘
+                {
+                    serialPort1.Write(tBoxTCPData.Text);
+                    logPrintInTextBox(tBoxTCPData.Text, "tx");
+                }
+
+                tBoxActionState.Text = states.sendtcpdata.ToString();
             }
         }
 
@@ -3231,8 +3274,21 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // TCP/IP data 전송를 위한 서버 IP/port 설정
-                this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".", ",") + "," + tBoxTCPPort.Text);
-                tBoxActionState.Text = states.settcpip.ToString();
+                if (tBoxManu.Text == "AM Telecom")        //AMTEL 
+                {
+                    this.sendDataOut(commands["tcpsocketopenamtel"] + tBoxTCPIP.Text + "," + tBoxTCPPort.Text);
+                    tBoxActionState.Text = states.tcpsocketopenamtel.ToString();
+                }
+                else if (tBoxModel.Text == "BG96")        //쿼텔 BG96 
+                {
+                    this.sendDataOut(commands["tcpsocketopenbg96"] + tBoxTCPIP.Text + "\"," + tBoxTCPPort.Text);
+                    tBoxActionState.Text = states.tcpsocketopenbg96.ToString();
+                }
+                else        // 텔라딘
+                {
+                    this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".", ",") + "," + tBoxTCPPort.Text);
+                    tBoxActionState.Text = states.settcpip.ToString();
+                }
                 timer1.Start();
             }
         }
@@ -3243,7 +3299,13 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // TCP/IP data 전송를 위한 서버 IP/port 설정
-                this.sendDataOut(commands["tcpsocketclose"]);
+                if (tBoxManu.Text == "AM Telecom")        //AMTEL 
+                    this.sendDataOut(commands["tcpsocketcloseamtel"]);
+                else if (tBoxModel.Text == "BG96")        //쿼텔 BG96 
+                    this.sendDataOut(commands["tcpsocketclosebg96"]);
+                else
+                    this.sendDataOut(commands["tcpsocketclose"]);
+
                 tBoxActionState.Text = states.tcpsocketclose.ToString();
                 timer1.Start();
             }

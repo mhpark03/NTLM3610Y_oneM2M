@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.chBoxRTSEnable = new System.Windows.Forms.CheckBox();
             this.chBoxDtrEnable = new System.Windows.Forms.CheckBox();
             this.cBoxParityBits = new System.Windows.Forms.ComboBox();
@@ -99,6 +100,8 @@
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuTxVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuTxModemVersion = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTCPOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTCPClose = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuLwM2M = new System.Windows.Forms.ToolStripMenuItem();
             this.initinfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -177,8 +180,8 @@
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
-            this.tSMenuTCPOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuTCPClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.tCP소켓연결ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tCP소켓해제ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -806,6 +809,20 @@
             this.tSMenuTxModemVersion.Text = "모듈FW완료보고";
             this.tSMenuTxModemVersion.Click += new System.EventHandler(this.tSMenuTxModemVersion_Click);
             // 
+            // tSMenuTCPOpen
+            // 
+            this.tSMenuTCPOpen.Name = "tSMenuTCPOpen";
+            this.tSMenuTCPOpen.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTCPOpen.Text = "TCP 소켓 연결";
+            this.tSMenuTCPOpen.Click += new System.EventHandler(this.tSMenuTCPOpen_Click);
+            // 
+            // tSMenuTCPClose
+            // 
+            this.tSMenuTCPClose.Name = "tSMenuTCPClose";
+            this.tSMenuTCPClose.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTCPClose.Text = "TCP 소켓 해제";
+            this.tSMenuTCPClose.Click += new System.EventHandler(this.tSMenuTCPClose_Click);
+            // 
             // tSMenuLwM2M
             // 
             this.tSMenuLwM2M.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -814,7 +831,9 @@
             this.registerToolStripMenuItem,
             this.deregisterToolStripMenuItem,
             this.serverTSMenu,
-            this.FWUPToolStripMenuItem});
+            this.FWUPToolStripMenuItem,
+            this.tCP소켓연결ToolStripMenuItem,
+            this.tCP소켓해제ToolStripMenuItem});
             this.tSMenuLwM2M.Name = "tSMenuLwM2M";
             this.tSMenuLwM2M.Size = new System.Drawing.Size(54, 20);
             this.tSMenuLwM2M.Text = "LwM2M";
@@ -1030,7 +1049,7 @@
             this.tBoxTCPData.Name = "tBoxTCPData";
             this.tBoxTCPData.Size = new System.Drawing.Size(381, 21);
             this.tBoxTCPData.TabIndex = 17;
-            this.tBoxTCPData.Text = "086200A1GB=CFG";
+            this.tBoxTCPData.Text = resources.GetString("tBoxTCPData.Text");
             // 
             // btnsendTCP
             // 
@@ -1128,7 +1147,7 @@
             this.tBoxTCPPort.Name = "tBoxTCPPort";
             this.tBoxTCPPort.Size = new System.Drawing.Size(126, 21);
             this.tBoxTCPPort.TabIndex = 35;
-            this.tBoxTCPPort.Text = "18782";
+            this.tBoxTCPPort.Text = "11101";
             // 
             // button8
             // 
@@ -1146,7 +1165,7 @@
             this.tBoxTCPIP.Name = "tBoxTCPIP";
             this.tBoxTCPIP.Size = new System.Drawing.Size(126, 21);
             this.tBoxTCPIP.TabIndex = 33;
-            this.tBoxTCPIP.Text = "220.88.49.162";
+            this.tBoxTCPIP.Text = "106.103.228.139";
             // 
             // button7
             // 
@@ -1258,7 +1277,7 @@
             this.tBoxDeviceModel.Name = "tBoxDeviceModel";
             this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceModel.TabIndex = 21;
-            this.tBoxDeviceModel.Text = "NTM_Simulator";
+            this.tBoxDeviceModel.Text = "AMM5400LG";
             // 
             // button3
             // 
@@ -1585,19 +1604,19 @@
             this.timer3.Enabled = true;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
-            // tSMenuTCPOpen
+            // tCP소켓연결ToolStripMenuItem
             // 
-            this.tSMenuTCPOpen.Name = "tSMenuTCPOpen";
-            this.tSMenuTCPOpen.Size = new System.Drawing.Size(214, 22);
-            this.tSMenuTCPOpen.Text = "TCP 소켓 연결";
-            this.tSMenuTCPOpen.Click += new System.EventHandler(this.tSMenuTCPOpen_Click);
+            this.tCP소켓연결ToolStripMenuItem.Name = "tCP소켓연결ToolStripMenuItem";
+            this.tCP소켓연결ToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.tCP소켓연결ToolStripMenuItem.Text = "TCP 소켓 연결";
+            this.tCP소켓연결ToolStripMenuItem.Click += new System.EventHandler(this.tSMenuTCPOpen_Click);
             // 
-            // tSMenuTCPClose
+            // tCP소켓해제ToolStripMenuItem
             // 
-            this.tSMenuTCPClose.Name = "tSMenuTCPClose";
-            this.tSMenuTCPClose.Size = new System.Drawing.Size(214, 22);
-            this.tSMenuTCPClose.Text = "TCP 소켓 해제";
-            this.tSMenuTCPClose.Click += new System.EventHandler(this.tSMenuTCPClose_Click);
+            this.tCP소켓해제ToolStripMenuItem.Name = "tCP소켓해제ToolStripMenuItem";
+            this.tCP소켓해제ToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.tCP소켓해제ToolStripMenuItem.Text = "TCP 소켓 해제";
+            this.tCP소켓해제ToolStripMenuItem.Click += new System.EventHandler(this.tSMenuTCPClose_Click);
             // 
             // Form1
             // 
@@ -1794,6 +1813,8 @@
         private System.Windows.Forms.TextBox tBoxTCPData;
         private System.Windows.Forms.ToolStripMenuItem tSMenuTCPOpen;
         private System.Windows.Forms.ToolStripMenuItem tSMenuTCPClose;
+        private System.Windows.Forms.ToolStripMenuItem tCP소켓연결ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tCP소켓해제ToolStripMenuItem;
     }
 }
 
