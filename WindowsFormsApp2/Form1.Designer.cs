@@ -177,6 +177,8 @@
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.tSMenuTCPOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTCPClose = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -707,7 +709,9 @@
             this.tSMenuDeviceVer,
             this.toolStripMenuItem8,
             this.tSMenuTxVersion,
-            this.tSMenuTxModemVersion});
+            this.tSMenuTxModemVersion,
+            this.tSMenuTCPOpen,
+            this.tSMenuTCPClose});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
             this.tSMenuOneM2M.Size = new System.Drawing.Size(61, 20);
             this.tSMenuOneM2M.Text = "oneM2M";
@@ -1581,6 +1585,20 @@
             this.timer3.Enabled = true;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // tSMenuTCPOpen
+            // 
+            this.tSMenuTCPOpen.Name = "tSMenuTCPOpen";
+            this.tSMenuTCPOpen.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTCPOpen.Text = "TCP 소켓 연결";
+            this.tSMenuTCPOpen.Click += new System.EventHandler(this.tSMenuTCPOpen_Click);
+            // 
+            // tSMenuTCPClose
+            // 
+            this.tSMenuTCPClose.Name = "tSMenuTCPClose";
+            this.tSMenuTCPClose.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTCPClose.Text = "TCP 소켓 해제";
+            this.tSMenuTCPClose.Click += new System.EventHandler(this.tSMenuTCPClose_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1774,6 +1792,8 @@
         private System.Windows.Forms.Button btnsendSMS;
         private System.Windows.Forms.TextBox tBoxSMS;
         private System.Windows.Forms.TextBox tBoxTCPData;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuTCPOpen;
+        private System.Windows.Forms.ToolStripMenuItem tSMenuTCPClose;
     }
 }
 

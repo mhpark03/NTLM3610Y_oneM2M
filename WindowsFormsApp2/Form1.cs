@@ -1034,6 +1034,10 @@ namespace WindowsFormsApp2
                 case "ICCID:":
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
+                    string[] strchar = str2.Split(' ');        // Remove first char ' '
+                    if (strchar.Length > 1)
+                        str2 = strchar[strchar.Length - 1];
+
                     if (str2.Length > 19)
                         tBoxIccid.Text = str2.Substring(str2.Length - 20, 19);
                     else
@@ -1718,6 +1722,7 @@ namespace WindowsFormsApp2
                     if (str2 == "1")
                         nextcommand = "tcpsocketopen";
                     break;
+                    /*
                 case "$$TELL: ":
                     string[] tcpmsg = str2.Split(',');
                     if (tcpmsg[0] == "603")
@@ -1729,11 +1734,12 @@ namespace WindowsFormsApp2
 
                         //this.sendDataOut(tBoxTCPData.Text);
 
-                        this.sendDataOut(commands["tcpsocketclose"]);
-                        tBoxActionState.Text = states.tcpsocketclose.ToString();
-                        //nextcommand = "tcpsocketclose";
+                       // this.sendDataOut(commands["tcpsocketclose"]);
+                       // tBoxActionState.Text = states.tcpsocketclose.ToString();
+                       // //nextcommand = "tcpsocketclose";
                     }
                     break;
+                    */
                 case "$$TCP_SENDDATA:":
                     if (str2 == "1")
                         nextcommand = "tcpsocketclose";
@@ -3216,6 +3222,29 @@ namespace WindowsFormsApp2
                 // TCP/IP data 전송를 위한 서버 IP/port 설정
                 this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".",",") +  "," + tBoxTCPPort.Text);
                 tBoxActionState.Text = states.settcpip.ToString();
+                timer1.Start();
+            }
+        }
+
+        private void tSMenuTCPOpen_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                // TCP/IP data 전송를 위한 서버 IP/port 설정
+                this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".", ",") + "," + tBoxTCPPort.Text);
+                tBoxActionState.Text = states.settcpip.ToString();
+                timer1.Start();
+            }
+        }
+
+        private void tSMenuTCPClose_Click(object sender, EventArgs e)
+        {
+            
+            if (isDeviceInfo())
+            {
+                // TCP/IP data 전송를 위한 서버 IP/port 설정
+                this.sendDataOut(commands["tcpsocketclose"]);
+                tBoxActionState.Text = states.tcpsocketclose.ToString();
                 timer1.Start();
             }
         }
