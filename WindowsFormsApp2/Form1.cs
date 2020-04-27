@@ -153,6 +153,12 @@ namespace WindowsFormsApp2
             sendSMSLG,
             getSMS,
             receivesmsdata,
+
+            settcpip,
+            settcpmode,
+            tcpsocketopen,
+            sendtcpdata,
+            tcpsocketclose
         }
 
         string sendWith;
@@ -362,6 +368,13 @@ namespace WindowsFormsApp2
             commands.Add("sendSMS", "AT+CMGS=\"");
             commands.Add("sendSMSLG", "AT$LGTSNDSM=");
             commands.Add("getSMS", "AT+CMGR=");
+
+            commands.Add("settcpip", "AT$$TCP_ADDR=0,");
+            //commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=0");         // Bypass mode
+            commands.Add("settcpmode", "AT$$TCP_NULLPERMISSION=1");       // AT command mode
+            commands.Add("tcpsocketopen", "AT$$TCP_SCOP");
+            commands.Add("sendtcpdata", "AT$$TCP_SENDBIN=");
+            commands.Add("tcpsocketclose", "AT$$TCP_SCCL");
         }
 
         private void setWindowLayOut()
@@ -369,6 +382,7 @@ namespace WindowsFormsApp2
             groupBox4.Width = panel1.Width - 230;
             groupBox4.Height = panel1.Height - 55;
             cBoxATCMD.Width = groupBox4.Width - 90;
+            tBoxTCPData.Width = groupBox4.Width - 90;
             tBoxSMS.Width = groupBox4.Width - 90;
 
             groupBox3.Width = groupBox4.Width - 230;
@@ -821,6 +835,8 @@ namespace WindowsFormsApp2
                 // Get the integral value of the character.
                 int value = Convert.ToInt32(_eachChar);
                 // Convert the decimal value to a hexadecimal value in string form.
+                if (value < 16)
+                    hexOutput += "0";
                 hexOutput += String.Format("{0:X}", value);
             }
             logPrintInTextBox(hexOutput, "");
@@ -922,6 +938,11 @@ namespace WindowsFormsApp2
                 "+CMT: ",
                 "+CMGR: ",
                 "+CMTI: ",
+
+                "$$TCP_ADDR: ",
+                "$$TCP_NULLPERMISSION:",
+                "$$TELL: ",
+                "$$TCP_SENDDATA:",
         };
 
 
@@ -1686,6 +1707,37 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["getSMS"] + smsnoti[1]);
                     tBoxActionState.Text = states.getSMS.ToString();
                     break;
+                case "$$TCP_ADDR: ":
+                    if (str2 == "0")
+                    {
+                        //                       nextcommand = "settcpmode";
+                        nextcommand = "tcpsocketopen";
+                    }
+                    break;
+                case "$$TCP_NULLPERMISSION:":
+                    if (str2 == "1")
+                        nextcommand = "tcpsocketopen";
+                    break;
+                case "$$TELL: ":
+                    string[] tcpmsg = str2.Split(',');
+                    if (tcpmsg[0] == "603")
+                    {
+                        serialPort1.Write(tBoxTCPData.Text);
+                        logPrintInTextBox(tBoxTCPData.Text, "tx");
+
+                        tBoxActionState.Text = states.sendtcpdata.ToString();
+
+                        //this.sendDataOut(tBoxTCPData.Text);
+
+                        this.sendDataOut(commands["tcpsocketclose"]);
+                        tBoxActionState.Text = states.tcpsocketclose.ToString();
+                        //nextcommand = "tcpsocketclose";
+                    }
+                    break;
+                case "$$TCP_SENDDATA:":
+                    if (str2 == "1")
+                        nextcommand = "tcpsocketclose";
+                    break;
                 default:
                     break;
             }
@@ -1986,6 +2038,13 @@ namespace WindowsFormsApp2
                 case states.setsmscnmi:
                     sendSMSdata();
                     break;
+                    /*
+                case states.settcpmode:
+                    this.sendDataOut(tBoxTCPData.Text);
+
+                    nextcommand = states.tcpsocketclose.ToString();
+                    break;
+                    */
                 default:
                     break;
             }
@@ -2198,8 +2257,7 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "AMM5400LG";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
-                tBoxSMS.Enabled = true;
-                btnsendSMS.Enabled = true;
+                panelSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
                 oneM2Mmode = 0;
             }
@@ -2212,8 +2270,7 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "TM800L";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
-                tBoxSMS.Enabled = true;
-                btnsendSMS.Enabled = true;
+                panelSMS.Enabled = true;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
                 oneM2Mmode = 0;
             }
@@ -2226,8 +2283,7 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "LML-D";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
-                tBoxSMS.Enabled = true;
-                btnsendSMS.Enabled = true;
+                panelSMS.Enabled = true;
                 tSStatusLblRF.Text = "LTE Cat.1 NETWORK";
                 oneM2Mmode = 0;
             }
@@ -2240,8 +2296,7 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
-                tBoxSMS.Enabled = false;
-                btnsendSMS.Enabled = false;
+                panelSMS.Enabled = false;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
                 oneM2Mmode = 0;
             }
@@ -2254,8 +2309,7 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
-                tBoxSMS.Enabled = false;
-                btnsendSMS.Enabled = false;
+                panelSMS.Enabled = false;
                 cBoxFOTASize.Checked = true;
                 oneM2Mmode = 1;
             }
@@ -2269,8 +2323,7 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
-                tBoxSMS.Enabled = false;
-                btnsendSMS.Enabled = false;
+                panelSMS.Enabled = false;
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
                 oneM2Mmode = 1;
             }
@@ -2284,8 +2337,7 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = false;
-                tBoxSMS.Enabled = false;
-                btnsendSMS.Enabled = false;
+                panelSMS.Enabled = false;
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
                 oneM2Mmode = 1;
             }
@@ -2299,8 +2351,7 @@ namespace WindowsFormsApp2
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
                 cBoxFOTASize.Checked = true;
-                tBoxSMS.Enabled = false;
-                btnsendSMS.Enabled = false;
+                panelSMS.Enabled = false;
                 tSStatusLblRF.Text = "LTE NETWORK";
                 oneM2Mmode = 1;
             }
@@ -3154,6 +3205,17 @@ namespace WindowsFormsApp2
                 this.sendDataOut(commands["mfotamefauth"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
                 tBoxActionState.Text = states.mfotamefauth.ToString();
                 nextcommand = "skip";
+                timer1.Start();
+            }
+        }
+
+        private void btnsendTCP_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                // TCP/IP data 전송를 위한 서버 IP/port 설정
+                this.sendDataOut(commands["settcpip"] + tBoxTCPIP.Text.Replace(".",",") +  "," + tBoxTCPPort.Text);
+                tBoxActionState.Text = states.settcpip.ToString();
                 timer1.Start();
             }
         }

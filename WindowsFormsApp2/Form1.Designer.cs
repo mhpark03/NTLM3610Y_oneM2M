@@ -89,6 +89,7 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuAuth = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuRemteCSE = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMenuoneM2MDataRetreive = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuModemVer = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuDeviceVer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,6 +98,7 @@
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuTxVersion = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTxModemVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuLwM2M = new System.Windows.Forms.ToolStripMenuItem();
             this.initinfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,12 +119,20 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.panelSMS = new System.Windows.Forms.Panel();
             this.btnsendSMS = new System.Windows.Forms.Button();
             this.tBoxSMS = new System.Windows.Forms.TextBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.tBoxTCPData = new System.Windows.Forms.TextBox();
+            this.btnsendTCP = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tBoxTCPPort = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
+            this.tBoxTCPIP = new System.Windows.Forms.TextBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.tBoxSMSCTN = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.tBoxModemVer = new System.Windows.Forms.TextBox();
@@ -167,14 +177,13 @@
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
-            this.tSMenuTxModemVersion = new System.Windows.Forms.ToolStripMenuItem();
-            this.oneM2M데이터읽기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsMenuoneM2MDataRetreive = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.panelSMS.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -296,7 +305,7 @@
             // 
             this.tBoxDataIN.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBoxDataIN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tBoxDataIN.Location = new System.Drawing.Point(3, 40);
+            this.tBoxDataIN.Location = new System.Drawing.Point(3, 61);
             this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataIN.Multiline = true;
             this.tBoxDataIN.Name = "tBoxDataIN";
@@ -314,7 +323,7 @@
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(82, 22);
             this.btnSendData.TabIndex = 2;
-            this.btnSendData.Text = "서버전송";
+            this.btnSendData.Text = "플랫폼전송";
             this.btnSendData.UseVisualStyleBackColor = true;
             this.btnSendData.Click += new System.EventHandler(this.BtnSendData_Click);
             // 
@@ -698,8 +707,7 @@
             this.tSMenuDeviceVer,
             this.toolStripMenuItem8,
             this.tSMenuTxVersion,
-            this.tSMenuTxModemVersion,
-            this.oneM2M데이터읽기ToolStripMenuItem});
+            this.tSMenuTxModemVersion});
             this.tSMenuOneM2M.Name = "tSMenuOneM2M";
             this.tSMenuOneM2M.Size = new System.Drawing.Size(61, 20);
             this.tSMenuOneM2M.Text = "oneM2M";
@@ -724,6 +732,13 @@
             this.tSMenuRemteCSE.Size = new System.Drawing.Size(214, 22);
             this.tSMenuRemteCSE.Text = "서버등록(remoteCSE)";
             this.tSMenuRemteCSE.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
+            // 
+            // tsMenuoneM2MDataRetreive
+            // 
+            this.tsMenuoneM2MDataRetreive.Name = "tsMenuoneM2MDataRetreive";
+            this.tsMenuoneM2MDataRetreive.Size = new System.Drawing.Size(214, 22);
+            this.tsMenuoneM2MDataRetreive.Text = "oneM2M데이터읽기";
+            this.tsMenuoneM2MDataRetreive.Click += new System.EventHandler(this.tsMenuoneM2MDataRetreive_Click);
             // 
             // tSMenuModemVer
             // 
@@ -779,6 +794,13 @@
             this.tSMenuTxVersion.Size = new System.Drawing.Size(214, 22);
             this.tSMenuTxVersion.Text = "디바이스FW완료보고";
             this.tSMenuTxVersion.Click += new System.EventHandler(this.tSMenuTxVersion_Click);
+            // 
+            // tSMenuTxModemVersion
+            // 
+            this.tSMenuTxModemVersion.Name = "tSMenuTxModemVersion";
+            this.tSMenuTxModemVersion.Size = new System.Drawing.Size(214, 22);
+            this.tSMenuTxModemVersion.Text = "모듈FW완료보고";
+            this.tSMenuTxModemVersion.Click += new System.EventHandler(this.tSMenuTxModemVersion_Click);
             // 
             // tSMenuLwM2M
             // 
@@ -910,11 +932,11 @@
             this.groupBox3.Controls.Add(this.panel3);
             this.groupBox3.Controls.Add(this.tBoxDataIN);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox3.Location = new System.Drawing.Point(3, 66);
+            this.groupBox3.Location = new System.Drawing.Point(3, 96);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(466, 339);
+            this.groupBox3.Size = new System.Drawing.Size(466, 360);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             // 
@@ -938,44 +960,85 @@
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(734, 462);
+            this.panel1.Size = new System.Drawing.Size(734, 523);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.btnsendSMS);
-            this.groupBox4.Controls.Add(this.tBoxSMS);
+            this.groupBox4.Controls.Add(this.panelSMS);
+            this.groupBox4.Controls.Add(this.panel5);
             this.groupBox4.Controls.Add(this.panel4);
             this.groupBox4.Controls.Add(this.groupBox3);
             this.groupBox4.Location = new System.Drawing.Point(225, -2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(472, 408);
+            this.groupBox4.Size = new System.Drawing.Size(472, 459);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
+            // 
+            // panelSMS
+            // 
+            this.panelSMS.Controls.Add(this.btnsendSMS);
+            this.panelSMS.Controls.Add(this.tBoxSMS);
+            this.panelSMS.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSMS.Enabled = false;
+            this.panelSMS.Location = new System.Drawing.Point(3, 57);
+            this.panelSMS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelSMS.Name = "panelSMS";
+            this.panelSMS.Size = new System.Drawing.Size(466, 20);
+            this.panelSMS.TabIndex = 16;
             // 
             // btnsendSMS
             // 
             this.btnsendSMS.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnsendSMS.Enabled = false;
-            this.btnsendSMS.Location = new System.Drawing.Point(387, 39);
+            this.btnsendSMS.Location = new System.Drawing.Point(381, 0);
             this.btnsendSMS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnsendSMS.Name = "btnsendSMS";
-            this.btnsendSMS.Size = new System.Drawing.Size(82, 27);
-            this.btnsendSMS.TabIndex = 13;
+            this.btnsendSMS.Size = new System.Drawing.Size(85, 20);
+            this.btnsendSMS.TabIndex = 15;
             this.btnsendSMS.Text = "SMS전송";
             this.btnsendSMS.UseVisualStyleBackColor = true;
-            this.btnsendSMS.Click += new System.EventHandler(this.btnsendSMS_Click);
             // 
             // tBoxSMS
             // 
             this.tBoxSMS.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tBoxSMS.Enabled = false;
-            this.tBoxSMS.Location = new System.Drawing.Point(3, 39);
+            this.tBoxSMS.Location = new System.Drawing.Point(0, 0);
             this.tBoxSMS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxSMS.Name = "tBoxSMS";
-            this.tBoxSMS.Size = new System.Drawing.Size(378, 21);
-            this.tBoxSMS.TabIndex = 14;
-            this.tBoxSMS.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tBoxSMS_KeyDown);
+            this.tBoxSMS.Size = new System.Drawing.Size(381, 21);
+            this.tBoxSMS.TabIndex = 16;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.tBoxTCPData);
+            this.panel5.Controls.Add(this.btnsendTCP);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(3, 37);
+            this.panel5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(466, 20);
+            this.panel5.TabIndex = 15;
+            // 
+            // tBoxTCPData
+            // 
+            this.tBoxTCPData.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tBoxTCPData.Location = new System.Drawing.Point(0, 0);
+            this.tBoxTCPData.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.tBoxTCPData.Name = "tBoxTCPData";
+            this.tBoxTCPData.Size = new System.Drawing.Size(381, 21);
+            this.tBoxTCPData.TabIndex = 17;
+            this.tBoxTCPData.Text = "086200A1GB=CFG";
+            // 
+            // btnsendTCP
+            // 
+            this.btnsendTCP.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnsendTCP.Location = new System.Drawing.Point(381, 0);
+            this.btnsendTCP.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.btnsendTCP.Name = "btnsendTCP";
+            this.btnsendTCP.Size = new System.Drawing.Size(85, 20);
+            this.btnsendTCP.TabIndex = 2;
+            this.btnsendTCP.Text = "TCP전송";
+            this.btnsendTCP.UseVisualStyleBackColor = true;
+            this.btnsendTCP.Click += new System.EventHandler(this.btnsendTCP_Click);
             // 
             // panel4
             // 
@@ -985,7 +1048,7 @@
             this.panel4.Location = new System.Drawing.Point(3, 17);
             this.panel4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(466, 22);
+            this.panel4.Size = new System.Drawing.Size(466, 20);
             this.panel4.TabIndex = 12;
             // 
             // cBoxATCMD
@@ -1007,7 +1070,7 @@
             this.btnATCMD.Location = new System.Drawing.Point(381, 0);
             this.btnATCMD.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnATCMD.Name = "btnATCMD";
-            this.btnATCMD.Size = new System.Drawing.Size(85, 22);
+            this.btnATCMD.Size = new System.Drawing.Size(85, 20);
             this.btnATCMD.TabIndex = 2;
             this.btnATCMD.Text = "AT명령";
             this.btnATCMD.UseVisualStyleBackColor = true;
@@ -1015,6 +1078,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tBoxTCPPort);
+            this.groupBox1.Controls.Add(this.button8);
+            this.groupBox1.Controls.Add(this.tBoxTCPIP);
+            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.tBoxSMSCTN);
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.tBoxModemVer);
@@ -1047,9 +1114,45 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(209, 409);
+            this.groupBox1.Size = new System.Drawing.Size(209, 458);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
+            // 
+            // tBoxTCPPort
+            // 
+            this.tBoxTCPPort.Location = new System.Drawing.Point(77, 437);
+            this.tBoxTCPPort.Name = "tBoxTCPPort";
+            this.tBoxTCPPort.Size = new System.Drawing.Size(126, 21);
+            this.tBoxTCPPort.TabIndex = 35;
+            this.tBoxTCPPort.Text = "18782";
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(6, 437);
+            this.button8.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(66, 24);
+            this.button8.TabIndex = 34;
+            this.button8.Text = "TCP port";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // tBoxTCPIP
+            // 
+            this.tBoxTCPIP.Location = new System.Drawing.Point(77, 411);
+            this.tBoxTCPIP.Name = "tBoxTCPIP";
+            this.tBoxTCPIP.Size = new System.Drawing.Size(126, 21);
+            this.tBoxTCPIP.TabIndex = 33;
+            this.tBoxTCPIP.Text = "220.88.49.162";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(6, 411);
+            this.button7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(66, 24);
+            this.button7.TabIndex = 32;
+            this.button7.Text = "TCP IP";
+            this.button7.UseVisualStyleBackColor = true;
             // 
             // tBoxSMSCTN
             // 
@@ -1338,7 +1441,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 407);
+            this.panel2.Location = new System.Drawing.Point(0, 468);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -1404,8 +1507,6 @@
             // cBoxSendHex
             // 
             this.cBoxSendHex.AutoSize = true;
-            this.cBoxSendHex.Checked = true;
-            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
             this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
@@ -1430,7 +1531,7 @@
             this.tSStatusLblLWM2M1,
             this.tSStatusLblLWM2M,
             this.tSProgressLwm2m});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 464);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 525);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(734, 22);
             this.statusStrip1.TabIndex = 11;
@@ -1480,31 +1581,11 @@
             this.timer3.Enabled = true;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
-            // tSMenuTxModemVersion
-            // 
-            this.tSMenuTxModemVersion.Name = "tSMenuTxModemVersion";
-            this.tSMenuTxModemVersion.Size = new System.Drawing.Size(214, 22);
-            this.tSMenuTxModemVersion.Text = "모듈FW완료보고";
-            this.tSMenuTxModemVersion.Click += new System.EventHandler(this.tSMenuTxModemVersion_Click);
-            // 
-            // oneM2M데이터읽기ToolStripMenuItem
-            // 
-            this.oneM2M데이터읽기ToolStripMenuItem.Name = "oneM2M데이터읽기ToolStripMenuItem";
-            this.oneM2M데이터읽기ToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.oneM2M데이터읽기ToolStripMenuItem.Text = "oneM2M데이터읽기";
-            // 
-            // tsMenuoneM2MDataRetreive
-            // 
-            this.tsMenuoneM2MDataRetreive.Name = "tsMenuoneM2MDataRetreive";
-            this.tsMenuoneM2MDataRetreive.Size = new System.Drawing.Size(214, 22);
-            this.tsMenuoneM2MDataRetreive.Text = "oneM2M데이터읽기";
-            this.tsMenuoneM2MDataRetreive.Click += new System.EventHandler(this.tsMenuoneM2MDataRetreive_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(734, 486);
+            this.ClientSize = new System.Drawing.Size(734, 547);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -1526,7 +1607,10 @@
             this.panel3.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.panelSMS.ResumeLayout(false);
+            this.panelSMS.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -1675,14 +1759,21 @@
         private System.Windows.Forms.ToolStripMenuItem cOMReloadToolStripMenuItem;
         private System.Windows.Forms.TextBox tBoxModemVer;
         private System.Windows.Forms.Button btnModemVer;
-        private System.Windows.Forms.Button btnsendSMS;
-        private System.Windows.Forms.TextBox tBoxSMS;
         private System.Windows.Forms.TextBox tBoxSMSCTN;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.ToolStripMenuItem tsMenuoneM2MDataRetreive;
         private System.Windows.Forms.ToolStripMenuItem tSMenuTxModemVersion;
-        private System.Windows.Forms.ToolStripMenuItem oneM2M데이터읽기ToolStripMenuItem;
+        private System.Windows.Forms.TextBox tBoxTCPPort;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TextBox tBoxTCPIP;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Panel panelSMS;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button btnsendTCP;
+        private System.Windows.Forms.Button btnsendSMS;
+        private System.Windows.Forms.TextBox tBoxSMS;
+        private System.Windows.Forms.TextBox tBoxTCPData;
     }
 }
 
