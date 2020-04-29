@@ -98,6 +98,11 @@ namespace WindowsFormsApp2
             geticcidamtel,
             autogeticcidamtel,
 
+            geticcidme,
+            autogeticcidme,
+            setepnsme,
+            sendmsgverme,
+
             geticcidlg,
             autogeticcidlg,
 
@@ -172,7 +177,7 @@ namespace WindowsFormsApp2
         string sendWith;
         string dataIN = "";
         string RxDispOrder;
-        string serverip = "106.103.230.51";
+        string serverip = "106.103.233.155";
         string serverport = "5783";
         int network_chkcnt = 3;
         string nextcommand = "";    //OK를 받은 후 전송할 명령어가 존재하는 경우
@@ -255,6 +260,7 @@ namespace WindowsFormsApp2
             commands.Add("getimei", "AT+GSN");
             commands.Add("geticcidtpb23", "AT+MUICCID");
             commands.Add("geticcidlg", "AT+MUICCID=?");
+            commands.Add("geticcidme", "AT+ICCID");
             commands.Add("geticcidamtel", "AT@ICCID?");
             commands.Add("getimeitpb23", "AT+CGSN=1");
             commands.Add("getmodel", "AT+CGMM");
@@ -271,6 +277,7 @@ namespace WindowsFormsApp2
             commands.Add("autogetimei", "AT+GSN");
             commands.Add("autogeticcidtpb23", "AT+MUICCID");
             commands.Add("autogeticcidamtel", "AT@ICCID?");
+            commands.Add("autogeticcidme", "AT+ICCID");
             commands.Add("autogeticcidlg", "AT+MUICCID=?");
             commands.Add("autogetimeitpb23", "AT+CGSN=1");
             commands.Add("autogetmodel", "AT+CGMM");
@@ -280,7 +287,6 @@ namespace WindowsFormsApp2
             commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",1");
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
-            //commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
             commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
             commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",\"");
             commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
@@ -321,6 +327,9 @@ namespace WindowsFormsApp2
             commands.Add("lwm2mresettpb23", "AT+FATORYRESET=0");
             commands.Add("sendmsgstrtpb23", "AT+MLWULDATA=");
             commands.Add("sendmsgvertpb23", "AT+MLWULDATA=1,");
+
+            commands.Add("setepnsme", "AT+MLWGENEPNS=");
+            commands.Add("sendmsgverme", "AT+MLWDFULDATA=");
 
             commands.Add("setmefserverinfo", "AT$OM_SVR_INFO=1,");
             commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
@@ -424,6 +433,8 @@ namespace WindowsFormsApp2
                     serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
                     serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
                     serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+                    serialPort1.ReadTimeout = (int)500;
+                    serialPort1.WriteTimeout = (int)500;
 
                     serialPort1.Open();
                     progressBar1.Value = 100;
@@ -911,6 +922,7 @@ namespace WindowsFormsApp2
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
                 "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
                 "AT+CGMI",
+                "AT+MLWDFDLDATA=",  // LWM2M서버에서 26241 data 수신 이벤트 (모바일에코)
                 "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
                 //"AT+CIMI",
                 //"AT+GSN",
@@ -959,6 +971,8 @@ namespace WindowsFormsApp2
                 "$$TCP_NULLPERMISSION:",
                 "$$TELL: ",
                 "$$TCP_SENDDATA:",
+
+                "@SOCKOPEN:",
         };
 
 
@@ -1572,7 +1586,14 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("data format이 맞지 않습니다.", "");
                     }
                     break;
-
+                case "AT+MLWDFDLDATA=":
+                    // 모듈이 LWM2M서버에서 받은 26241 데이터를 전달하는 이벤트,
+                    // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                    // AT+MLWDFDLDATA=<length>,<hex data>
+                    string[] rxdfdatas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                                                             // 26241 FOTA DATA object RECEIVED!!!
+                    receiveFotaData(rxdfdatas[0], rxdfdatas[1]);
+                    break;
                 case "+QLWDLDATA:":
                     // 모듈이 LWM2M서버에서 받은 데이터를 전달하는 이벤트,
                     // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
@@ -1760,6 +1781,16 @@ namespace WindowsFormsApp2
                     if (str2 == "1")
                         nextcommand = "tcpsocketclose";
                     break;
+                case "@SOCKOPEN:":
+                    string[] tcpmsg = str2.Split(',');
+                    if (tcpmsg[0] == "0" && tcpmsg[1]=="0")
+                    {
+                        this.sendDataOut(commands["sendtcpdataamtel"] + tBoxTCPData.Text + "\"");
+                        tBoxActionState.Text = states.sendtcpdataamtel.ToString();
+                    }
+                    else
+                        logPrintInTextBox("서버 상태를 확인해주세요.", "");
+                    break;
                 default:
                     break;
             }
@@ -1852,13 +1883,13 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.setservertype:
-                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
-                    // disable - setcdp - (servertype) - (endpointpame) - mbsps - enable
-                    // EndPointName 플랫폼 device ID 설정
-                    //AT+QLWM2M="enps",0,<service code>
-                    //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
-                    this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
-                    tBoxActionState.Text = states.setepns.ToString();
+                        // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                        // disable - setcdp - (servertype) - (endpointpame) - mbsps - enable
+                        // EndPointName 플랫폼 device ID 설정
+                        //AT+QLWM2M="enps",0,<service code>
+                        //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
+                        this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
+                        tBoxActionState.Text = states.setepns.ToString();
 
                     timer1.Start();
                     nextcommand = "skip";
@@ -1904,6 +1935,30 @@ namespace WindowsFormsApp2
                         timer1.Stop();
                     }
                     break;
+                case states.setepnsme:
+                    if (tBoxIMSI.Text != "알 수 없음")
+                    {
+                        // Bootstrap Parameter 설정
+                        //AT+MLWMBSPS="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
+                        string mbspscmd = commands["setmbspstpb23"] + tBoxSVCCD.Text + "|deviceSerialNo=";
+                        mbspscmd += tBoxDeviceSN.Text + "|ctn=";
+                        mbspscmd += tBoxIMSI.Text + "|iccId=";
+
+                        mbspscmd += tBoxIccid.Text.Substring(tBoxIccid.Text.Length - 6, 6) + "|deviceModel=";
+                        mbspscmd += tBoxDeviceModel.Text + "|mac=";
+
+                        this.sendDataOut(mbspscmd);
+                        tBoxActionState.Text = states.setmbspstpb23.ToString();
+
+                        timer1.Start();
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        nextcommand = "";
+                    }
+                    break;
                 case states.setmbsps:
                     if (tBoxModel.Text == "BG96")
                     {
@@ -1937,17 +1992,27 @@ namespace WindowsFormsApp2
                     nextcommand = states.getcereg.ToString();
                     break;
                 case states.setncdp:
-                    // LWM2M bootstrap 자동 요청 순서 (V150)
-                    // (setncdp) - (setepnstpb23) - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
-                    // End Point Name Parameter 설정
-                    //AT+MLWEPNS="LWM2M 서버 entityID"
-                    String md5value = getMd5Hash(tBoxIMSI.Text + tBoxIccid.Text);
-                    logPrintInTextBox(md5value, "");
+                    if (tBoxManu.Text.StartsWith("MOBILEECO", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // 모바일에코 EndPointName 생성 
+                        //AT+MLWGENEPNS=<service code>
+                        this.sendDataOut(commands["setepnsme"] + tBoxSVCCD.Text);
+                        tBoxActionState.Text = states.setepnsme.ToString();
+                    }
+                    else
+                    {
+                        // LWM2M bootstrap 자동 요청 순서 (V150)
+                        // (setncdp) - (setepnstpb23) - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                        // End Point Name Parameter 설정
+                        //AT+MLWEPNS="LWM2M 서버 entityID"
+                        String md5value = getMd5Hash(tBoxIMSI.Text + tBoxIccid.Text);
+                        logPrintInTextBox(md5value, "");
 
-                    string epn = md5value.Substring(0, 5) + md5value.Substring(md5value.Length - 5, 5);
+                        string epn = md5value.Substring(0, 5) + md5value.Substring(md5value.Length - 5, 5);
 
-                    this.sendDataOut(commands["setepnstpb23"] + epn + "-" + tBoxSVCCD.Text);
-                    tBoxActionState.Text = states.setepnstpb23.ToString();
+                        this.sendDataOut(commands["setepnstpb23"] + epn + "-" + tBoxSVCCD.Text);
+                        tBoxActionState.Text = states.setepnstpb23.ToString();
+                    }
 
                     timer1.Start();
                     nextcommand = "skip";
@@ -2161,12 +2226,32 @@ namespace WindowsFormsApp2
                         tBoxActionState.Text = states.autogeticcidamtel.ToString();
                         nextcommand = states.autogeticcidamtel.ToString();
                     }
+                    else if (tBoxManu.Text.StartsWith("MOBILEECO", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        tBoxActionState.Text = states.autogeticcidme.ToString();
+                        nextcommand = states.autogeticcidme.ToString();
+                    }
                     else
                     {
                         tBoxActionState.Text = states.autogeticcid.ToString();
                         nextcommand = states.autogeticcid.ToString();
                     }
                     this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
+                    break;
+                case states.autogeticcidme:
+                case states.geticcidme:
+                    // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                    // OK 응답이 따라온다
+                    if (str1.Length > 19)
+                        tBoxIccid.Text = str1.Substring(str1.Length - 20, 19);
+                    else
+                        tBoxIccid.Text = str1;
+                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+
+                    if (tBoxActionState.Text == states.autogeticcidme.ToString())
+                    {
+                        nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
+                    }
                     break;
                 case states.setservertype:
                     // EndPointName 플랫폼 device ID 설정
@@ -2363,6 +2448,20 @@ namespace WindowsFormsApp2
                 tSStatusLblRF.Text = "NB_IOT NETWORK";
                 oneM2Mmode = 1;
             }
+            else if (model.StartsWith("MOBILEECO", System.StringComparison.CurrentCultureIgnoreCase))         //모바일에코/LwM2M 모듈
+            {
+                tSMenuOneM2M.Visible = false;
+                tSMenuLwM2M.Visible = true;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATM";
+                tBoxDeviceModel.Text = "LWEMG";
+                btSNConst.Text = "단말SN";
+                tBoxDeviceSN.Text = "123456";
+                cBoxFOTASize.Checked = true;
+                panelSMS.Enabled = false;
+                tSStatusLblRF.Text = "NB_IOT NETWORK";
+                oneM2Mmode = 1;
+            }
             else                                                                                        //default/LwM2M 메뉴 활성화
             {
                 tSMenuOneM2M.Visible = false;
@@ -2421,6 +2520,10 @@ namespace WindowsFormsApp2
                 || tBoxModel.Text.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))           //oneM2M 모듈인 경우, oneM2M 메뉴 활성화
             {
                 this.sendDataOut(commands["geticcid"]);
+            }
+            else if (tBoxManu.Text.StartsWith("MOBILEECO", System.StringComparison.CurrentCultureIgnoreCase))
+            {
+                this.sendDataOut(commands["geticcidmc"]);
             }
             else
             {
@@ -3017,6 +3120,17 @@ namespace WindowsFormsApp2
 
                     timer1.Start();
                 }
+                else if (tBoxManu.Text.StartsWith("MOBILEECO", System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // Data send to SERVER (string original)
+                    //AT+MLWDFULDATA=<length>,<data>
+                    string hexOutput = StringToBCD(text.ToCharArray());
+
+                    this.sendDataOut(commands["sendmsgverme"] + hexOutput.Length / 2 + "," + hexOutput);
+                    tBoxActionState.Text = states.sendmsgverme.ToString();
+
+                    timer1.Start();
+                }
                 else
                 {
                     // Data send to SERVER (string original)
@@ -3237,8 +3351,12 @@ namespace WindowsFormsApp2
             {
                 if (tBoxManu.Text == "AM Telecom")        //AMTEL 
                 {
-                    this.sendDataOut(commands["sendtcpdataamtel"] + tBoxTCPData.Text + "\"");
-                    tBoxActionState.Text = states.sendtcpdataamtel.ToString();
+                    // TCP 소켓 오픈 성공 확인 후 데이터 전송함
+                    this.sendDataOut(commands["tcpsocketopenamtel"] + tBoxTCPIP.Text + "," + tBoxTCPPort.Text);
+                    tBoxActionState.Text = states.tcpsocketopenamtel.ToString();
+
+                    //this.sendDataOut(commands["sendtcpdataamtel"] + tBoxTCPData.Text + "\"");
+                    //tBoxActionState.Text = states.sendtcpdataamtel.ToString();
                 }
                 else if (tBoxModel.Text == "BG96")        //쿼텔 BG96 
                 {
