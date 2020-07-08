@@ -181,7 +181,6 @@
             this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
             this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -1334,7 +1333,7 @@
             this.tBoxSVCCD.Name = "tBoxSVCCD";
             this.tBoxSVCCD.Size = new System.Drawing.Size(126, 21);
             this.tBoxSVCCD.TabIndex = 17;
-            this.tBoxSVCCD.Text = "CATM";
+            this.tBoxSVCCD.Text = "CATO";
             // 
             // button1
             // 
@@ -1613,11 +1612,6 @@
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
-            // timer3
-            // 
-            this.timer3.Enabled = true;
-            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1798,7 +1792,6 @@
         private System.Windows.Forms.Button btnModemVer;
         private System.Windows.Forms.TextBox tBoxSMSCTN;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.ToolStripMenuItem tsMenuoneM2MDataRetreive;
         private System.Windows.Forms.ToolStripMenuItem tSMenuTxModemVersion;
         private System.Windows.Forms.TextBox tBoxTCPPort;

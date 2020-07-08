@@ -23,3 +23,16 @@ D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAP
 D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CopyComplete
 D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.exe
 D:\VisualStudio\workspace\NTLM3610Y_oneM2M\WindowsFormsApp2\obj\Debug\LGUoneM2M.pdb
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\bin\Debug\LGUoneM2M.exe.config
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\bin\Debug\LGUoneM2M.exe
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\bin\Debug\LGUoneM2M.pdb
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csprojAssemblyReference.cache
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGUoneM2M.Properties.Resources.resources
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.GenerateResource.cache
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CoreCompileInputs.cache
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGoneM2MAPP.csproj.CopyComplete
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGUoneM2M.exe
+D:\VisualStudio\workspace\oneM2M_LwM2M_device\WindowsFormsApp2\obj\Debug\LGUoneM2M.pdb

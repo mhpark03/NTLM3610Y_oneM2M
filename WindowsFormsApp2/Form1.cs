@@ -2360,7 +2360,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "AMM5400LG";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
@@ -2386,7 +2386,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "LML-D";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
@@ -2399,7 +2399,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = true;
                 tSMenuLwM2M.Visible = false;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 btSNConst.Text = "폴더명";
                 tBoxDeviceSN.Text = "TEST";
@@ -2412,7 +2412,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = true;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -2425,7 +2425,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "TPB23";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -2439,7 +2439,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "VTLM-102G";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -2453,7 +2453,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -2467,7 +2467,7 @@ namespace WindowsFormsApp2
                 tSMenuOneM2M.Visible = false;
                 tSMenuLwM2M.Visible = true;
                 lTEToolStripMenuItem.Visible = false;
-                tBoxSVCCD.Text = "CATM";
+                tBoxSVCCD.Text = "CATO";
                 tBoxDeviceModel.Text = "LWEMG";
                 btSNConst.Text = "단말SN";
                 tBoxDeviceSN.Text = "123456";
@@ -3315,14 +3315,6 @@ namespace WindowsFormsApp2
                 }
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-            }
-        }
-
-        private void timer3_Tick(object sender, EventArgs e)
-        {
-            if(serialPort1.IsOpen && serialPort1.BytesToRead != 0)
-            {
-                logPrintInTextBox("100ms Timer","");
             }
         }
 
