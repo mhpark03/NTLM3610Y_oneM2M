@@ -1309,7 +1309,8 @@
             "개발",
             "검증",
             "상용",
-            "NMS"});
+            "NMS개발",
+            "NMS상용"});
             this.cBoxSERVER.Location = new System.Drawing.Point(77, 355);
             this.cBoxSERVER.Name = "cBoxSERVER";
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);

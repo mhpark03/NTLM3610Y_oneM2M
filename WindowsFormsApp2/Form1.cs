@@ -2730,9 +2730,13 @@ namespace WindowsFormsApp2
                     oneM2MBRKIP = "106.103.210.104";
                     oneM2MBRKPort = "8080";
                 }
-                else if (cBoxSERVER.Text == "NMS")
+                else if (cBoxSERVER.Text == "NMS개발")
                 {
                     serverip = "192.168.33.131";
+                }
+                else if (cBoxSERVER.Text == "NMS상용")
+                {
+                    serverip = "172.17.102.56";
                 }
                 serverport = "5783";
 
