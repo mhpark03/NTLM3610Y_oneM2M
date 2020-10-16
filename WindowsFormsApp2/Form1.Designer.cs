@@ -1308,7 +1308,8 @@
             this.cBoxSERVER.Items.AddRange(new object[] {
             "개발",
             "검증",
-            "상용"});
+            "상용",
+            "NMS"});
             this.cBoxSERVER.Location = new System.Drawing.Point(77, 355);
             this.cBoxSERVER.Name = "cBoxSERVER";
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);

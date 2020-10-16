@@ -2730,6 +2730,10 @@ namespace WindowsFormsApp2
                     oneM2MBRKIP = "106.103.210.104";
                     oneM2MBRKPort = "8080";
                 }
+                else if (cBoxSERVER.Text == "NMS")
+                {
+                    serverip = "192.168.33.131";
+                }
                 serverport = "5783";
 
                 // 플랫폼 서버의 IP/port 설정
