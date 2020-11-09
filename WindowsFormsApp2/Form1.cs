@@ -1047,7 +1047,7 @@ namespace WindowsFormsApp2
 
                     if (tBoxActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (tBoxModel.Text == "BG96" || tBoxManu.Text == "LIME-I Co., Ltd")
+                        if (tBoxModel.Text == "BG96" || tBoxManu.Text == "LIME-I Co., Ltd" || tBoxModel.Text == "EC25" || tBoxModel.Text == "EC21")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -2405,6 +2405,19 @@ namespace WindowsFormsApp2
                 tBoxDeviceSN.Text = "TEST";
                 panelSMS.Enabled = false;
                 tSStatusLblRF.Text = "Cat M1 NETWORK";
+                oneM2Mmode = 0;
+            }
+            else if (model == "EC21" || model == "EC25")                                                //쿼텔/oneM2M 모듈
+            {
+                tSMenuOneM2M.Visible = true;
+                tSMenuLwM2M.Visible = false;
+                lTEToolStripMenuItem.Visible = false;
+                tBoxSVCCD.Text = "CATO";
+                tBoxDeviceModel.Text = "EC25-E";
+                btSNConst.Text = "폴더명";
+                tBoxDeviceSN.Text = "TEST";
+                panelSMS.Enabled = false;
+                tSStatusLblRF.Text = "LTE Cat 1/4 Network";
                 oneM2Mmode = 0;
             }
             else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
