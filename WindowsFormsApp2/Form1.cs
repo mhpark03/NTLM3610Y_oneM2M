@@ -115,6 +115,7 @@ namespace WindowsFormsApp2
             sendmsgstrbc95,
             sendmsghextpb23,
             sendmsgvertpb23,
+            sendmsgverbc95,
 
             geticcidamtel,
             autogeticcidamtel,
@@ -356,8 +357,9 @@ namespace WindowsFormsApp2
             commands.Add("deregisterbc95", "AT+QLWSREGIND=1");
             commands.Add("lwm2mresettpb23", "AT+FATORYRESET=0");
             commands.Add("sendmsgstrtpb23", "AT+MLWULDATA=");
-            commands.Add("sendmsgstbc95", "AT+QLWULDATA=");
+            commands.Add("sendmsgstbc95", "AT+QLWULDATA=0,");
             commands.Add("sendmsgvertpb23", "AT+MLWULDATA=1,");
+            commands.Add("sendmsgverbc95", "AT+QLWULDATA=1,");
 
             commands.Add("holdoffbc95", "AT+QBOOTSTRAPHOLDOFF=0");
             commands.Add("lwm2mresetbc95", "AT+QREGSWT=2");
@@ -969,6 +971,7 @@ namespace WindowsFormsApp2
                 "+CGSN:",       // IMEI (NB TPB23모델) 값을 저장한다.
                 "APPLICATION_A,",    // Modem verion (BC95) 값을 저장한다.
                 "AT+MLWDLDATA=",    // LWM2M서버에서 data 수신이벤트
+                "+NNMI:",    // LWM2M서버에서 data 수신이벤트
                 "AT+MLWEVTIND=",    // LWM2M서버와 연동 상태 이벤트
                 "+QLWEVTIND:",    // LWM2M서버와 연동 상태 이벤트
                 "AT+CGMI",
@@ -1708,6 +1711,23 @@ namespace WindowsFormsApp2
                     else
                     {
                         logPrintInTextBox("data format이 맞지 않습니다.", "");
+                    }
+                    break;
+                case "+NNMI:":
+                    // 모듈이 LWM2M서버에서 받은 데이터를 전달하는 이벤트,
+                    // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                    // +NNMI:<length>,<hex data>
+                    string[] rxdatasbc95 = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                                                               // 10250 DATA object RECEIVED!!!
+                    if (Convert.ToInt32(rxdatasbc95[0]) == rxdatasbc95[1].Length / 2)    // data size 비교
+                    {
+                        //received hex data make to ascii code
+                        string receiveDataIN = BcdToString(rxdatasbc95[1].ToCharArray());
+                        logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                    }
+                    else
+                    {
+                        logPrintInTextBox("data size가 맞지 않습니다.", "");
                     }
                     break;
                 case "AT+MLWDFDLDATA=":
@@ -3391,6 +3411,17 @@ namespace WindowsFormsApp2
 
                     this.sendDataOut(commands["sendmsgverme"] + hexOutput.Length / 2 + "," + hexOutput);
                     tBoxActionState.Text = states.sendmsgverme.ToString();
+
+                    timer1.Start();
+                }
+                else if (tBoxModel.Text.StartsWith("BC95", System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // Data send to SERVER (string original)
+                    //AT+QLWULDATA=1,<length>,<data>
+                    string hexOutput = StringToBCD(text.ToCharArray());
+
+                    this.sendDataOut(commands["sendmsgverbc95"] + hexOutput.Length / 2 + "," + hexOutput);
+                    tBoxActionState.Text = states.sendmsgverbc95.ToString();
 
                     timer1.Start();
                 }
