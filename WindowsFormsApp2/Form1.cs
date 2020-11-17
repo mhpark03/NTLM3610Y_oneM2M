@@ -1493,9 +1493,9 @@ namespace WindowsFormsApp2
                         if (tBoxActionState.Text != states.actsetsvrbsbc95.ToString())
                         {
                             //AT+QLWSERVERIP=LWM2M,<ip>,<port>   BC95모델 서버정보 갱신
-                            this.sendDataOut(commands["autosetsvripbc95"] + serverip + "," + serverport);
-                            tBoxActionState.Text = states.autosetsvripbc95.ToString();
-                            nextcommand = "skip";
+                            //this.sendDataOut(commands["autosetsvripbc95"] + serverip + "," + serverport);
+                            tBoxActionState.Text = states.actsetsvripbc95.ToString();
+                            //nextcommand = "skip";
                         }
                     }
                     break;
